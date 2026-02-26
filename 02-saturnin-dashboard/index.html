@@ -206,7 +206,10 @@
      Primary Protocol
     </div>
     <h2><span class="highlight" id="protocolWord">MONTIS</span> <span id="protocolName">SILENT</span></h2>
-    <p id="protocolDescription">Configuration du système d'acquisition confidentiel.</p><button class="btn-cta" id="ctaButton">Configurer</button>
+    <p id="protocolDescription">Configuration du système d'acquisition confidentiel.</p>
+    
+    <button class="btn-cta" id="ctaButton">Configurer</button>
+    
     <svg class="illustration" width="60" height="60" viewbox="0 0 100 100" style="margin-top: 40px; opacity: 0.3;">
      <path d="M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z" />
     </svg>
@@ -236,6 +239,7 @@
     </svg>
    </div>
   </div>
+  
   <script>
         const defaultConfig = {
             dashboard_title: "Saturnin Gestion",
@@ -283,6 +287,17 @@
         if (window.elementSdk) {
             window.elementSdk.init(elementHandler);
         }
+
+        // ==========================================
+        // AJOUT DE LA REDIRECTION VERS L'ÉTAPE 3
+        // ==========================================
+        const btn = document.getElementById('ctaButton');
+        if (btn) {
+            btn.addEventListener('click', function() {
+                // Redirection vers le dossier de l'étape 3
+                window.location.href = "../03-questionnaire/";
+            });
+        }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d3d0506417c038b',t:'MTc3MjA4MzUwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
