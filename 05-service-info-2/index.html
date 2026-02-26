@@ -72,7 +72,7 @@
             border-radius: 12px;
             padding: 50px 30px;
             background: #050505;
-            margin-bottom: 40px;
+            margin-bottom: 30px; /* Réduit légèrement pour intégrer la signature */
         }
 
         h2 {
@@ -153,23 +153,45 @@
             line-height: 1.6;
         }
 
-        /* Footer */
-        .footer-note {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            padding-top: 20px;
+        /* Signature Projet (Nouveau) */
+        .brand-signature {
+            margin: 0 auto 35px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
         }
 
-        .no-cost {
+        .brand-company {
             color: var(--text-main);
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .brand-projects {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
+        .brand-projects span {
+            color: var(--border);
+        }
+
+        .brand-author {
+            color: #555555;
+            font-size: 0.8rem;
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        /* Footer & Bouton */
         .cta-button {
             background-color: var(--text-main);
             color: var(--bg);
@@ -192,6 +214,22 @@
             box-shadow: 0 8px 16px rgba(0, 112, 243, 0.2);
         }
 
+        .footer-note {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            padding-top: 20px;
+        }
+
+        .no-cost {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 768px) {
             h1 { font-size: 1.8rem; }
             .catchphrase { font-size: 1rem; }
@@ -200,6 +238,8 @@
             .line { display: none; }
             .node { flex: 0 1 calc(33.333% - 15px); }
             .node span { font-size: 0.65rem; }
+            .brand-company { font-size: 0.75rem; }
+            .brand-projects { font-size: 0.65rem; }
         }
     </style>
   <style>body { box-sizing: border-box; }</style>
@@ -237,6 +277,12 @@
      </div>
     </div>
     <p class="central-quote">« Nous éliminons le travail de recherche : votre identité reste confidentielle, les curieux sont filtrés, et votre agenda se remplit d'intentions d'investissement à fort levier. »</p>
+   </div>
+   
+   <div class="brand-signature">
+       <div class="brand-company">Goscale France</div>
+       <div class="brand-projects">Visalign V2 <span>•</span> Montis Media</div>
+       <div class="brand-author">par Evan Nanguy</div>
    </div>
    
    <button class="cta-button" id="nextStepBtn">Personnaliser le service</button>
