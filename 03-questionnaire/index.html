@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="fr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saturnin Gestion - Architecte IA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --bg: #000000;
+        --surface: #050505;
+        --border: #1a1a1a;
+        --border-hover: #0070f3;
+        --accent-blue: #0070f3;
+        --text-question: #ffffff;
+        --text-answer: #888888;
+        --font-main: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background: var(--bg);
+        color: var(--text-question);
+        font-family: var(--font-main);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    header {
+        padding: 2.5rem;
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        background: rgba(0,0,0,0.9);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    header h1 { font-size: 0.85rem; letter-spacing: 0.5rem; font-weight: 800; margin: 0 0 0.6rem 0; }
+    header p { font-size: 0.6rem; color: var(--text-answer); text-transform: uppercase; margin: 0; }
+
+    .progress-container {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        padding: 20px;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .step-segment { height: 1px; flex: 1; background: var(--border); transition: 0.4s; }
+    .step-segment.active { background: var(--accent-blue); box-shadow: 0 0 10px var(--accent-blue); }
+
+    /* CARD STRUCTURE */
+    .card {
+        max-width: 600px;
+        width: 90%;
+        margin: 60px auto;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 4rem 3rem;
+        border-radius: 4px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .question-id { 
+        display: block; 
+        font-size: 0.7rem; 
+        color: var(--accent-blue); 
+        margin-bottom: 1.5rem; 
+        font-family: monospace;
+        letter-spacing: 2px;
+    }
+
+    /* QUESTION STYLE */
+    h2 { 
+        font-size: 1.4rem; 
+        font-weight: 500; 
+        line-height: 1.5; 
+        margin-bottom: 4rem; 
+        color: #ffffff;
+        letter-spacing: -0.02em;
+        border-left: 2px solid var(--accent-blue);
+        padding-left: 1.5rem;
+    }
+
+    /* OPTIONS CONTAINER */
+    .options { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 1.2rem;
+        margin-top: 2rem;
+    }
+
+    /* BUTTONS / ANSWERS */
+    button.option {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        color: #888888;
+        padding: 1.2rem 1.5rem;
+        text-align: left;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        border-radius: 2px;
+    }
+
+    button.option:hover { 
+        border-color: var(--accent-blue); 
+        color: #ffffff; 
+        background: rgba(0, 112, 243, 0.1);
+        transform: translateX(8px);
+    }
+
+    /* RESULT VERDICT STYLES */
+    .result-label { font-size: 0.7rem; color: var(--accent-blue); text-transform: uppercase; margin: 0 0 1rem 0; font-family: monospace; letter-spacing: 1px; }
+    .verdict { font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; color: #ffffff; }
+    .diagnostic-text { color: var(--text-answer); line-height: 1.7; margin-bottom: 2.5rem; }
+
+    .btn-primary { 
+        background: var(--accent-blue); 
+        color: white; 
+        font-weight: 700; 
+        text-align: center; 
+        border: none;
+        padding: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+        transform: translateX(4px);
+    }
+
+    .btn-secondary { 
+        border: 1px dashed var(--border); 
+        margin-top: 10px; 
+        text-align: center; 
+        font-size: 0.7rem; 
+        background: rgba(255,255,255,0.01);
+        color: var(--text-answer);
+        transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
+    }
+
+    .bad-tag {
+        color: #ff4d4d;
+        font-weight: 600;
+        display: inline;
+        margin: 0 4px;
+    }
+
+    .bad-tag + .bad-tag::before {
+        content: "•";
+        margin: 0 8px;
+        color: #444;
+        font-size: 1.2rem;
+    }
+
+    .fade-slide { animation: fadeIn 0.6s forwards; }
+
+    @keyframes fadeIn { 
+        from { opacity: 0; transform: translateY(10px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+
+    main {
+        flex: 1;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <header>
+   <h1>SATURNIN GESTION</h1>
+   <p>Diagnostic de compatibilité d'infrastructure : validation du protocole Product Architect.</p>
+  </header>
+  <div class="progress-container" id="progress"></div>
+  <main id="app">
+   <div id="intro-screen" class="fade-slide card"><span class="question-id">SYSTEM_STATUS: READY</span>
+    <h2>Choix de la méthodologie</h2>
+    <p class="diagnostic-text" style="margin-bottom: 2.5rem;">Ce protocole vise à valider que la configuration choisie par votre Product Architect est la solution la plus efficiente pour votre cabinet.</p>
+    <div class="options">
+     <button class="option" onclick="startAudit()">[ DÉMARRER L'AUDIT DE COMPATIBILITÉ ]</button>
+    </div>
+   </div>
+  </main>
+  <script>
+        const auditData = {
+            questions: {
+                // --- TRONC COMMUN ---
+                "Q1": {
+                    text: "Le cabinet confirme une allocation inférieure à 1 000 €",
+                    options: [
+                        { text: "Confirmer", next: "Q2" }
+                    ]
+                },
+                "Q2": {
+                    text: "Performance prioritaire pour l'exploitation ?",
+                    options: [{ text: "[ Volume de flux ]", next: "Q3" }]
+                },
+                "Q3": {
+                    text: "Le cabinet souhaite-t-il intégrer un protocole de filtrage Veto pour écarter les profils sans levier ?",
+                    options: [
+                        { text: "Désactiver le filtrage", next: "A4" },
+                        { text: "Activer la branche Expertise", next: "B4" }
+                    ]
+                },
+
+                // --- BRANCHE DÉCLASSEMENT (Branche A) ---
+                "A4": { 
+                    text: "L'absence de filtrage expose l'agenda du cabinet aux profils suivants : <span class='bad-tag'>chroniqueur</span><span class='bad-tag'>profil sans levier</span><span class='bad-tag'>dossier rouge</span>. Le cabinet comprend-il l'impact de cette dégradation ?", 
+                    options: [{ text: "[ Validé, la quantité prime ]", next: "A5" }] 
+                },
+                "A5": { 
+                    text: "Le cabinet renonce-t-il à un positionnement d'expert en ingénierie patrimoniale au profit d'une approche plus accessible et tarifairement orientée masse ?", 
+                    options: [{ text: "[ Confirmé, priorité au prix ]", next: "A8" }] 
+                },
+                "A8": { 
+                    text: "Les dossiers seront à faible complexité et à prix d'entrée réduit pour soutenir un volume élevé", 
+                    options: [{ text: "[ Accepté, prix d'entrées secondaire ]", next: "A10" }] 
+                },
+                "A10": { 
+                    text: "Le cabinet confirme-t-il la prise en charge interne des absences et des relances ?", 
+                    options: [{ text: "[ Confirmé, temps disponible pour gestion manuelle ]", next: "A13" }] 
+                },
+                "A13": { 
+                    text: "La méthode proposée renoncera à la sélectivité et à l'image de marque afin de garantir un coût d'acquisition minimal.", 
+                    options: [{ text: "[ Je confirme ce renoncement ]", next: "RESULT_A" }] 
+                },
+
+                // --- BRANCHE EXPERTISE (Branche B) ---
+                "B4": { 
+                    text: "L'infrastructure doit-elle valoriser votre spécialisation et votre niveau d'expertise ?", 
+                    options: [{ text: "[ Confirmé, priorité expertise ]", next: "B10" }] 
+                },
+                "B10": { 
+                    text: "Le cabinet valide-t-il la délégation de la prise de rendez-vous, des relances et de la replanification pour préserver sa charge mentale ?", 
+                    options: [{ text: "[ Validé, protection du temps ]", next: "B13" }] 
+                },
+                "B13": { 
+                    text: "Le cabinet confirme-t-il une prospection discrétionnaire pour préserver son image de marque ?", 
+                    options: [{ text: "[ Je valide une approche orientée prestige. ]", next: "RESULT_B" }] 
+                }
+            },
+
+            results: {
+                "RESULT_A": { 
+                    tag: "FICHE DE CONTACT - FLUX STANDARD", 
+                    diag: "Infrastructure artisanale détectée. Modèle adapté aux structures privilégiant la quantité brute au standing de conseil.", 
+                    cta: "M'orienter vers cette solution",
+                    style: "degraded" 
+                },
+                "RESULT_B": { 
+                    tag: "MONTIS SILENT : PROTOCOLE VALIDÉ", 
+                    diag: "Haute précision validée. Le cabinet est éligible à l'infrastructure de conciergerie déléguée.", 
+                    cta: "Personnaliser mon infrastructure",
+                    style: "premium"
+                }
+            }
+        };
+
+        let stepCount = 0;
+
+        function startAudit() {
+            stepCount = 1;
+            updateProgress();
+            render("Q1");
+        }
+
+        function render(id) {
+            const app = document.getElementById('app');
+            app.classList.remove('fade-slide');
+            void app.offsetWidth;
+            app.classList.add('fade-slide');
+
+            if(id.startsWith('RESULT')) return showVerdict(id);
+
+            const data = auditData.questions[id];
+            app.innerHTML = `
+                <div class="card fade-slide">
+                    <span class="question-id">AUDIT_REF: ${id}</span>
+                    <h2>${data.text}</h2>
+                    <div class="options">
+                        ${data.options.map(o => `<button class="option" onclick="nextStep('${o.next}')">${o.text}</button>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function nextStep(nextId) {
+            stepCount++;
+            updateProgress();
+            render(nextId);
+        }
+
+        function updateProgress() {
+            const container = document.getElementById('progress');
+            if(container.children.length === 0) {
+                for(let i=0; i<10; i++) container.innerHTML += '<div class="step-segment"></div>';
+            }
+            const segments = document.querySelectorAll('.step-segment');
+            if(segments[stepCount-1]) segments[stepCount-1].classList.add('active');
+        }
+
+        function showVerdict(type) {
+            const app = document.getElementById('app');
+            app.classList.remove('fade-slide');
+            void app.offsetWidth;
+            app.classList.add('fade-slide');
+
+            const res = auditData.results[type];
+            app.innerHTML = `
+                <div class="card fade-slide">
+                    <p class="result-label">VERDICT ARCHITECTE</p>
+                    <h2 class="verdict">${res.tag}</h2>
+                    <div class="diagnostic-text">${res.diag}</div>
+                    <div class="options">
+                        <button class="btn-primary" onclick="nextSlide()">${res.cta}</button>
+                        <button class="btn-secondary" onclick="location.reload()">RÉINITIALISER LE PROTOCOLE</button>
+                    </div>
+                </div>
+            `;
+        }
+function nextSlide() {
+    // On quitte la logique Canva pour passer à la navigation par dossiers GitHub
+    // Le "../" permet de sortir du dossier actuel pour entrer dans le suivant
+    window.location.href = "../03-questionnaire/";
+}
+
+        window.onload = () => {
+            updateProgress();
+        };
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d3d10bab0ab854a',t:'MTc3MjA4Mzk4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
