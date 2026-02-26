@@ -31,12 +31,11 @@
 
     :root {
       --bg: #000000;
-      --card: #000000; /* Fond noir pour fondre */
+      --card: #000000;
       --border: #333333;
-      --accent: #0070f3; /* Bleu conservé pour l'interaction */
+      --accent: #0070f3; /* TON BLEU DE MARQUE */
       --text-main: #ffffff;
       --text-dim: #888888;
-      --success: #00FF41; /* Gardé pour le positif uniquement */
       --error: #FF4D4D;
     }
 
@@ -55,7 +54,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 60px;
       background: var(--card);
-      /* Suppression de la bordure et du fond gris pour un look plus épuré */
       padding: 20px; 
       max-width: 1200px;
       width: 95%;
@@ -119,12 +117,12 @@
     }
 
     .segment-btn.active {
-      border-color: var(--accent); /* Bleu seulement ici */
-      background: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent); /* Fond BLEU actif */
       color: #fff;
     }
 
-    /* Range Sliders minimalistes */
+    /* Range Sliders avec Accent Bleu */
     input[type="range"] {
       -webkit-appearance: none;
       width: 100%;
@@ -138,18 +136,17 @@
       -webkit-appearance: none;
       width: 16px;
       height: 16px;
-      background: #fff; /* Thumb blanc */
+      background: var(--accent); /* Puce BLEUE */
       border-radius: 50%;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-      margin-top: -7px; /* Centrer sur la ligne */
+      box-shadow: 0 0 15px rgba(0, 112, 243, 0.4); /* Glow Bleu */
+      margin-top: -7px;
     }
     
-    /* Fix pour Firefox */
     input[type="range"]::-moz-range-thumb {
       width: 16px;
       height: 16px;
-      background: #fff;
+      background: var(--accent); /* Puce BLEUE */
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -185,7 +182,7 @@
     }
 
     .roi-display {
-      background: transparent; /* Plus de fond vert/bleu */
+      background: transparent;
       border: 1px solid var(--border);
       padding: 40px;
       border-radius: 8px;
@@ -205,9 +202,10 @@
     #roi-value {
       font-size: 4.5rem;
       font-weight: 700;
-      color: #ffffff; /* Texte blanc pur */
+      color: var(--accent); /* RESULTAT EN BLEU */
       letter-spacing: -2px;
       line-height: 1;
+      text-shadow: 0 0 30px rgba(0, 112, 243, 0.2);
     }
 
     .metric-card {
@@ -248,7 +246,7 @@
     .progress-fill {
       width: 100%;
       height: 100%;
-      background: #fff; /* Barre blanche */
+      background: var(--accent); /* Barre BLEUE */
     }
 
     .progress-text {
@@ -268,8 +266,8 @@
     }
 
     .next-step-btn {
-      background: #ffffff; /* Fond blanc */
-      color: #000000; /* Texte noir */
+      background: var(--accent); /* Bouton BLEU */
+      color: #ffffff;
       border: none;
       padding: 16px 40px;
       font-size: 0.9rem;
@@ -279,11 +277,13 @@
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 112, 243, 0.3);
     }
 
     .next-step-btn:hover {
-      background: #ccc;
+      background: #0060df;
       transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 112, 243, 0.5);
     }
 
     .footer-disclaimer {
@@ -315,7 +315,7 @@
  </head>
  <body>
 
-  <div class="header-title">Choisissez votre configuration</div>
+  <div class="header-title">Évaluez vos résultats</div>
 
   <div class="simulator-container">
    <div class="config-section">
@@ -333,7 +333,9 @@
      <label>Collecte Moyenne par dossier (€)</label> <input type="number" id="input-collecte" value="150000" oninput="calculate()">
     </div>
     
-    <div style="height: 20px;"></div> <h2>Variables Cabinet</h2>
+    <div style="height: 20px;"></div>
+
+    <h2>Variables Cabinet</h2>
     <div class="input-group">
      <label>Taux Upfront (Frais d'entrée) <span id="val-upfront">2.5%</span></label> <input type="range" id="input-upfront" min="0" max="5" step="0.1" value="2.5" oninput="calculate()">
     </div>
@@ -416,8 +418,9 @@
       
       const roiEl = document.getElementById('roi-value');
       roiEl.innerText = fmt.format(roi);
-      // On garde le blanc pour le texte, sauf si négatif (rouge)
-      roiEl.style.color = roi < 0 ? "var(--error)" : "#ffffff";
+      
+      // On applique le BLEU (var(--accent)) au résultat, sauf si négatif
+      roiEl.style.color = roi < 0 ? "var(--error)" : "var(--accent)";
 
       document.getElementById('res-encours').innerText = fmt.format(encours);
       document.getElementById('res-rente').innerText = fmt.format(rente);
