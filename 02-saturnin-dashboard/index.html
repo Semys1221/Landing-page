@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="fr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saturnin Dashboard — Infrastructure</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        :root {
+            --bg: #000000;
+            --card-bg: #050505;
+            --border: #222222;
+            --accent: #0070f3;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --font-display: 'Inter', 'Geist', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-display);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            font-size: 1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .status-pill {
+            font-size: 0.7rem;
+            border: 1px solid var(--border);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: var(--text-dim);
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* Card Base */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .card-header {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        /* Main Section: Montis Silent */
+        .main-config {
+            grid-row: span 2;
+            border-color: #333;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+        }
+
+        .main-config h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+            letter-spacing: -1px;
+        }
+
+        .main-config .highlight { 
+            color: var(--accent); 
+        }
+
+        .main-config p {
+            color: var(--text-dim);
+            max-width: 300px;
+            margin: 15px auto;
+        }
+
+        .btn-cta {
+            background: var(--text-main);
+            color: var(--bg);
+            border: none;
+            padding: 16px 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 2px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.2s;
+            align-self: center;
+        }
+
+        .btn-cta:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Developer / English Sections */
+        .dev-metric {
+            font-family: monospace;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .terminal-text {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* Minimalist Illustrations (SVG) */
+        .illustration {
+            margin-top: auto;
+            stroke: #333;
+            stroke-width: 1;
+            fill: none;
+        }
+
+        .active-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+
+            .main-config {
+                grid-row: span 1;
+            }
+
+            .main-config h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <header>
+   <div class="brand-logo" id="dashboardTitle">
+    Saturnin Gestion
+   </div>
+   <div class="status-pill" id="statusPill">
+    Infrastructure: Operational
+   </div>
+  </header>
+  <div class="dashboard-grid">
+   <div class="card main-config">
+    <div class="card-header">
+     Primary Protocol
+    </div>
+    <h2><span class="highlight" id="protocolWord">MONTIS</span> <span id="protocolName">SILENT</span></h2>
+    <p id="protocolDescription">Configuration du système d'acquisition confidentiel.</p><button class="btn-cta" id="ctaButton">Configurer</button>
+    <svg class="illustration" width="60" height="60" viewbox="0 0 100 100" style="margin-top: 40px; opacity: 0.3;">
+     <path d="M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z" />
+    </svg>
+   </div>
+   <div class="card">
+    <div class="card-header">
+     Endpoint status
+    </div>
+    <div class="dev-metric" id="endpointStatus">
+     200 OK
+    </div>
+    <div class="terminal-text" style="margin-top: 10px;">
+     &gt; Fetching lead_data...<br>
+      &gt; Latency: 14ms<br>
+      &gt; Protocol: HTTPS/3
+    </div>
+   </div>
+   <div class="card">
+    <div class="card-header">
+     System Logs
+    </div>
+    <div class="terminal-text">
+     <span class="active-dot"></span> Deployment successful<br><span style="color: #444;">[18:42:01] Auth_Token validated</span><br><span style="color: #444;">[18:42:05] Module_Horizon synced</span>
+    </div>
+    <svg class="illustration" width="100%" height="40" style="margin-top: 20px;">
+     <path d="M0 30 Q 20 10, 40 25 T 80 15 T 120 30" stroke="#222" />
+    </svg>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            dashboard_title: "Saturnin Gestion",
+            status_text: "Infrastructure: Operational",
+            protocol_name: "MONTIS SILENT",
+            protocol_description: "Configuration du système d'acquisition confidentiel.",
+            button_text: "Choisir la méthode",
+            endpoint_status: "200 OK"
+        };
+
+        let config = { ...defaultConfig };
+
+        const elementHandler = {
+            defaultConfig,
+            onConfigChange: async (newConfig) => {
+                config = newConfig;
+                
+                document.getElementById('dashboardTitle').textContent = config.dashboard_title || defaultConfig.dashboard_title;
+                document.getElementById('statusPill').textContent = config.status_text || defaultConfig.status_text;
+                
+                const protocolParts = (config.protocol_name || defaultConfig.protocol_name).split(' ');
+                document.getElementById('protocolWord').textContent = protocolParts[0] || 'MONTIS';
+                document.getElementById('protocolName').textContent = protocolParts.slice(1).join(' ') || 'SILENT';
+                
+                document.getElementById('protocolDescription').textContent = config.protocol_description || defaultConfig.protocol_description;
+                document.getElementById('ctaButton').textContent = config.button_text || defaultConfig.button_text;
+                document.getElementById('endpointStatus').textContent = config.endpoint_status || defaultConfig.endpoint_status;
+            },
+            mapToCapabilities: (config) => ({
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            }),
+            mapToEditPanelValues: (config) => new Map([
+                ["dashboard_title", config.dashboard_title || defaultConfig.dashboard_title],
+                ["status_text", config.status_text || defaultConfig.status_text],
+                ["protocol_name", config.protocol_name || defaultConfig.protocol_name],
+                ["protocol_description", config.protocol_description || defaultConfig.protocol_description],
+                ["button_text", config.button_text || defaultConfig.button_text],
+                ["endpoint_status", config.endpoint_status || defaultConfig.endpoint_status]
+            ])
+        };
+
+        if (window.elementSdk) {
+            window.elementSdk.init(elementHandler);
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d3d0506417c038b',t:'MTc3MjA4MzUwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
