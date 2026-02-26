@@ -142,41 +142,36 @@
             line-height: 1.6;
         }
 
-        /* --- Section Signature Identité --- */
+        /* --- STYLE DES INFOS AJOUTÉES (Goscale, Visalign, etc) --- */
         .identity-signature {
-            margin-bottom: 35px;
+            margin: 10px auto 30px auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            opacity: 0.9;
+            gap: 5px;
         }
 
         .identity-company {
-            font-size: 0.85rem;
-            font-weight: 800;
+            font-size: 0.9rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 2px;
             color: var(--text-main);
         }
 
         .identity-projects {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-size: 0.75rem;
             color: var(--text-dim);
-            display: flex;
-            justify-content: center;
-            gap: 15px;
+            letter-spacing: 1px;
         }
 
         .identity-owner {
-            font-size: 0.75rem;
-            color: #444;
-            font-style: italic;
-            margin-top: 5px;
+            font-size: 0.8rem;
+            color: var(--accent); /* Ton bleu pour Evan Nanguy */
+            font-weight: 500;
+            margin-top: 2px;
         }
 
-        /* --- Bouton & Footer --- */
+        /* --- BOUTON CTA --- */
         .cta-button {
             background-color: var(--text-main);
             color: var(--bg);
@@ -221,12 +216,12 @@
             .schema { flex-wrap: wrap; gap: 20px; }
             .line { display: none; }
             .node { flex: 0 1 calc(33.333% - 15px); }
-            .identity-projects { flex-direction: column; gap: 5px; }
         }
     </style>
  </head>
  <body>
   <div class="content-wrapper">
+   
    <div class="hero-section">
     <span class="brand-tag">Protocole</span>
     <h1>Montis Silent</h1>
@@ -258,11 +253,7 @@
    
    <div class="identity-signature">
        <div class="identity-company">Goscale France</div>
-       <div class="identity-projects">
-           <span>Visalign V2</span>
-           <span>•</span>
-           <span>Montis Media</span>
-       </div>
+       <div class="identity-projects">Visalign V2 — Montis Media</div>
        <div class="identity-owner">Evan Nanguy</div>
    </div>
    
