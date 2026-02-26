@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="fr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Votre Privilège — Saturnin Gestion</title>
+  
+  <link rel="icon" type="image/png" href="../favicon.png">
+  
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #000000;
+            --card: #050505;
+            --border: #222222;
+            --accent: #0070f3;
+            --text: #ffffff;
+            --text-dim: #888888;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .gift-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .brand-header {
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 60px;
+            animation: fadeIn 1.2s ease-out 0.2s both;
+        }
+
+        /* Illustration du paquet cadeau en Line Art */
+        .gift-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 40px;
+            position: relative;
+            animation: fadeIn 1.2s ease-out 0.4s both;
+        }
+
+        .gift-icon svg {
+            stroke: var(--accent);
+            fill: none;
+            stroke-width: 1.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 3s forwards ease-in-out 0.6s;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            margin-bottom: 24px;
+            line-height: 1.3;
+            animation: fadeIn 1.2s ease-out 0.8s both;
+        }
+
+        .message {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-dim);
+            margin-bottom: 48px;
+            animation: fadeIn 1.2s ease-out 1s both;
+        }
+
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 112, 243, 0.05);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+            animation: fadeIn 1.2s ease-out 1.2s both;
+        }
+
+        .location-badge:hover {
+            background: rgba(0, 112, 243, 0.1);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .location-badge svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--accent);
+            flex-shrink: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .footer-note {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: #333;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: fadeIn 1.2s ease-out 1.4s both;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .gift-container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .message {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            .brand-header {
+                margin-bottom: 40px;
+            }
+
+            .gift-icon {
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="gift-container">
+   <div class="brand-header">
+    Expédition Confidentielle
+   </div>
+   <div class="gift-icon">
+    <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+     <path d="M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+    </svg>
+   </div>
+   <h1>Une attention particulière vous attend.</h1>
+   
+   <p class="message">Nous avons le plaisir de vous informer qu'un présent exclusif a été expédié à votre intention. Il sera livré sous <strong>5-6 jours</strong> à l'adresse de votre cabinet, telle que validée lors de notre premier échange stratégique.</p>
+   
+   <div class="location-badge">
+    <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /> <circle cx="12" cy="10" r="3"></circle>
+    </svg> 13 rue de Metz, 31000 Toulouse
+   </div>
+  </div>
+  <div class="footer-note">
+   MONTIS MEDIA — TOUS DROITS RÉSERVÉS
+  </div>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d3d49e625730dad',t:'MTc3MjA4NjMyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
