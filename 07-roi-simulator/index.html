@@ -3,246 +3,457 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Offres Montis Silent — Saturnin Gestion</title>
+  <title>Saturnin Gestion</title>
   
   <link rel="icon" type="image/png" href="../favicon.png">
   
   <style>
-        :root {
-            --bg: #000000;
-            --card-bg: #050505;
-            --border: #222222;
-            --accent: #0070f3;
-            --text-main: #ffffff;
-            --text-dim: #888888;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-        }
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #000000;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    :root {
+      --bg: #000000;
+      --card: #000000; /* Fond noir pour fondre */
+      --border: #333333;
+      --accent: #0070f3; /* Bleu conservé pour l'interaction */
+      --text-main: #ffffff;
+      --text-dim: #888888;
+      --success: #00FF41; /* Gardé pour le positif uniquement */
+      --error: #FF4D4D;
+    }
 
-        .header-title {
-            font-size: 0.85rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            margin-bottom: 50px;
-            font-weight: 600;
-        }
+    .header-title {
+        text-align: center;
+        margin-bottom: 40px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        font-size: 0.9rem;
+        color: var(--text-dim);
+        font-weight: 600;
+    }
 
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            width: 100%;
-            max-width: 900px;
-        }
+    .simulator-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      background: var(--card);
+      /* Suppression de la bordure et du fond gris pour un look plus épuré */
+      padding: 20px; 
+      max-width: 1200px;
+      width: 95%;
+      margin: 0 auto;
+    }
 
-        .price-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
+    .config-section h2, .results-section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 15px;
+    }
 
-        /* Style spécifique pour la carte recommandée (Gauche) */
-        .price-card.recommended {
-            border-color: var(--accent); /* Bordure bleue */
-            box-shadow: 0 0 30px rgba(0, 112, 243, 0.05);
-        }
+    .input-group {
+      margin-bottom: 35px;
+    }
 
-        .badge {
-            position: absolute;
-            top: -14px;
-            left: 30px; /* Aligné à gauche comme sur le screen */
-            background: var(--accent);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+    .input-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      margin-bottom: 15px;
+      letter-spacing: 0.5px;
+    }
 
-        .card-header {
-            margin-bottom: 30px;
-        }
+    .input-group label span {
+      color: var(--text-main);
+      font-weight: 600;
+    }
 
-        .offer-name {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--text-main);
-        }
+    /* Boutons Segments */
+    .segment-selector {
+      display: flex;
+      gap: 15px;
+    }
 
-        .price-wrapper {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
+    .segment-btn {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-        .price-amount {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
+    .segment-btn:hover {
+      border-color: var(--text-main);
+      color: var(--text-main);
+    }
 
-        .price-unit {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            font-weight: 400;
-        }
+    .segment-btn.active {
+      border-color: var(--accent); /* Bleu seulement ici */
+      background: var(--accent);
+      color: #fff;
+    }
 
-        .features-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 40px 0;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+    /* Range Sliders minimalistes */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: var(--border);
+      height: 2px;
+      border-radius: 0px;
+      outline: none;
+    }
 
-        .features-list li {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #fff; /* Thumb blanc */
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      margin-top: -7px; /* Centrer sur la ligne */
+    }
+    
+    /* Fix pour Firefox */
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    input[type="range"]::-webkit-slider-runnable-track {
+        height: 2px;
+        background: var(--border);
+    }
 
-        /* Flèche bleue pour les listes */
-        .arrow-icon {
-            color: var(--accent);
-            font-size: 1rem;
-            line-height: 1;
-        }
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: border-color 0.3s;
+    }
 
-        .highlight-text {
-            color: var(--text-main);
-            font-weight: 500;
-        }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
 
-        .blue-text {
-            color: var(--accent);
-            font-weight: 700;
-        }
+    /* Section Résultats */
+    .results-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-        /* Boutons */
-        .btn {
-            width: 100%;
-            padding: 18px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
+    .roi-display {
+      background: transparent; /* Plus de fond vert/bleu */
+      border: 1px solid var(--border);
+      padding: 40px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-        .btn-primary {
-            background: white;
-            color: black;
-            border: none;
-        }
+    .roi-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
 
-        .btn-primary:hover {
-            background: #e0e0e0;
-        }
+    #roi-value {
+      font-size: 4.5rem;
+      font-weight: 700;
+      color: #ffffff; /* Texte blanc pur */
+      letter-spacing: -2px;
+      line-height: 1;
+    }
 
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 1px solid var(--border);
-        }
+    .metric-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
 
-        .btn-secondary:hover {
-            border-color: var(--text-main);
-        }
+    .metric-card span {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-        @media (max-width: 850px) {
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .price-card {
-                padding: 30px;
-            }
-        }
-    </style>
+    .res-value-small {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    /* Barre de progression */
+    .progress-container {
+      margin-top: 30px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 0;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      width: 100%;
+      height: 100%;
+      background: #fff; /* Barre blanche */
+    }
+
+    .progress-text {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: right;
+    }
+
+    /* Bouton Next */
+    .next-step-container {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .next-step-btn {
+      background: #ffffff; /* Fond blanc */
+      color: #000000; /* Texte noir */
+      border: none;
+      padding: 16px 40px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .next-step-btn:hover {
+      background: #ccc;
+      transform: translateY(-2px);
+    }
+
+    .footer-disclaimer {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 0.65rem;
+      color: #444;
+      margin-top: 30px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 850px) {
+      .simulator-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 10px;
+      }
+
+      #roi-value {
+        font-size: 3rem;
+      }
+    }
+  </style>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <style>body { box-sizing: border-box; }</style>
   <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body>
 
-  <div class="container">
-      <div class="header-title">Choisissez votre configuration</div>
+  <div class="header-title">Choisissez votre configuration</div>
 
-      <div class="pricing-grid">
-          
-          <div class="price-card recommended">
-              <div class="badge">Recommandé</div>
-              
-              <div class="card-header">
-                  <h2 class="offer-name">Montis Silent (Performance)</h2>
-                  <div class="price-wrapper">
-                      <span class="price-amount">89€</span>
-                      <span class="price-unit">/ RDV</span>
-                  </div>
-              </div>
+  <div class="simulator-container">
+   <div class="config-section">
+    <h2>Configuration Infrastructure</h2>
+    <div class="input-group">
+     <label>Segment de Marché Cible</label>
+     <div class="segment-selector">
+      <button class="segment-btn" id="btn-bnc" onclick="toggleSegment('BNC')">BNC (PER, Madelin)</button> <button class="segment-btn active" id="btn-bic" onclick="toggleSegment('BIC')">BIC (Tréso, Dutreil)</button>
+     </div>
+    </div>
+    <div class="input-group">
+     <label>Volume Infrastructure (90J) <span id="val-rdv">30 RDV</span></label> <input type="range" id="input-rdv" min="15" max="45" value="30" oninput="calculate()">
+    </div>
+    <div class="input-group">
+     <label>Collecte Moyenne par dossier (€)</label> <input type="number" id="input-collecte" value="150000" oninput="calculate()">
+    </div>
+    
+    <div style="height: 20px;"></div> <h2>Variables Cabinet</h2>
+    <div class="input-group">
+     <label>Taux Upfront (Frais d'entrée) <span id="val-upfront">2.5%</span></label> <input type="range" id="input-upfront" min="0" max="5" step="0.1" value="2.5" oninput="calculate()">
+    </div>
+    <div class="input-group">
+     <label>Taux de Closing (Transformation) <span id="val-closing">20%</span></label> <input type="range" id="input-closing" min="0" max="100" value="20" oninput="calculate()">
+    </div>
+    <div class="input-group">
+     <label>Rémunération sur Encours (Annuelle) <span id="val-encours-rate">0.7%</span></label> <input type="range" id="input-encours-rate" min="0" max="1.5" step="0.1" value="0.7" oninput="calculate()">
+    </div>
+   </div>
+   
+   <div class="results-section">
+    <h2>Verdict Économique</h2>
+    <div class="roi-display">
+     <div class="roi-label">
+      COMMISSIONS – PRIX D'ENTRÉE ESTIMÉES (90J)
+     </div>
+     <div id="roi-value">
+      0€
+     </div>
+    </div>
+    <div class="metric-card">
+     <span>Valorisation de l'Encours</span>
+     <div id="res-encours" class="res-value-small">
+      0€
+     </div>
+    </div>
+    <div class="metric-card">
+     <span>Rente Annuelle Générée</span>
+     <div id="res-rente" class="res-value-small">
+      0€
+     </div>
+    </div>
+    <div class="input-group" style="margin-top: 20px;">
+     <div class="progress-bar">
+      <div class="progress-fill"></div>
+     </div>
+     <div class="progress-text">
+      Cycle d'activation 90 jours validé
+     </div>
+    </div>
+   </div>
+   
+   <div class="next-step-container"><button class="next-step-btn" id="btn-next" onclick="handleNextStep()"> VALIDER LA STRATÉGIE ➔ </button>
+   </div>
+   <div class="footer-disclaimer">
+    ESTIMATION BASÉE SUR UN CYCLE D'INGÉNIERIE PATRIMONIALE COMPLET.
+   </div>
+  </div>
+  
+  <script>
+    let activeSegments = ['BIC'];
 
-              <ul class="features-list">
-                  <li><span class="arrow-icon">→</span> <span class="highlight-text">Objectif : 20-25 RDV qualifiés</span></li>
-                  <li><span class="arrow-icon">→</span> <span class="highlight-text">Période : 90 jours</span></li>
-                  <li><span class="arrow-icon">→</span> Module Horizon</li>
-                  <li><span class="arrow-icon">→</span> Module Veto</li>
-                  <li><span class="arrow-icon">→</span> Module Sync</li>
-                  <li><span class="arrow-icon">→</span> <span class="blue-text">Frais d'activation : 500€</span></li>
-              </ul>
+    function calculate() {
+      const rdv = parseInt(document.getElementById('input-rdv').value);
+      const collecte = parseFloat(document.getElementById('input-collecte').value) || 0;
+      const upfront = parseFloat(document.getElementById('input-upfront').value) / 100;
+      const closing = parseFloat(document.getElementById('input-closing').value) / 100;
+      const encoursRate = parseFloat(document.getElementById('input-encours-rate').value) / 100;
 
-              <button class="btn btn-primary" onclick="selectOffer('performance')">Activer la performance</button>
-          </div>
+      // Mise à jour des labels visuels
+      document.getElementById('val-rdv').innerText = rdv + " RDV";
+      document.getElementById('val-upfront').innerText = (upfront * 100).toFixed(1) + "%";
+      document.getElementById('val-closing').innerText = Math.round(closing * 100) + "%";
+      document.getElementById('val-encours-rate').innerText = (encoursRate * 100).toFixed(1) + "%";
 
-          <div class="price-card">
-              <div class="card-header">
-                  <h2 class="offer-name">Montis Silent (Forfait)</h2>
-                  <div class="price-wrapper">
-                      <span class="price-amount">1 589€</span>
-                      <span class="price-unit">/ mois</span>
-                  </div>
-              </div>
+      const nbDossiers = rdv * closing;
+      
+      // LOGIQUE CA BRUT
+      const caImmediat = nbDossiers * (collecte * upfront);
 
-              <ul class="features-list">
-                  <li><span class="arrow-icon">→</span> <span class="highlight-text">Flux continu illimité</span></li>
-                  <li><span class="arrow-icon">→</span> Module Horizon</li>
-                  <li><span class="arrow-icon">→</span> Module Veto</li>
-                  <li><span class="arrow-icon">→</span> Module Sync</li>
-                  <li><span class
+      const valorisationEncours = nbDossiers * collecte;
+      const renteAnnuelle = valorisationEncours * encoursRate;
+
+      updateDisplay(caImmediat, valorisationEncours, renteAnnuelle);
+    }
+
+    function updateDisplay(roi, encours, rente) {
+      const fmt = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+      
+      const roiEl = document.getElementById('roi-value');
+      roiEl.innerText = fmt.format(roi);
+      // On garde le blanc pour le texte, sauf si négatif (rouge)
+      roiEl.style.color = roi < 0 ? "var(--error)" : "#ffffff";
+
+      document.getElementById('res-encours').innerText = fmt.format(encours);
+      document.getElementById('res-rente').innerText = fmt.format(rente);
+    }
+
+    function toggleSegment(seg) {
+      const index = activeSegments.indexOf(seg);
+      if (index > -1) { 
+        if (activeSegments.length > 1) activeSegments.splice(index, 1); 
+      } else { 
+        activeSegments.push(seg); 
+      }
+      
+      document.getElementById('btn-bnc').classList.toggle('active', activeSegments.includes('BNC'));
+      document.getElementById('btn-bic').classList.toggle('active', activeSegments.includes('BIC'));
+
+      const inputCollecte = document.getElementById('input-collecte');
+      if (activeSegments.includes('BNC') && activeSegments.includes('BIC')) inputCollecte.value = 115000;
+      else if (activeSegments.includes('BIC')) inputCollecte.value = 150000;
+      else inputCollecte.value = 80000;
+      
+      calculate();
+    }
+
+    window.onload = calculate;
+
+    function handleNextStep() {
+      // Animation de succès au clic
+      const btn = document.getElementById('btn-next');
+      btn.innerText = "TRANSITION EN COURS...";
+      
+      // REDIRECTION VERS L'ÉTAPE SUIVANTE
+      setTimeout(() => {
+        window.location.href = "../08-delivery-roadmap/";
+      }, 800);
+    }
+  </script>
+ </body>
+</html>
