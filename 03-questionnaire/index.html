@@ -220,40 +220,32 @@
                     ]
                 },
 
-                // --- BRANCHE DÉCLASSEMENT (Branche A) ---
+                // --- BRANCHE A (DÉCLASSEMENT) ---
                 "A4": { 
-                    text: "L'absence de filtrage expose l'agenda du cabinet aux profils suivants : <span class='bad-tag'>chroniqueur</span><span class='bad-tag'>profil sans levier</span><span class='bad-tag'>dossier rouge</span>. Le cabinet comprend-il l'impact de cette dégradation ?", 
-                    options: [{ text: "[ Validé, la quantité prime ]", next: "A5" }] 
+                    text: "Êtes-vous prêt à bloquer 4 heures par jour pour appeler des gens qui n'ont pas demandé à vous parler spécifiquement ?", 
+                    options: [{ text: "[ Je valide l'investissement temps ]", next: "A5" }] 
                 },
                 "A5": { 
-                    text: "Le cabinet renonce-t-il à un positionnement d'expert en ingénierie patrimoniale au profit d'une approche plus accessible et tarifairement orientée masse ?", 
-                    options: [{ text: "[ Confirmé, priorité au prix ]", next: "A8" }] 
+                    text: "Acceptez-vous de commencer chaque conversation en devant prouver que vous n'êtes pas un énième spammeur téléphonique ?", 
+                    options: [{ text: "[ J'accepte cette friction ]", next: "A6" }] 
                 },
-                "A8": { 
-                    text: "Les dossiers seront à faible complexité et à prix d'entrée réduit pour soutenir un volume élevé", 
-                    options: [{ text: "[ Accepté, prix d'entrées secondaire ]", next: "A10" }] 
-                },
-                "A10": { 
-                    text: "Le cabinet confirme-t-il la prise en charge interne des absences et des relances ?", 
-                    options: [{ text: "[ Confirmé, temps disponible pour gestion manuelle ]", next: "A13" }] 
-                },
-                "A13": { 
-                    text: "La méthode proposée renoncera à la sélectivité et à l'image de marque afin de garantir un coût d'acquisition minimal.", 
-                    options: [{ text: "[ Je confirme ce renoncement ]", next: "RESULT_A" }] 
+                "A6": { 
+                    text: "Acceptez-vous de payer une méthode pour devoir tout de même investir votre propre temps à faire de la téléprospecton ?", 
+                    options: [{ text: "[ Je confirme ce fonctionnement ]", next: "RESULT_A" }] 
                 },
 
-                // --- BRANCHE EXPERTISE (Branche B) ---
+                // --- BRANCHE B (EXPERTISE) ---
                 "B4": { 
-                    text: "L'infrastructure doit-elle valoriser votre spécialisation et votre niveau d'expertise ?", 
-                    options: [{ text: "[ Confirmé, priorité expertise ]", next: "B10" }] 
+                    text: "Préférez-vous intervenir comme la ‘Solution' attendu qui apporte l’expertise à un problème déjà identifié par le prospect ?", 
+                    options: [{ text: "[ Oui, solution attendue ]", next: "B5" }] 
                 },
-                "B10": { 
-                    text: "Le cabinet valide-t-il la délégation de la prise de rendez-vous, des relances et de la replanification pour préserver sa charge mentale ?", 
-                    options: [{ text: "[ Validé, protection du temps ]", next: "B13" }] 
+                "B5": { 
+                    text: "Souhaitez-vous un système qui travaille pour vous 24h/24, même lorsque vous êtes en rendez-vous ou avec votre famille ?", 
+                    options: [{ text: "[ Validé, continuité de service ]", next: "B6" }] 
                 },
-                "B13": { 
-                    text: "Le cabinet confirme-t-il une prospection discrétionnaire pour préserver son image de marque ?", 
-                    options: [{ text: "[ Je valide une approche orientée prestige. ]", next: "RESULT_B" }] 
+                "B6": { 
+                    text: "Confirmez-vous que votre identité ne doit être révélée qu’après validation d’un intérêt sérieux et de la capacité financière ?", 
+                    options: [{ text: "[ Je valide l'approche prestige ]", next: "RESULT_B" }] 
                 }
             },
 
@@ -335,15 +327,15 @@
                 </div>
             `;
         }
-function nextSlide() {
-    // On quitte la logique Canva pour passer à la navigation par dossiers GitHub
-    // Le "../" permet de sortir du dossier actuel pour entrer dans le suivant
-    window.location.href = "../04-service-info-1/";
-}
+        function nextSlide() {
+            // On quitte la logique Canva pour passer à la navigation par dossiers GitHub
+            // Le "../" permet de sortir du dossier actuel pour entrer dans le suivant
+            window.location.href = "../04-service-info-1/";
+        }
 
         window.onload = () => {
             updateProgress();
         };
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d3d10bab0ab854a',t:'MTc3MjA4Mzk4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
