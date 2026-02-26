@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="fr" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Système Multiplex Silent 2026</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #000;
+      color: #fff;
+    }
+    
+    .animate-in {
+      animation: fade-in 0.7s ease-out;
+    }
+    
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .tab-active {
+      color: white !important;
+      border-color: white !important;
+    }
+    
+    .tab-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .tab-btn:hover {
+      color: #999;
+    }
+    
+    .spec-card {
+      border-color: rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .spec-card:hover {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.02);
+    }
+    
+    input[type="checkbox"] {
+      cursor: pointer;
+    }
+    
+    input[type="text"],
+    textarea {
+      transition: border-color 0.3s ease;
+    }
+    
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: rgba(255,255,255,0.3);
+    }
+    
+    .filter-option {
+      transition: all 0.3s ease;
+    }
+    
+    .filter-option:hover {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.02);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-black text-white antialiased flex flex-col overflow-hidden">
+  <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+   <div class="max-w-6xl mx-auto flex">
+    <button onclick="switchTab('horizon')" id="tab-horizon" class="tab-btn px-8 py-5 text-[10px] font-bold tracking-[0.3em] uppercase transition-all border-b-2 border-transparent text-gray-500 tab-active">Horizon</button> <button onclick="switchTab('veto')" id="tab-veto" class="tab-btn px-8 py-5 text-[10px] font-bold tracking-[0.3em] uppercase transition-all border-b-2 border-transparent text-gray-500">Veto</button> <button onclick="switchTab('sync')" id="tab-sync" class="tab-btn px-8 py-5 text-[10px] font-bold tracking-[0.3em] uppercase transition-all border-b-2 border-transparent text-gray-500">Sync</button>
+   </div>
+  </nav>
+  <main class="flex-1 overflow-auto w-full">
+   <div class="max-w-6xl mx-auto w-full p-8 pb-40">
+    <div id="horizon-module" class="animate-in space-y-24">
+     <h1 class="text-6xl font-bold tracking-tighter italic uppercase">Horizon.</h1>
+     <section class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div class="lg:col-span-8 grid grid-cols-2 gap-8 text-[10px] tracking-widest uppercase font-bold text-gray-500">
+       <div>
+        <div class="flex justify-between mb-4">
+         <p class="text-purple-500 italic">Pool BNC</p><button onclick="selectAll('bnc')" class="underline hover:text-white transition">Tout sélectionner</button>
+        </div>
+        <div id="bnc-list" class="space-y-2"></div>
+       </div>
+       <div>
+        <div class="flex justify-between mb-4">
+         <p class="text-blue-500 italic">Pool BIC</p><button onclick="selectAll('bic')" class="underline hover:text-white transition">Tout sélectionner</button>
+        </div>
+        <div id="bic-list" class="space-y-2"></div>
+       </div>
+      </div>
+      <div class="lg:col-span-4 bg-white/5 border border-white/10 p-8 rounded-sm">
+       <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-4">Volume Projeté (National)</p>
+       <p id="volume-display" class="text-5xl font-bold tracking-tighter">0</p>
+      </div>
+     </section>
+     <section class="space-y-6">
+      <div class="flex justify-between items-center">
+       <h2 class="text-xs font-bold tracking-[0.2em] uppercase text-gray-500">07. Spécialisations</h2><button id="select-all-spec" class="text-[9px] text-blue-400 underline uppercase tracking-widest hover:text-blue-300 transition">Tout sélectionner</button>
+      </div>
+      <div id="specialties-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 italic"></div>
+     </section>
+     <section class="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-white/10 pt-16">
+      <div class="space-y-4">
+       <p class="text-[10px] font-bold text-purple-500 uppercase">BNC</p>
+       <p class="text-2xl font-light italic">"Je gagne beaucoup mais je finance l'état."</p><textarea class="w-full bg-transparent border border-white/10 p-4 text-sm rounded outline-none focus:border-white" placeholder="Votre phrase de stratégie..."></textarea>
+      </div>
+      <div class="space-y-4">
+       <p class="text-[10px] font-bold text-blue-500 uppercase">BIC</p>
+       <p class="text-2xl font-light italic">"Mon entreprise, c'est ma vraie richesse."</p><textarea class="w-full bg-transparent border border-white/10 p-4 text-sm rounded outline-none focus:border-white" placeholder="Votre phrase de stratégie..."></textarea>
+      </div>
+     </section>
+     <section class="space-y-16 border-t border-white/10 pt-16">
+      <div class="max-w-xl mx-auto text-center space-y-4">
+       <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Choix du domaine</p>
+       <div class="flex items-center justify-center gap-2 text-3xl font-bold border-b border-white/20 pb-2">
+        <input type="text" class="bg-transparent outline-none text-right" placeholder="votre-cabinet"><span class="text-gray-600">.fr</span>
+       </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-xs font-light text-gray-400 italic">
+       <div class="p-6 bg-white/5 border border-white/5"><strong>01. Silent Contact :</strong> Approche discrète sans exposition directe.
+       </div>
+       <div class="p-6 bg-white/5 border border-white/5"><strong>02. Landing Page :</strong> Page dédiée alignée sur votre tonalité.
+       </div>
+       <div class="p-6 bg-white/5 border border-white/5"><strong>03. RDV Cabinet :</strong> Rencontre où la promesse est tenue.
+       </div>
+      </div>
+     </section>
+    </div><div id="veto-module" class="hidden animate-in space-y-24">
+     <h1 class="text-6xl font-bold tracking-tighter uppercase text-red-600">Veto.</h1>
+     <section class="bg-red-950/10 border border-red-900/20 p-12 space-y-8">
+      <h2 class="text-xs font-bold tracking-[0.2em] uppercase text-red-500">Filtrage Thématique</h2>
+      <p class="text-2xl font-light italic text-gray-300">Exclusion des activités carte T et IOBSP</p>
+      <div class="flex gap-4">
+       <button onclick="toggleFilter('deactivate')" id="btn-deactivate" class="px-8 py-3 bg-red-600 font-bold text-xs uppercase hover:bg-red-700 transition">Désactiver</button> <button onclick="toggleFilter('maintain')" id="btn-maintain" class="px-8 py-3 bg-white/10 font-bold text-xs uppercase hover:bg-white/20 transition text-gray-500">Maintenir</button>
+      </div>
+     </section>
+     <section class="space-y-8">
+      <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Critères de qualification sélectionnés</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div class="p-4 bg-white/5 border border-white/10 flex items-center gap-4 opacity-70">
+        <input type="checkbox" checked disabled class="accent-red-600"> <span class="text-[10px] uppercase">Levier : Capacité d'épargne ou impôt</span>
+       </div>
+       <div class="p-4 bg-white/5 border border-white/10 flex items-center gap-4 opacity-70">
+        <input type="checkbox" checked disabled class="accent-red-600"> <span class="text-[10px] uppercase">Projet : Intention &lt; 12 mois</span>
+       </div>
+       <div class="p-4 bg-white/5 border border-white/10 flex items-center gap-4 opacity-70">
+        <input type="checkbox" checked disabled class="accent-red-600"> <span class="text-[10px] uppercase">Cible : Profil BIC, BNC, TNS</span>
+       </div>
+       <div class="p-4 bg-white/5 border border-white/10 flex items-center gap-4 opacity-70">
+        <input type="checkbox" checked disabled class="accent-red-600"> <span class="text-[10px] uppercase">Profil décisionnaire</span>
+       </div>
+      </div>
+     </section>
+     <section class="space-y-8 border-t border-white/10 pt-16">
+      <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Sélectionner votre filtre</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 italic">
+       <div onclick="toggleFilterOption('proactive')" id="filter-proactive" class="filter-option p-8 border border-white/10 cursor-pointer hover:border-red-600 transition"><strong>Proactif :</strong> Qualification en amont par Montis Silent.
+       </div>
+       <div onclick="toggleFilterOption('retroactive')" id="filter-retroactive" class="filter-option p-8 border border-white/10 cursor-pointer hover:border-white transition"><strong>Rétroactif :</strong> Qualification durant rendez-vous.
+       </div>
+      </div>
+     </section>
+    </div><div id="sync-module" class="hidden animate-in space-y-16">
+     <h1 class="text-6xl font-bold tracking-tighter uppercase text-center italic">Sync.</h1>
+     <div class="max-w-2xl mx-auto space-y-12">
+      <div class="space-y-4">
+       <label class="text-[10px] text-gray-500 uppercase tracking-widest">Email de Synchronisation</label> <input class="w-full bg-[#0a0a0a] border border-white/10 p-4 rounded outline-none focus:border-white" placeholder="votre.email@cabinet.fr">
+      </div>
+      <div class="space-y-6">
+       <label class="text-[10px] text-gray-500 uppercase tracking-widest text-center block">Délai minimum avant rendez-vous</label>
+       <div class="grid grid-cols-2 gap-4">
+        <button onclick="selectDelay('security')" id="btn-security" class="p-6 border border-white/10 hover:border-white transition text-[10px] font-bold">SÉCURITÉ (24-48h)</button> <button onclick="selectDelay('reactivity')" id="btn-reactivity" class="p-6 border border-white/10 hover:border-white transition text-[10px] font-bold text-blue-500">RÉACTIVITÉ (Jusqu'à 4h)</button>
+       </div>
+      </div>
+      <p class="text-[9px] text-gray-600 uppercase tracking-[0.2em] text-center italic">Les rappels sont automatisés par nos soins et la reprise de RDV en cas d'absence.</p>
+      <div class="flex justify-center mt-12">
+       <button onclick="viewResults()" class="px-12 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition">Voir mes résultats</button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <script>
+  const BNC_POOL = ["Médecin", "Avocat", "Architecte", "Dentiste", "Expert-comptable", "Consultant indépendant", "Coach professionnel", "Psychologue", "Ostéopathe", "Formateur indépendant"];
+  const BIC_POOL = ["Commerçant de détail", "Restaurateur", "Artisan plombier ou électricien", "Coiffeur", "Garagiste", "Hôtelier", "Vendeur e-commerce", "Entreprise du bâtiment", "Loueur meublé professionnel"];
+  
+  let selectedDelay = null;
+  
+  const SPECIALTIES = {
+    BNC: [
+      { id: 'bnc_f', t: 'Fiscalité', d: '« Transformer vos impôts à fonds perdus en une épargne forcée et structurée. »', p: 'PER Individuel' },
+      { id: 'bnc_r', t: 'Revenu', d: '« Sécuriser votre train de vie futur via un système de revenus garantis. »', p: 'Retraite Madelin' },
+      { id: 'bnc_d', t: 'Dépendance', d: '« Bâtir un patrimoine de substitution sans dépendre de la revente du cabinet. »', p: 'Assurance-Vie' }
+    ],
+    BIC: [
+      { id: 'bic_t', t: 'Trésorerie', d: "« Optimiser l'arbitrage rémunération/trésorerie pour financer votre protection avec l'argent du bilan. »", p: 'Contrat IAS / Art. 62' },
+      { id: 'bic_a', t: 'Aléas', d: "« Garantir que l'entreprise survive à votre absence en couvrant immédiatement vos frais fixes. »", p: 'Prévoyance Dirigeant' },
+      { id: 'bic_v', t: 'Transmission', d: "« Anticiper la sortie de votre capital pour ne pas subir la fiscalité le jour de la vente. »", p: 'Pacte Dutreil' }
+    ]
+  };
+
+  function switchTab(tabId) {
+    document.querySelectorAll('[id$="-module"]').forEach(m => m.classList.add('hidden'));
+    document.getElementById(tabId + '-module').classList.remove('hidden');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+    document.getElementById('tab-' + tabId).classList.add('tab-active');
+  }
+
+  function renderLists() {
+    const bncList = document.getElementById('bnc-list');
+    const bicList = document.getElementById('bic-list');
+    
+    bncList.innerHTML = BNC_POOL.map(p => `
+      <label class="flex items-center gap-2 cursor-pointer hover:text-gray-400 transition">
+        <input type="checkbox" onchange="calcVol()" class="bnc-cb accent-purple-500">
+        <span>${p}</span>
+      </label>
+    `).join('');
+    
+    bicList.innerHTML = BIC_POOL.map(p => `
+      <label class="flex items-center gap-2 cursor-pointer hover:text-gray-400 transition">
+        <input type="checkbox" onchange="calcVol()" class="bic-cb accent-blue-500">
+        <span>${p}</span>
+      </label>
+    `).join('');
+    
+    const specGrid = document.getElementById('specialties-grid');
+    const allSpecs = [...SPECIALTIES.BNC, ...SPECIALTIES.BIC];
+    specGrid.innerHTML = allSpecs.map(s => `
+      <div class="p-6 border border-white/10 group cursor-pointer transition spec-card">
+        <div class="flex justify-between items-start mb-2">
+          <p class="font-bold text-sm uppercase">${s.t}</p>
+          <input type="checkbox" class="spec-cb accent-white">
+        </div>
+        <p class="text-xs text-gray-500 mb-2">${s.d}</p>
+        <p class="text-[8px] tracking-widest uppercase text-gray-700">Produit: ${s.p}</p>
+      </div>
+    `).join('');
+  }
+
+  function calcVol() {
+    const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const vol = checked * 8500 * 1.25;
+    document.getElementById('volume-display').innerText = Math.round(vol).toLocaleString();
+  }
+
+  function selectAll(type) {
+    document.querySelectorAll('.' + type + '-cb').forEach(cb => cb.checked = true);
+    calcVol();
+  }
+
+  document.getElementById('select-all-spec').addEventListener('click', () => {
+    document.querySelectorAll('.spec-cb').forEach(cb => cb.checked = true);
+    document.querySelectorAll('.spec-card').forEach(c => c.style.borderColor = 'white');
+  });
+
+  function selectDelay(type) {
+    selectedDelay = type;
+    document.getElementById('btn-security').classList.remove('border-white', 'bg-white/10');
+    document.getElementById('btn-reactivity').classList.remove('border-white', 'bg-white/10');
+    
+    if (type === 'security') {
+      document.getElementById('btn-security').classList.add('border-white', 'bg-white/10');
+    } else {
+      document.getElementById('btn-reactivity').classList.add('border-white', 'bg-white/10');
+    }
+  }
+
+  function viewResults() {
+    // Redirection vers l'étape suivante (ROI Simulator)
+    window.location.href = "../07-roi-simulator/";
+  }
+
+  function toggleFilter(type) {
+    const deactivateBtn = document.getElementById('btn-deactivate');
+    const maintainBtn = document.getElementById('btn-maintain');
+    
+    if (type === 'deactivate') {
+      deactivateBtn.classList.remove('bg-white/10', 'text-gray-500');
+      deactivateBtn.classList.add('bg-red-600');
+      maintainBtn.classList.remove('bg-green-600');
+      maintainBtn.classList.add('bg-white/10', 'text-gray-500');
+    } else {
+      maintainBtn.classList.remove('bg-white/10', 'text-gray-500');
+      maintainBtn.classList.add('bg-green-600');
+      deactivateBtn.classList.remove('bg-red-600');
+      deactivateBtn.classList.add('bg-white/10', 'text-gray-500');
+    }
+  }
+
+  function toggleFilterOption(type) {
+    const proactiveFilter = document.getElementById('filter-proactive');
+    const retroactiveFilter = document.getElementById('filter-retroactive');
+    
+    if (type === 'proactive') {
+      proactiveFilter.classList.add('border-red-600', 'bg-red-600/10');
+      retroactiveFilter.classList.remove('border-white', 'bg-white/10');
+      retroactiveFilter.classList.add('border-white/10', 'bg-transparent');
+    } else {
+      retroactiveFilter.classList.add('border-white', 'bg-white/10');
+      proactiveFilter.classList.remove('border-red-600', 'bg-red-600/10');
+      proactiveFilter.classList.add('border-white/10', 'bg-transparent');
+    }
+  }
+
+  renderLists();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d3d2878c514e2fd',t:'MTc3MjA4NDk1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
