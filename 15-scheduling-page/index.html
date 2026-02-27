@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualification - Montis Media</title>
+    
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+        html, body { height: 100%; width: 100%; margin: 0; padding: 0; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .option-card { border: 1px solid rgba(255, 255, 255, 0.05); background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; cursor: pointer; }
+        .option-card:hover { border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); }
+        .selected { border-color: #3b82f6 !important; background: rgba(59, 130, 246, 0.1) !important; }
+        .hidden { display: none; }
+        input:focus { outline: none; border-color: rgba(59, 130, 246, 0.5) !important; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <header class="w-full py-8 px-12 border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-center items-center">
+            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/90">Montis Media</span>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col items-center justify-center px-6 py-12">
+        
+        <div id="quiz-step" class="w-full max-w-2xl space-y-12 fade-in">
+            <div class="text-center space-y-4">
+                <h1 class="text-2xl font-light tracking-tight text-white uppercase tracking-[0.2em]">Qualification.</h1>
+                <p class="text-sm text-gray-400 font-light italic">3 questions rapides pour préparer notre échange.</p>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">1. Acceptez-vous de déléguer la prise de contact ?</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest" onclick="selectOption(this, 'delegation', 'oui')">Oui</div>
+                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest" onclick="selectOption(this, 'delegation', 'non')">Non</div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">2. Budget mensuel consacré à l'acquisition</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest" onclick="selectOption(this, 'budget', 'low')">- 500€</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest" onclick="selectOption(this, 'budget', 'mid')">500€ - 1000€</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest" onclick="selectOption(this, 'budget', 'high')">1000€+</div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">3. Mandats actuels / Objectif 90 jours</p>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest" onclick="selectOption(this, 'obj', 'done')">Sélectionner pour confirmer</div>
+                </div>
+            </div>
+
+            <button onclick="goToContact()" class="w-full py-4 border border-white/10 hover:bg-white hover:text-black transition-all duration-500 text-[10px] uppercase tracking-[0.4em] mt-8">
+                Continuer
+            </button>
+        </div>
+
+        <div id="contact-step" class="hidden w-full max-w-md space-y-8 fade-in text-center">
+            <div class="space-y-2">
+                <h2 class="text-xl font-light uppercase tracking-widest">Dernière étape</h2>
+                <p class="text-xs text-gray-500 italic">Pour le rappel SMS et la validation du créneau.</p>
+            </div>
+            <div class="space-y-4">
+                <input type="tel" id="user-phone" placeholder="Votre numéro de téléphone" class="w-full bg-white/5 border border-white/10 rounded-sm p-4 text-center text-sm tracking-widest text-white focus:bg-white/10 transition-all">
+                <button onclick="validateFinal()" class="w-full py-4 bg-white text-black text-[10px] font-bold uppercase tracking-[0.4em]">
+                    Vérifier l'éligibilité
+                </button>
+            </div>
+        </div>
+
+        <div id="success-step" class="hidden w-full max-w-4xl text-center space-y-8 fade-in">
+            <h2 class="text-2xl font-light tracking-widest uppercase">Disponibilités.</h2>
+            <div id="calendly-container" class="w-full border border-white/5 bg-white/5" style="min-width:320px;height:700px;">
+            </div>
+        </div>
+
+        <div id="refusal-step" class="hidden w-full max-w-xl text-center space-y-6 fade-in">
+            <h2 class="text-xl font-light text-gray-300">Modèle non compatible.</h2>
+            <p class="text-sm text-gray-500 font-light leading-relaxed italic">
+                Nos stratégies de montée en gamme TMI sont conçues pour des structures prêtes à déléguer avec un budget minimal de 500€/mois. <br><br>
+                <span class="not-italic text-white">Nous ne pourrons pas vous accompagner pour le moment.</span>
+            </p>
+            <a href="/" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1">Retour</a>
+        </div>
+
+    </main>
+
+    <footer class="p-8 border-t border-white/5 w-full">
+        <div class="max-w-6xl mx-auto flex justify-between items-center text-[8px] font-mono uppercase tracking-[0.4em] text-gray-700">
+            <span>Stratégie de Croissance</span> 
+            <span>Montis Media / 2026</span>
+        </div>
+    </footer>
+
+    <script>
+        let responses = { delegation: null, budget: null, obj: null };
+
+        function selectOption(el, category, value) {
+            const siblings = el.parentElement.querySelectorAll('.option-card');
+            siblings.forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+            responses[category] = value;
+        }
+
+        function goToContact() {
+            if (!responses.delegation || !responses.budget || !responses.obj) {
+                alert("Veuillez répondre aux questions pour continuer.");
+                return;
+            }
+            document.getElementById('quiz-step').classList.add('hidden');
+            document.getElementById('contact-step').classList.remove('hidden');
+        }
+
+        function validateFinal() {
+            const phone = document.getElementById('user-phone').value;
+            if (phone.length < 10) {
+                alert("Veuillez saisir un numéro de téléphone valide.");
+                return;
+            }
+
+            document.getElementById('contact-step').classList.add('hidden');
+
+            if (responses.delegation === 'oui' && responses.budget !== 'low') {
+                document.getElementById('success-step').classList.remove('hidden');
+                initCalendly(phone); // On déclenche l'API Calendly
+            } else {
+                document.getElementById('refusal-step').classList.remove('hidden');
+            }
+        }
+
+        function initCalendly(phone) {
+            const container = document.getElementById('calendly-container');
+            container.innerHTML = ''; // Nettoyer par sécurité
+            
+            // Appel propre de l'API Calendly
+            Calendly.initInlineWidget({
+                url: 'https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1',
+                parentElement: container,
+                prefill: {
+                    customAnswers: {
+                        a1: phone // Injecte le numéro dans la 1ère question (custom) du formulaire Calendly
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
