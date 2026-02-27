@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation - Montis Media</title>
+    
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+        
+        html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .fade-in-icon { animation-delay: 0.2s; }
+        .fade-in-title { animation-delay: 0.4s; }
+        .fade-in-subtitle { animation-delay: 0.6s; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .glow-blue {
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));
+        }
+
+        /* Effet de grain subtil pour le côté premium */
+        .bg-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3仿真 %3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.02;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-black relative">
+    <div class="absolute inset-0 bg-grain"></div>
+
+    <header class="w-full py-8 px-12 border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-center items-center">
+            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/90">Montis Media</span>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col items-center justify-center px-6 w-full py-20 relative z-10">
+        <div class="mb-10 glow-blue fade-in fade-in-icon">
+            <div class="w-16 h-16 rounded-full border border-blue-500/30 flex items-center justify-center bg-blue-500/5">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 6L9 17L4 12"></path>
+                </svg>
+            </div>
+        </div>
+
+        <div class="text-center space-y-6 max-w-2xl fade-in fade-in-title">
+            <h1 class="text-3xl md:text-4xl font-light tracking-[0.1em] text-white uppercase">
+                Rendez-vous confirmé.
+            </h1>
+        </div>
+
+        <div class="mt-8 text-center max-w-xl fade-in fade-in-subtitle">
+            <p class="text-sm md:text-base text-gray-400 font-light tracking-widest leading-relaxed">
+                Au plaisir de vous voir pour votre <br class="hidden md:block">
+                <span class="text-blue-500 font-medium italic">présentation produit.</span>
+            </p>
+        </div>
+
+        <div class="mt-16 w-12 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent fade-in" style="animation-delay: 1s;"></div>
+    </main>
+
+    <footer class="p-8 border-t border-white/5 w-full bg-black/50 backdrop-blur-sm relative z-10">
+        <div class="max-w-6xl mx-auto flex justify-between items-center text-[8px] font-mono uppercase tracking-[0.5em] text-gray-700">
+            <span>Protocoles d'Acquisition</span> 
+            <span>Montis Media / 2026</span>
+        </div>
+    </footer>
+
+</body>
+</html>
