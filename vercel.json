@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/14-meeting-confirmed", "destination": "/14-meeting-confirmed/index.html" }
+  ]
+}
