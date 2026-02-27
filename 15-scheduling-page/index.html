@@ -10,7 +10,7 @@
     <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
         
         html, body { height: 100%; width: 100%; margin: 0; padding: 0; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
         
@@ -18,40 +18,34 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .option-card { 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
             background: rgba(255, 255, 255, 0.03); 
             transition: all 0.3s ease; 
             cursor: pointer; 
+            color: #d1d5db; 
         }
         
         .option-card:hover { 
-            border-color: rgba(59, 130, 246, 0.5); /* Bordure bleue au survol */
+            border-color: rgba(59, 130, 246, 0.5); 
             background: rgba(59, 130, 246, 0.05); 
+            color: #fff;
         }
         
-        /* Style des cartes sélectionnées avec fort contraste bleu */
         .selected { 
             border-color: #3b82f6 !important; 
-            background: rgba(59, 130, 246, 0.15) !important; 
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); /* Glow effect */
+            background: rgba(59, 130, 246, 0.1) !important; 
             color: #fff !important;
-            font-weight: 600;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); 
         }
         
         .hidden { display: none; }
-        
-        input:focus { 
-            outline: none; 
-            border-color: #3b82f6 !important; 
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
     
     <header class="w-full py-8 px-12 border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-center items-center">
-            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-blue-500">Montis Media</span>
+            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/90">Montis Media</span>
         </div>
     </header>
 
@@ -60,75 +54,76 @@
         <div id="quiz-step" class="w-full max-w-2xl space-y-12 fade-in">
             <div class="text-center space-y-4">
                 <h1 class="text-2xl font-light tracking-tight text-white uppercase tracking-[0.2em]">Prise de rendez-vous.</h1>
-                <p class="text-sm text-gray-400 font-light italic">4 questions rapides pour préparer notre échange.</p>
+                <p class="text-sm text-gray-400 font-light italic">3 questions rapides pour préparer notre échange.</p>
             </div>
 
             <div class="space-y-4">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">1. Acceptez-vous de déléguer la prise de contact ?</p>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 text-center font-medium">1. Acceptez-vous de déléguer la prise de contact ? <span class="text-blue-500">*</span></p>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest text-gray-300" onclick="selectOption(this, 'delegation', 'oui')">Oui</div>
-                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest text-gray-300" onclick="selectOption(this, 'delegation', 'non')">Non</div>
+                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest font-medium" onclick="selectOption(this, 'delegation', 'oui')">Oui</div>
+                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest font-medium" onclick="selectOption(this, 'delegation', 'non')">Non</div>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">2. Budget mensuel consacré à l'acquisition</p>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 text-center font-medium">2. Budget mensuel consacré à l'acquisition <span class="text-blue-500">*</span></p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'budget', 'low')">- 500€</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'budget', 'mid')">500€ - 1000€</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'budget', 'high')">1000€+</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'budget', 'low')">- 500€</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'budget', 'mid')">500€ - 1000€</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'budget', 'high')">1000€+</div>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">3. Volume de mandats actuel par mois</p>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 text-center font-medium">3. Mandats actuels / Objectif 90 jours <span class="text-blue-500">*</span></p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'volume', 'moins5')">Moins de 5</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'volume', '5a10')">5 à 10</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'volume', 'plus10')">Plus de 10</div>
+                    <div class="option-card p-4 rounded-sm text-center flex flex-col items-center justify-center space-y-2" onclick="selectOption(this, 'obj', '1')">
+                        <span class="text-[11px] font-bold tracking-wider">- de 5 / mois</span>
+                        <span class="text-[9px] tracking-[0.1em] opacity-70">Obj : +30%</span>
+                    </div>
+                    <div class="option-card p-4 rounded-sm text-center flex flex-col items-center justify-center space-y-2" onclick="selectOption(this, 'obj', '2')">
+                        <span class="text-[11px] font-bold tracking-wider">5 à 10 / mois</span>
+                        <span class="text-[9px] tracking-[0.1em] opacity-70">Obj : +50%</span>
+                    </div>
+                    <div class="option-card p-4 rounded-sm text-center flex flex-col items-center justify-center space-y-2" onclick="selectOption(this, 'obj', '3')">
+                        <span class="text-[11px] font-bold tracking-wider">+ de 10 / mois</span>
+                        <span class="text-[9px] tracking-[0.1em] opacity-70">Obj : x2</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">4. Objectif de croissance à 90 jours</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'objectif', '30pct')">+ 30 %</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'objectif', '50pct')">+ 50 %</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'objectif', 'x2')">Objectif x2</div>
-                </div>
-            </div>
-
-            <button onclick="goToContact()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300 text-[10px] uppercase tracking-[0.4em] font-bold rounded-sm mt-8 shadow-[0_0_15px_rgba(59,130,246,0.4)]">
+            <button onclick="evaluateFirstStep()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300 text-[10px] font-bold uppercase tracking-[0.4em] mt-8 rounded-sm shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]">
                 Continuer
             </button>
         </div>
 
-        <div id="contact-step" class="hidden w-full max-w-md space-y-8 fade-in text-center">
-            <div class="space-y-2">
-                <h2 class="text-xl font-light uppercase tracking-widest text-blue-500">Dernière étape</h2>
-                <p class="text-xs text-gray-400 italic">Pour le rappel SMS et la validation du créneau.</p>
-            </div>
+        <div id="sms-step" class="hidden w-full max-w-md space-y-10 fade-in text-center">
             <div class="space-y-4">
-                <input type="tel" id="user-phone" placeholder="Votre numéro de téléphone" class="w-full bg-white/5 border border-white/10 rounded-sm p-4 text-center text-sm tracking-widest text-white transition-all">
-                <button onclick="validateFinal()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[10px] uppercase tracking-[0.4em] rounded-sm shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all">
-                    Vérifier l'éligibilité
-                </button>
+                <h2 class="text-xl font-light uppercase tracking-widest">Confirmation</h2>
+                <p class="text-sm text-gray-400 italic leading-relaxed">
+                    Acceptez-vous de recevoir un rappel SMS de ma part avant notre rendez-vous pour garantir la fluidité de nos échanges ?
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="option-card p-5 rounded-sm text-center text-xs uppercase tracking-widest font-bold" onclick="handleSmsResponse('oui')">Oui</div>
+                <div class="option-card p-5 rounded-sm text-center text-xs uppercase tracking-widest font-bold" onclick="handleSmsResponse('non')">Non</div>
             </div>
         </div>
 
         <div id="success-step" class="hidden w-full max-w-4xl text-center space-y-8 fade-in">
             <h2 class="text-2xl font-light tracking-widest uppercase">Disponibilités.</h2>
-            <div id="calendly-container" class="w-full border border-white/5 bg-black" style="min-width:320px;height:700px;">
-                </div>
+            <div id="calendly-container" class="w-full border border-white/5 bg-white/5 rounded-sm overflow-hidden" style="min-width:320px;height:700px;">
+            </div>
         </div>
 
         <div id="refusal-step" class="hidden w-full max-w-xl text-center space-y-6 fade-in">
             <h2 class="text-xl font-light text-gray-300">Modèle non compatible.</h2>
             <p class="text-sm text-gray-500 font-light leading-relaxed italic">
-                Nos stratégies de montée en gamme TMI sont conçues pour des structures prêtes à déléguer avec un budget minimal de 500€/mois. <br><br>
-                <span class="not-italic text-white">Nous ne pourrons pas vous accompagner pour le moment.</span>
+                Nos stratégies de croissance sont conçues pour des structures prêtes à déléguer, disposant d'un budget minimal de 500€/mois, et acceptant notre processus de suivi. <br><br>
+                <span class="not-italic text-white">Nous ne pourrons malheureusement pas vous accompagner pour le moment.</span>
             </p>
-            <a href="/" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] text-blue-500 hover:text-blue-400 border-b border-blue-500/30 pb-1 transition-colors">Retour</a>
+            <a href="/" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors">Retour</a>
         </div>
 
     </main>
@@ -141,8 +136,7 @@
     </footer>
 
     <script>
-        // L'objet stocke les 4 réponses obligatoires
-        let responses = { delegation: null, budget: null, volume: null, objectif: null };
+        let responses = { delegation: null, budget: null, obj: null };
 
         function selectOption(el, category, value) {
             const siblings = el.parentElement.querySelectorAll('.option-card');
@@ -151,50 +145,44 @@
             responses[category] = value;
         }
 
-        function goToContact() {
-            // Vérification stricte : toutes les questions doivent avoir une réponse
-            if (!responses.delegation || !responses.budget || !responses.volume || !responses.objectif) {
-                alert("Veuillez répondre à toutes les questions pour continuer.");
+        function evaluateFirstStep() {
+            // Vérifie que tout est rempli
+            if (!responses.delegation || !responses.budget || !responses.obj) {
+                alert("Veuillez répondre à toutes les questions (*) pour continuer.");
                 return;
             }
+
             document.getElementById('quiz-step').classList.add('hidden');
-            document.getElementById('contact-step').classList.remove('hidden');
-        }
 
-        function validateFinal() {
-            const phone = document.getElementById('user-phone').value.trim();
-            if (phone.length < 9) { // Sécurité simple sur la longueur d'un numéro de téléphone
-                alert("Veuillez saisir un numéro de téléphone valide.");
-                return;
-            }
-
-            document.getElementById('contact-step').classList.add('hidden');
-
-            // Logique d'éligibilité : Délégation = OUI ET Budget n'est pas "Moins de 500"
-            if (responses.delegation === 'oui' && responses.budget !== 'low') {
-                document.getElementById('success-step').classList.remove('hidden');
-                initCalendly(phone);
-            } else {
+            // Filtre : Si Délégation = Non OU Budget = -500€ ➔ Disqualification immédiate
+            if (responses.delegation === 'non' || responses.budget === 'low') {
                 document.getElementById('refusal-step').classList.remove('hidden');
+            } else {
+                // Sinon on passe à l'étape SMS
+                document.getElementById('sms-step').classList.remove('hidden');
             }
         }
 
-        function initCalendly(phone) {
-            const container = document.getElementById('calendly-container');
-            container.innerHTML = ''; 
-            
-            // Formatage de l'URL pour pousser la donnée du numéro
-            // On couvre "phone_number" (champ natif) ET "a1" (champ personnalisé 1)
-            const calendlyUrl = `https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000&phone_number=${encodeURIComponent(phone)}&a1=${encodeURIComponent(phone)}`;
+        function handleSmsResponse(response) {
+            document.getElementById('sms-step').classList.add('hidden');
 
+            // Filtre : S'il refuse le SMS ➔ Disqualification
+            if (response === 'non') {
+                document.getElementById('refusal-step').classList.remove('hidden');
+            } else {
+                // Succès total ➔ On affiche Calendly (propre, sans pré-remplissage forcé)
+                document.getElementById('success-step').classList.remove('hidden');
+                initCalendly();
+            }
+        }
+
+        function initCalendly() {
+            const container = document.getElementById('calendly-container');
+            container.innerHTML = '';
+            
             Calendly.initInlineWidget({
-                url: calendlyUrl,
-                parentElement: container,
-                prefill: {
-                    customAnswers: {
-                        a1: phone // Injection via l'API pour être sûr à 100%
-                    }
-                }
+                url: 'https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000',
+                parentElement: container
             });
         }
     </script>
