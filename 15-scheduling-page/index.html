@@ -54,7 +54,7 @@
         <div id="quiz-step" class="w-full max-w-2xl space-y-12 fade-in">
             <div class="text-center space-y-4">
                 <h1 class="text-2xl font-light tracking-tight text-white uppercase tracking-[0.2em]">Prise de rendez-vous.</h1>
-                <p class="text-sm text-gray-400 font-light italic">3 questions rapides pour préparer notre échange.</p>
+                <p class="text-sm text-gray-400 font-light italic">Trois questions pour préparer notre échange.</p>
             </div>
 
             <div class="space-y-4">
@@ -75,11 +75,11 @@
             </div>
 
             <div class="space-y-4">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 text-center font-medium">3. Combien de ventes faites-vous actuellement par mois ? <span class="text-blue-500">*</span></p>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 text-center font-medium">3. Quel est votre moyenne actuel de dossiers signés par mois ? <span class="text-blue-500">*</span></p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '1')">- de 5</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '2')">5 à 10</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '3')">+ de 10</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '1')">Moins de 2</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '2')">Entre 2 et 5</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '3')">Entre 6 et 10</div>
                 </div>
             </div>
 
@@ -92,7 +92,7 @@
             <div class="space-y-4">
                 <h2 class="text-xl font-light uppercase tracking-widest">Confirmation</h2>
                 <p class="text-sm text-gray-400 italic leading-relaxed">
-                    Acceptez-vous de recevoir un rappel SMS de ma part avant notre rendez-vous pour garantir la fluidité de nos échanges ?
+                    Acceptez-vous de recevoir un rappel SMS afin de sécuriser le rendez-vous ?
                 </p>
             </div>
             
@@ -103,7 +103,7 @@
         </div>
 
         <div id="success-step" class="hidden w-full max-w-4xl text-center space-y-8 fade-in">
-            <h2 class="text-2xl font-light tracking-widest uppercase">Disponibilités.</h2>
+            <h2 class="text-2xl font-light tracking-widest uppercase">Choisissez votre créneau.</h2>
             <div id="calendly-container" class="w-full border border-white/5 bg-white/5 rounded-sm overflow-hidden" style="min-width:320px;height:700px;">
             </div>
         </div>
@@ -111,10 +111,19 @@
         <div id="refusal-step" class="hidden w-full max-w-xl text-center space-y-6 fade-in">
             <h2 class="text-xl font-light text-gray-300">Modèle non compatible.</h2>
             <p class="text-sm text-gray-500 font-light leading-relaxed italic">
-                Nos stratégies de croissance sont conçues pour des structures prêtes à déléguer, disposant d'un budget minimal de 500€/mois, et acceptant notre processus de suivi. <br><br>
+                Nos stratégies de croissance sont conçues pour des structures prêtes à déléguer et disposant d'un budget minimal de 500€/mois. <br><br>
                 <span class="not-italic text-white">Nous ne pourrons malheureusement pas vous accompagner pour le moment.</span>
             </p>
             <button onclick="resetForm()" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors bg-transparent cursor-pointer">Retour</button>
+        </div>
+
+        <div id="sms-refusal-step" class="hidden w-full max-w-xl text-center space-y-6 fade-in">
+            <h2 class="text-xl font-light text-gray-300">Sécurisation requise.</h2>
+            <p class="text-sm text-gray-500 font-light leading-relaxed italic">
+                Afin de vous garantir un échange de haute qualité, la confirmation par numéro de téléphone est une étape indispensable. <br><br>
+                <span class="not-italic text-white">Si vous changez d'avis, n'hésitez pas à reprendre la réservation.</span>
+            </p>
+            <button onclick="resetForm()" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors bg-transparent cursor-pointer">Changer d'avis</button>
         </div>
 
     </main>
@@ -155,9 +164,9 @@
         function handleSmsResponse(response) {
             document.getElementById('sms-step').classList.add('hidden');
 
-            // Disqualification si refus du SMS
+            // Disqualification spécifique si refus du SMS
             if (response === 'non') {
-                document.getElementById('refusal-step').classList.remove('hidden');
+                document.getElementById('sms-refusal-step').classList.remove('hidden');
             } else {
                 document.getElementById('success-step').classList.remove('hidden');
                 initCalendly();
@@ -165,12 +174,14 @@
         }
 
         function resetForm() {
-            // Reset des data
             responses = { delegation: null, budget: null, obj: null };
-            // Nettoyage visuel des sélections
             document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
-            // Switch d'affichage
+            
+            // Masquer tous les écrans de refus potentiels
             document.getElementById('refusal-step').classList.add('hidden');
+            document.getElementById('sms-refusal-step').classList.add('hidden');
+            
+            // Réafficher le quiz
             document.getElementById('quiz-step').classList.remove('hidden');
         }
 
@@ -178,7 +189,7 @@
             const container = document.getElementById('calendly-container');
             container.innerHTML = '';
             
-            // Correction de visibilité : texte blanc (ffffff) et boutons bleus (3b82f6)
+            // Intégration de Calendly avec forçage des couleurs pour le mode sombre
             Calendly.initInlineWidget({
                 url: 'https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000&text_color=ffffff&primary_color=3b82f6',
                 parentElement: container
