@@ -123,7 +123,7 @@
                 Afin de vous garantir un échange de haute qualité, la confirmation par numéro de téléphone est une étape indispensable. <br><br>
                 <span class="not-italic text-white">Si vous changez d'avis, n'hésitez pas à reprendre la réservation.</span>
             </p>
-            <button onclick="resetForm()" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors bg-transparent cursor-pointer">Changer d'avis</button>
+            <button onclick="retrySms()" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors bg-transparent cursor-pointer">Changer d'avis</button>
         </div>
 
     </main>
@@ -183,6 +183,12 @@
             
             // Réafficher le quiz
             document.getElementById('quiz-step').classList.remove('hidden');
+        }
+
+        // CORRECTION ICI : Ajout de la fonction retrySms()
+        function retrySms() {
+            document.getElementById('sms-refusal-step').classList.add('hidden');
+            document.getElementById('sms-step').classList.remove('hidden');
         }
 
         function initCalendly() {
