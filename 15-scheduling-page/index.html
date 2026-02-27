@@ -75,20 +75,11 @@
             </div>
 
             <div class="space-y-4">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 text-center font-medium">3. Mandats actuels / Objectif 90 jours <span class="text-blue-500">*</span></p>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 text-center font-medium">3. Combien de ventes faites-vous actuellement par mois ? <span class="text-blue-500">*</span></p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center flex flex-col items-center justify-center space-y-2" onclick="selectOption(this, 'obj', '1')">
-                        <span class="text-[11px] font-bold tracking-wider">- de 5 / mois</span>
-                        <span class="text-[9px] tracking-[0.1em] opacity-70">Obj : +30%</span>
-                    </div>
-                    <div class="option-card p-4 rounded-sm text-center flex flex-col items-center justify-center space-y-2" onclick="selectOption(this, 'obj', '2')">
-                        <span class="text-[11px] font-bold tracking-wider">5 à 10 / mois</span>
-                        <span class="text-[9px] tracking-[0.1em] opacity-70">Obj : +50%</span>
-                    </div>
-                    <div class="option-card p-4 rounded-sm text-center flex flex-col items-center justify-center space-y-2" onclick="selectOption(this, 'obj', '3')">
-                        <span class="text-[11px] font-bold tracking-wider">+ de 10 / mois</span>
-                        <span class="text-[9px] tracking-[0.1em] opacity-70">Obj : x2</span>
-                    </div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '1')">- de 5</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '2')">5 à 10</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest font-medium" onclick="selectOption(this, 'obj', '3')">+ de 10</div>
                 </div>
             </div>
 
@@ -123,7 +114,7 @@
                 Nos stratégies de croissance sont conçues pour des structures prêtes à déléguer, disposant d'un budget minimal de 500€/mois, et acceptant notre processus de suivi. <br><br>
                 <span class="not-italic text-white">Nous ne pourrons malheureusement pas vous accompagner pour le moment.</span>
             </p>
-            <a href="/" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors">Retour</a>
+            <button onclick="resetForm()" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors bg-transparent cursor-pointer">Retour</button>
         </div>
 
     </main>
@@ -146,7 +137,6 @@
         }
 
         function evaluateFirstStep() {
-            // Vérifie que tout est rempli
             if (!responses.delegation || !responses.budget || !responses.obj) {
                 alert("Veuillez répondre à toutes les questions (*) pour continuer.");
                 return;
@@ -154,11 +144,10 @@
 
             document.getElementById('quiz-step').classList.add('hidden');
 
-            // Filtre : Si Délégation = Non OU Budget = -500€ ➔ Disqualification immédiate
+            // Disqualification si Délégation "Non" ou Budget "-500€"
             if (responses.delegation === 'non' || responses.budget === 'low') {
                 document.getElementById('refusal-step').classList.remove('hidden');
             } else {
-                // Sinon on passe à l'étape SMS
                 document.getElementById('sms-step').classList.remove('hidden');
             }
         }
@@ -166,22 +155,32 @@
         function handleSmsResponse(response) {
             document.getElementById('sms-step').classList.add('hidden');
 
-            // Filtre : S'il refuse le SMS ➔ Disqualification
+            // Disqualification si refus du SMS
             if (response === 'non') {
                 document.getElementById('refusal-step').classList.remove('hidden');
             } else {
-                // Succès total ➔ On affiche Calendly (propre, sans pré-remplissage forcé)
                 document.getElementById('success-step').classList.remove('hidden');
                 initCalendly();
             }
+        }
+
+        function resetForm() {
+            // Reset des data
+            responses = { delegation: null, budget: null, obj: null };
+            // Nettoyage visuel des sélections
+            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
+            // Switch d'affichage
+            document.getElementById('refusal-step').classList.add('hidden');
+            document.getElementById('quiz-step').classList.remove('hidden');
         }
 
         function initCalendly() {
             const container = document.getElementById('calendly-container');
             container.innerHTML = '';
             
+            // Correction de visibilité : texte blanc (ffffff) et boutons bleus (3b82f6)
             Calendly.initInlineWidget({
-                url: 'https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000',
+                url: 'https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000&text_color=ffffff&primary_color=3b82f6',
                 parentElement: container
             });
         }
