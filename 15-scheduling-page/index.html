@@ -3,28 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qualification - Montis Media</title>
+    <title>Prise de rendez-vous - Montis Media</title>
     
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     
     <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
         html, body { height: 100%; width: 100%; margin: 0; padding: 0; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        
         .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .option-card { border: 1px solid rgba(255, 255, 255, 0.05); background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; cursor: pointer; }
-        .option-card:hover { border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); }
-        .selected { border-color: #3b82f6 !important; background: rgba(59, 130, 246, 0.1) !important; }
+        
+        .option-card { 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            background: rgba(255, 255, 255, 0.03); 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+        }
+        
+        .option-card:hover { 
+            border-color: rgba(59, 130, 246, 0.5); /* Bordure bleue au survol */
+            background: rgba(59, 130, 246, 0.05); 
+        }
+        
+        /* Style des cartes sélectionnées avec fort contraste bleu */
+        .selected { 
+            border-color: #3b82f6 !important; 
+            background: rgba(59, 130, 246, 0.15) !important; 
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); /* Glow effect */
+            color: #fff !important;
+            font-weight: 600;
+        }
+        
         .hidden { display: none; }
-        input:focus { outline: none; border-color: rgba(59, 130, 246, 0.5) !important; }
+        
+        input:focus { 
+            outline: none; 
+            border-color: #3b82f6 !important; 
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
+    
     <header class="w-full py-8 px-12 border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-center items-center">
-            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/90">Montis Media</span>
+            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-blue-500">Montis Media</span>
         </div>
     </header>
 
@@ -32,47 +59,58 @@
         
         <div id="quiz-step" class="w-full max-w-2xl space-y-12 fade-in">
             <div class="text-center space-y-4">
-                <h1 class="text-2xl font-light tracking-tight text-white uppercase tracking-[0.2em]">Qualification.</h1>
-                <p class="text-sm text-gray-400 font-light italic">3 questions rapides pour préparer notre échange.</p>
+                <h1 class="text-2xl font-light tracking-tight text-white uppercase tracking-[0.2em]">Prise de rendez-vous.</h1>
+                <p class="text-sm text-gray-400 font-light italic">4 questions rapides pour préparer notre échange.</p>
             </div>
 
             <div class="space-y-4">
                 <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">1. Acceptez-vous de déléguer la prise de contact ?</p>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest" onclick="selectOption(this, 'delegation', 'oui')">Oui</div>
-                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest" onclick="selectOption(this, 'delegation', 'non')">Non</div>
+                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest text-gray-300" onclick="selectOption(this, 'delegation', 'oui')">Oui</div>
+                    <div class="option-card p-4 rounded-sm text-center text-xs uppercase tracking-widest text-gray-300" onclick="selectOption(this, 'delegation', 'non')">Non</div>
                 </div>
             </div>
 
             <div class="space-y-4">
                 <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">2. Budget mensuel consacré à l'acquisition</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest" onclick="selectOption(this, 'budget', 'low')">- 500€</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest" onclick="selectOption(this, 'budget', 'mid')">500€ - 1000€</div>
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest" onclick="selectOption(this, 'budget', 'high')">1000€+</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'budget', 'low')">- 500€</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'budget', 'mid')">500€ - 1000€</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'budget', 'high')">1000€+</div>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">3. Mandats actuels / Objectif 90 jours</p>
-                <div class="grid grid-cols-1 gap-4">
-                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest" onclick="selectOption(this, 'obj', 'done')">Sélectionner pour confirmer</div>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">3. Volume de mandats actuel par mois</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'volume', 'moins5')">Moins de 5</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'volume', '5a10')">5 à 10</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'volume', 'plus10')">Plus de 10</div>
                 </div>
             </div>
 
-            <button onclick="goToContact()" class="w-full py-4 border border-white/10 hover:bg-white hover:text-black transition-all duration-500 text-[10px] uppercase tracking-[0.4em] mt-8">
+            <div class="space-y-4">
+                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center">4. Objectif de croissance à 90 jours</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'objectif', '30pct')">+ 30 %</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'objectif', '50pct')">+ 50 %</div>
+                    <div class="option-card p-4 rounded-sm text-center text-[10px] tracking-widest text-gray-300" onclick="selectOption(this, 'objectif', 'x2')">Objectif x2</div>
+                </div>
+            </div>
+
+            <button onclick="goToContact()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300 text-[10px] uppercase tracking-[0.4em] font-bold rounded-sm mt-8 shadow-[0_0_15px_rgba(59,130,246,0.4)]">
                 Continuer
             </button>
         </div>
 
         <div id="contact-step" class="hidden w-full max-w-md space-y-8 fade-in text-center">
             <div class="space-y-2">
-                <h2 class="text-xl font-light uppercase tracking-widest">Dernière étape</h2>
-                <p class="text-xs text-gray-500 italic">Pour le rappel SMS et la validation du créneau.</p>
+                <h2 class="text-xl font-light uppercase tracking-widest text-blue-500">Dernière étape</h2>
+                <p class="text-xs text-gray-400 italic">Pour le rappel SMS et la validation du créneau.</p>
             </div>
             <div class="space-y-4">
-                <input type="tel" id="user-phone" placeholder="Votre numéro de téléphone" class="w-full bg-white/5 border border-white/10 rounded-sm p-4 text-center text-sm tracking-widest text-white focus:bg-white/10 transition-all">
-                <button onclick="validateFinal()" class="w-full py-4 bg-white text-black text-[10px] font-bold uppercase tracking-[0.4em]">
+                <input type="tel" id="user-phone" placeholder="Votre numéro de téléphone" class="w-full bg-white/5 border border-white/10 rounded-sm p-4 text-center text-sm tracking-widest text-white transition-all">
+                <button onclick="validateFinal()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[10px] uppercase tracking-[0.4em] rounded-sm shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all">
                     Vérifier l'éligibilité
                 </button>
             </div>
@@ -80,8 +118,8 @@
 
         <div id="success-step" class="hidden w-full max-w-4xl text-center space-y-8 fade-in">
             <h2 class="text-2xl font-light tracking-widest uppercase">Disponibilités.</h2>
-            <div id="calendly-container" class="w-full border border-white/5 bg-white/5" style="min-width:320px;height:700px;">
-            </div>
+            <div id="calendly-container" class="w-full border border-white/5 bg-black" style="min-width:320px;height:700px;">
+                </div>
         </div>
 
         <div id="refusal-step" class="hidden w-full max-w-xl text-center space-y-6 fade-in">
@@ -90,7 +128,7 @@
                 Nos stratégies de montée en gamme TMI sont conçues pour des structures prêtes à déléguer avec un budget minimal de 500€/mois. <br><br>
                 <span class="not-italic text-white">Nous ne pourrons pas vous accompagner pour le moment.</span>
             </p>
-            <a href="/" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] border-b border-white/20 pb-1">Retour</a>
+            <a href="/" class="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] text-blue-500 hover:text-blue-400 border-b border-blue-500/30 pb-1 transition-colors">Retour</a>
         </div>
 
     </main>
@@ -103,7 +141,8 @@
     </footer>
 
     <script>
-        let responses = { delegation: null, budget: null, obj: null };
+        // L'objet stocke les 4 réponses obligatoires
+        let responses = { delegation: null, budget: null, volume: null, objectif: null };
 
         function selectOption(el, category, value) {
             const siblings = el.parentElement.querySelectorAll('.option-card');
@@ -113,8 +152,9 @@
         }
 
         function goToContact() {
-            if (!responses.delegation || !responses.budget || !responses.obj) {
-                alert("Veuillez répondre aux questions pour continuer.");
+            // Vérification stricte : toutes les questions doivent avoir une réponse
+            if (!responses.delegation || !responses.budget || !responses.volume || !responses.objectif) {
+                alert("Veuillez répondre à toutes les questions pour continuer.");
                 return;
             }
             document.getElementById('quiz-step').classList.add('hidden');
@@ -122,17 +162,18 @@
         }
 
         function validateFinal() {
-            const phone = document.getElementById('user-phone').value;
-            if (phone.length < 10) {
+            const phone = document.getElementById('user-phone').value.trim();
+            if (phone.length < 9) { // Sécurité simple sur la longueur d'un numéro de téléphone
                 alert("Veuillez saisir un numéro de téléphone valide.");
                 return;
             }
 
             document.getElementById('contact-step').classList.add('hidden');
 
+            // Logique d'éligibilité : Délégation = OUI ET Budget n'est pas "Moins de 500"
             if (responses.delegation === 'oui' && responses.budget !== 'low') {
                 document.getElementById('success-step').classList.remove('hidden');
-                initCalendly(phone); // On déclenche l'API Calendly
+                initCalendly(phone);
             } else {
                 document.getElementById('refusal-step').classList.remove('hidden');
             }
@@ -140,15 +181,18 @@
 
         function initCalendly(phone) {
             const container = document.getElementById('calendly-container');
-            container.innerHTML = ''; // Nettoyer par sécurité
+            container.innerHTML = ''; 
             
-            // Appel propre de l'API Calendly
+            // Formatage de l'URL pour pousser la donnée du numéro
+            // On couvre "phone_number" (champ natif) ET "a1" (champ personnalisé 1)
+            const calendlyUrl = `https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000&phone_number=${encodeURIComponent(phone)}&a1=${encodeURIComponent(phone)}`;
+
             Calendly.initInlineWidget({
-                url: 'https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1',
+                url: calendlyUrl,
                 parentElement: container,
                 prefill: {
                     customAnswers: {
-                        a1: phone // Injecte le numéro dans la 1ère question (custom) du formulaire Calendly
+                        a1: phone // Injection via l'API pour être sûr à 100%
                     }
                 }
             });
