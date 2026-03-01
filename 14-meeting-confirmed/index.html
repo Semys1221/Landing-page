@@ -7,107 +7,56 @@
     
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
-        
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
         
         body {
             font-family: 'Inter', sans-serif;
             background-color: #000;
             color: #fff;
+            overflow: hidden; /* Empêche le scroll inutile */
         }
         
         .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
+            animation: fadeIn 1.2s ease-out forwards;
             opacity: 0;
         }
         
-        .fade-in-icon { animation-delay: 0.2s; }
-        .fade-in-title { animation-delay: 0.4s; }
-        .fade-in-subtitle { animation-delay: 0.6s; }
-        .fade-in-grid { animation-delay: 0.9s; }
-        
         @keyframes fadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(10px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .glow {
-            filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));
-        }
-
-        .option-card {
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(255, 255, 255, 0.02);
-            transition: all 0.3s ease;
-        }
-
-        .option-card:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-2px);
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));
         }
     </style>
 </head>
-<body class="h-full w-full flex flex-col bg-black">
-    
-    <header class="w-full py-8 px-12 border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-center items-center">
-            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/90">Montis Media</span>
-        </div>
-    </header>
+<body class="h-screen w-full flex flex-col items-center justify-center bg-black">
 
-    <main class="flex-1 flex flex-col items-center justify-center px-6 w-full py-12">
-        <div class="mb-8 glow fade-in fade-in-icon">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="m9 12 2 2 4-4"></path>
+    <main class="text-center px-6 fade-in">
+        <div class="mb-10 flex justify-center glow">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5"></path>
             </svg>
         </div>
 
-        <div class="text-center space-y-4 max-w-2xl fade-in fade-in-title">
-            <h1 class="text-2xl md:text-3xl font-light tracking-tight text-white">Rendez-vous confirmé.</h1>
-        </div>
+        <h1 class="text-3xl md:text-4xl font-light tracking-tight text-white mb-4">
+            Rendez-vous confirmé.
+        </h1>
 
-        <div class="mt-4 text-center max-w-xl fade-in fade-in-subtitle">
-            <p class="text-sm md:text-base text-gray-400 font-light tracking-wide italic">
-                Cet échange de 20 minutes marque la première étape vers une solution sur mesure. <br class="hidden md:block">
-                <span class="text-gray-200 not-italic font-medium">Réfléchissez simplement à votre priorité principale.</span>
-            </p>
-        </div>
+        <p class="text-lg md:text-xl text-gray-400 font-light tracking-wide italic">
+            "20 audit à forte TMI en 90 jours"
+        </p>
 
-        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl fade-in fade-in-grid">
-            <div class="option-card p-6 rounded-sm text-center cursor-pointer">
-                <span class="text-xs uppercase tracking-[0.2em] text-gray-300">Faire venir les clients à vous</span>
-            </div>
-            <div class="option-card p-6 rounded-sm text-center cursor-pointer">
-                <span class="text-xs uppercase tracking-[0.2em] text-gray-300">Augmenter le volume d’acquisition</span>
-            </div>
-            <div class="option-card p-6 rounded-sm text-center cursor-pointer">
-                <span class="text-xs uppercase tracking-[0.2em] text-gray-300">Déléguer l’acquisition</span>
-            </div>
-            <div class="option-card p-6 rounded-sm text-center cursor-pointer">
-                <span class="text-xs uppercase tracking-[0.2em] text-gray-300">Monter en gamme sur les dossiers</span>
-            </div>
+        <div class="mt-12">
+            <span class="text-[10px] uppercase tracking-[0.5em] text-gray-500">À très vite.</span>
         </div>
     </main>
 
-    <footer class="p-8 border-t border-white/5 w-full">
-        <div class="max-w-6xl mx-auto flex justify-between items-center text-[8px] font-mono uppercase tracking-[0.4em] text-gray-700">
-            <span>Stratégie de Croissance</span> 
-            <span>Montis Media / 2026</span>
-        </div>
+    <footer class="absolute bottom-8 w-full text-center">
+        <span class="text-[8px] font-mono uppercase tracking-[0.4em] text-gray-800">
+            Montis Media / 2026
+        </span>
     </footer>
 
 </body>
