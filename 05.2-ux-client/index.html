@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" class="h-full">
+<html lang="fr" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,6 +60,12 @@
             height: 100%;
             opacity: 0; 
             visibility: hidden; 
+        }
+
+        /* Design Abstrait Luxe (Étape 1) */
+        .abstract-luxury {
+            background: radial-gradient(circle at top right, #1a1a1a, #000000);
+            box-shadow: inset 0 0 60px rgba(255, 255, 255, 0.03);
         }
 
         .text-gradient {
@@ -170,23 +176,31 @@
                     
                     <div class="phone-screen">
                         
-                        <div id="screen-1" class="screen-layer bg-gray-900 flex flex-col relative">
-                            <div class="px-4 pt-10 pb-3 border-b border-white/10 flex items-center gap-3 bg-black/50 backdrop-blur-md absolute top-0 w-full z-10">
-                                <div class="w-8 h-8 rounded bg-white/10 border border-white/20 flex items-center justify-center">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                </div>
+                        <div id="screen-1" class="screen-layer abstract-luxury flex flex-col relative" style="opacity: 1; visibility: visible;">
+                            <div class="px-4 pt-10 pb-3 border-b border-white/10 flex items-center gap-3 absolute top-0 w-full z-10 bg-black/20 backdrop-blur-sm">
+                                <div class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center text-xs font-bold">M</div>
                                 <div>
-                                    <p class="text-xs font-bold text-white tracking-wide">Source Confidentielle</p>
-                                    <p class="text-[9px] text-gray-400 uppercase tracking-widest">Sponsorisé</p>
+                                    <p class="text-[10px] font-bold text-white tracking-tight">Le Collectif Ingénierie</p>
+                                    <p class="text-[8px] text-gray-400 uppercase tracking-widest">Expertise Référente</p>
                                 </div>
                             </div>
-                            <video class="w-full h-full object-cover" autoplay loop muted playsinline>
-                                <source src="https://player.vimeo.com/external/372333036.sd.mp4?s=d0107a97ef14ee158913d8063d86f2b1c8a1752b&profile_id=165" type="video/mp4">
-                            </video>
-                            <div class="absolute bottom-0 w-full p-5 bg-gradient-to-t from-black via-black/90 to-transparent">
-                                <p class="text-sm font-bold text-white mb-1">Optimisez votre TMI dès 2026</p>
-                                <p class="text-[10px] text-gray-300 mb-4 line-clamp-2 leading-relaxed">Découvrez la méthode mathématique pour transformer votre impôt en patrimoine sans alerter votre entourage.</p>
-                                <div class="w-full py-3 bg-white/10 border border-white/20 text-white text-center text-[10px] font-bold uppercase tracking-widest rounded shadow-md backdrop-blur-sm">Accéder au test crypté</div>
+                            
+                            <div class="flex-1 flex flex-col items-center justify-center px-8 pt-20 text-center">
+                                <div class="w-20 h-20 border border-white/10 rotate-45 flex items-center justify-center mb-10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+                                    <div class="w-10 h-10 border border-white/40"></div>
+                                </div>
+                                <h4 class="text-xl font-medium tracking-[0.15em] uppercase text-white mb-6 leading-relaxed">
+                                    Optimisation des<br><span class="font-bold">Flux Libéraux</span>
+                                </h4>
+                                <p class="text-[10px] text-gray-500 font-light leading-relaxed tracking-wide uppercase px-4">
+                                    Analyse structurelle des leviers de capitalisation pour profils BNC & Dirigeants.
+                                </p>
+                            </div>
+
+                            <div class="p-8">
+                                <div class="w-full py-4 border border-white/30 text-white text-center text-[9px] font-bold uppercase tracking-[0.3em] rounded-sm bg-white/5 backdrop-blur-sm shadow-md">
+                                    Accéder au test crypté
+                                </div>
                             </div>
                         </div>
 
@@ -211,7 +225,7 @@
                         <div id="screen-3" class="screen-layer bg-[#050505] flex flex-col">
                             <div class="w-full aspect-video bg-black relative mt-16 border-y border-white/10">
                                 <video class="w-full h-full object-cover" autoplay loop muted playsinline>
-                                    <source src="VSL.MP4" type="video/mp4">
+                                    <source src="Vsl.mp4" type="video/mp4">
                                 </video>
                             </div>
                             
