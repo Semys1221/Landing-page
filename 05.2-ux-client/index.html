@@ -1,301 +1,333 @@
 <!doctype html>
-<html lang="fr" class="h-full scroll-smooth">
+<html lang="fr" class="h-full">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Montis Media - Recommandation Digitale</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      overflow-x: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montis Media - Recommandation Digitale</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
 
-    /* Le Téléphone 3D */
-    .perspective-container {
-      perspective: 1200px;
-    }
-    
-    .phone-mockup {
-      width: 300px;
-      height: 620px;
-      background: #111;
-      border: 10px solid #222;
-      border-radius: 40px;
-      position: relative;
-      transform-style: preserve-3d;
-      box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.1), inset 0 0 0 2px #333;
-      will-change: transform;
-    }
+        /* Le Téléphone 3D */
+        .perspective-container {
+            perspective: 1200px;
+        }
+        
+        .phone-mockup {
+            width: 300px;
+            height: 620px;
+            background: #111;
+            border: 10px solid #222;
+            border-radius: 40px;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.1), inset 0 0 0 2px #333;
+            will-change: transform;
+        }
 
-    .phone-notch {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 130px;
-      height: 25px;
-      background: #222;
-      border-bottom-left-radius: 15px;
-      border-bottom-right-radius: 15px;
-      z-index: 50;
-    }
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 25px;
+            background: #222;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 50;
+        }
 
-    .phone-screen {
-      width: 100%;
-      height: 100%;
-      border-radius: 30px;
-      overflow: hidden;
-      position: relative;
-      background: #000;
-    }
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
 
-    .screen-layer {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      visibility: hidden;
-    }
+        .screen-layer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0; 
+            visibility: hidden; 
+        }
 
-    /* Visuel Abstrait Luxe Etape 1 */
-    .abstract-luxury {
-      background: radial-gradient(circle at top right, #1a1a1a, #000000);
-      box-shadow: inset 0 0 60px rgba(255, 255, 255, 0.03);
-    }
-
-    /* Utilitaires typographiques */
-    .text-gradient {
-      background: linear-gradient(180deg, #FFFFFF 0%, #999999 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-  </style>
+        .text-gradient {
+            background: linear-gradient(180deg, #FFFFFF 0%, #999999 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Utilitaires pour les textes d'étapes */
+        .step-text {
+            display: none;
+            opacity: 0;
+        }
+    </style>
 </head>
 <body class="antialiased">
 
-  <section class="min-h-screen w-full flex flex-col items-center justify-center relative px-6 text-center">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,transparent_50%)]"></div>
-    
-    <div class="z-10 space-y-8 animate-in fade-in duration-1000">
-      <div class="inline-block px-4 py-1.5 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 mb-4">
-        Montis Media Infrastructure
-      </div>
-      <h1 class="text-5xl md:text-8xl font-bold tracking-tighter uppercase italic text-gradient">
-        Recommandation<br>Digitale.
-      </h1>
-      <p class="text-xl md:text-2xl text-gray-400 font-light tracking-wide">
-        Faites venir les clients à vous.
-      </p>
-      
-      <div class="pt-12">
-        <a href="#simulator" class="px-10 py-5 bg-white text-black font-bold text-sm uppercase tracking-[0.2em] rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 inline-block shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-          Commencer
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <div id="simulator" class="relative bg-black w-full min-h-screen flex items-center py-20">
-    <div class="w-full flex flex-col lg:flex-row items-center max-w-7xl mx-auto px-6">
-      
-      <div class="w-full lg:w-1/2 relative flex items-center justify-center lg:justify-start lg:pl-12 z-10 h-[350px]">
+    <section class="min-h-screen w-full flex flex-col items-center justify-center relative px-6 text-center">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,transparent_50%)]"></div>
         
-        <div id="text-1" class="absolute left-0 right-0 space-y-6 lg:pr-12">
-          <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Étape 01</h2>
-          <h3 class="text-4xl font-bold tracking-tight">L'Hameçon Institutionnel</h3>
-          <p class="text-xl font-light italic text-gray-300 leading-relaxed border-l-2 border-white/20 pl-6 py-2">
-            « On ne dilue pas votre rareté. On capte l'attention sur le problème fiscal, pas sur le vendeur. »
-          </p>
-          <p class="text-sm text-gray-500">
-            Le prospect voit notre matrice publicitaire. L'algorithme isole les profils ciblés avec un message neutre, haut de gamme et abstrait.
-          </p>
-        </div>
-
-        <div id="text-2" class="absolute left-0 right-0 space-y-6 lg:pr-12 opacity-0 invisible translate-y-8">
-          <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Étape 02</h2>
-          <h3 class="text-4xl font-bold tracking-tight">Le Filtre Haute Précision</h3>
-          <p class="text-xl font-light italic text-gray-300 leading-relaxed border-l-2 border-white/20 pl-6 py-2">
-            « L'algorithme est votre garde du corps. Les dossiers non-rentables sont éliminés avant de voir votre nom. »
-          </p>
-          <p class="text-sm text-gray-500">
-            Une interface intransigeante. Si le prospect n'a pas les leviers financiers nécessaires, il est stoppé net.
-          </p>
-        </div>
-
-        <div id="text-3" class="absolute left-0 right-0 space-y-6 lg:pr-12 opacity-0 invisible translate-y-8">
-          <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Étape 03</h2>
-          <h3 class="text-4xl font-bold tracking-tight">La Preuve d'Expertise</h3>
-          <p class="text-xl font-light italic text-gray-300 leading-relaxed border-l-2 border-white/20 pl-6 py-2">
-            « Ce n'est plus vous qui cherchez le client, c'est lui qui vous écoute. »
-          </p>
-          <p class="text-sm text-gray-500">
-            Le prospect regarde votre vidéo de présentation. Il comprend immédiatement votre valeur. Vous n'avez plus rien à lui vendre, la confiance est déjà là.
-          </p>
-        </div>
-
-        <div id="text-4" class="absolute left-0 right-0 space-y-6 lg:pr-12 opacity-0 invisible translate-y-8">
-          <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Étape 04</h2>
-          <h3 class="text-4xl font-bold tracking-tight text-white">Le prospect demande votre expertise</h3>
-          <p class="text-xl font-light italic text-gray-300 leading-relaxed border-l-2 border-white/20 pl-6 py-2">
-            « Zéro relance. Le client prend rendez-vous chez vous, de lui-même. Vous restez en position d'offreur. »
-          </p>
-          <p class="text-sm text-gray-500">
-            Il valide le créneau dans votre agenda. Le rapport de force est inversé. Le dossier est chaud, qualifié et pré-vendu.
-          </p>
-        </div>
-
-      </div>
-
-      <div class="w-full lg:w-1/2 flex items-center justify-center perspective-container mt-12 lg:mt-0">
-        <div id="phone-3d" class="phone-mockup">
-          <div class="phone-notch"></div>
-          
-          <div class="phone-screen">
+        <div class="z-10 space-y-8 animate-in fade-in duration-1000">
+            <div class="inline-block px-4 py-1.5 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 mb-4">
+                Montis Media Infrastructure
+            </div>
+            <h1 class="text-5xl md:text-8xl font-bold tracking-tighter uppercase italic text-gradient">
+                Recommandation<br>Digitale.
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 font-light tracking-wide">
+                Faites venir les clients à vous.
+            </p>
             
-            <div id="screen-1" class="screen-layer abstract-luxury flex flex-col relative" style="opacity: 1; visibility: visible;">
-              <div class="px-4 pt-10 pb-3 border-b border-white/10 flex items-center gap-3 absolute top-0 w-full z-10">
-                <div class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center text-xs font-bold">C</div>
-                <div>
-                  <p class="text-xs font-bold text-white">Le Collectif Fiscal</p>
-                  <p class="text-[9px] text-gray-400 uppercase tracking-widest">Sponsorisé</p>
-                </div>
-              </div>
-              
-              <div class="flex-1 flex flex-col items-center justify-center px-6 pt-20 text-center">
-                <div class="w-16 h-16 border border-white/20 rounded-full flex items-center justify-center mb-6">
-                  <div class="w-8 h-8 border-t-2 border-r-2 border-white transform rotate-45"></div>
-                </div>
-                <h4 class="text-2xl font-bold uppercase tracking-widest mb-4">Massacre Fiscal 2026.</h4>
-                <p class="text-sm text-gray-400 font-light">Optimisez votre TMI (41%+). Découvrez les leviers réservés aux hauts revenus.</p>
-              </div>
-
-              <div class="p-6">
-                <button onclick="goToStep(2)" class="w-full py-4 bg-white text-black text-[10px] font-bold uppercase tracking-widest rounded shadow-md hover:bg-gray-200 transition-colors">
-                  Faire le test d'éligibilité
-                </button>
-              </div>
+            <div class="pt-12">
+                <a href="#simulator" class="px-10 py-5 bg-white text-black font-bold text-sm uppercase tracking-[0.2em] rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 inline-block shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                    Lancer l'algorithme
+                </a>
             </div>
-
-            <div id="screen-2" class="screen-layer bg-[#0a0a0a] flex flex-col justify-center px-6">
-              <div class="absolute top-0 left-0 w-1/3 h-1 bg-white"></div>
-              <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Question 2/4</p>
-              <h4 class="text-lg font-bold text-white mb-6">Quelle est votre Tranche Marginale d'Imposition (TMI) ?</h4>
-              <div class="space-y-3">
-                <div class="p-4 border border-white/10 rounded flex justify-between items-center group cursor-not-allowed">
-                  <span class="text-sm text-gray-400">11% ou 0%</span>
-                  <span class="text-[8px] uppercase tracking-widest text-red-500 font-bold opacity-0 group-hover:opacity-100 transition">Rejet</span>
-                </div>
-                <div class="p-4 border border-white/10 rounded flex justify-between items-center group cursor-not-allowed">
-                  <span class="text-sm text-gray-400">30%</span>
-                  <span class="text-[8px] uppercase tracking-widest text-red-500 font-bold opacity-0 group-hover:opacity-100 transition">Rejet</span>
-                </div>
-                <div class="p-4 border border-white bg-white/10 rounded flex items-center gap-3">
-                  <div class="w-4 h-4 bg-white text-black flex items-center justify-center text-[10px] font-bold rounded-sm">A</div>
-                  <span class="text-sm font-bold text-white">41%</span>
-                </div>
-                <div class="p-4 border border-white/20 rounded flex items-center gap-3">
-                  <div class="w-4 h-4 border border-gray-500 text-gray-500 flex items-center justify-center text-[10px] font-bold rounded-sm">B</div>
-                  <span class="text-sm font-bold text-gray-300">45%</span>
-                </div>
-              </div>
-              <div class="mt-8">
-                <button onclick="goToStep(3)" class="w-full py-4 bg-white text-black text-center text-xs font-bold uppercase tracking-widest rounded shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:bg-gray-200 transition-colors">
-                  Valider l'étape
-                </button>
-              </div>
-            </div>
-
-            <div id="screen-3" class="screen-layer bg-[#050505] flex flex-col">
-              <div class="w-full aspect-video bg-black relative border-b border-white/10 mt-12">
-                <video class="w-full h-full object-cover" autoplay loop muted playsinline>
-                  <source src="VSL.MP4" type="video/mp4">
-                  Votre navigateur ne supporte pas la vidéo.
-                </video>
-              </div>
-              <div class="p-6 flex-1 flex flex-col">
-                <p class="text-[10px] text-green-400 uppercase tracking-widest font-bold mb-2 flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span> Profil Éligible
-                </p>
-                <h4 class="text-xl font-bold text-white leading-tight mb-2">Expert Référent Alloué</h4>
-                <p class="text-xs text-gray-400 leading-relaxed flex-1">
-                  Découvrez la méthode exclusive pour restructurer votre rémunération et anéantir votre pression fiscale dès 2026.
-                </p>
-                <button onclick="goToStep(4)" class="w-full py-4 border border-white/20 text-white text-center text-[10px] font-bold uppercase tracking-widest rounded bg-white/5 hover:bg-white/10 transition-colors">
-                  Continuer vers l'agenda
-                </button>
-              </div>
-            </div>
-
-            <div id="screen-4" class="screen-layer bg-white text-black flex flex-col h-full">
-              <div class="p-5 border-b border-gray-200 bg-gray-50 flex items-center gap-4 mt-8">
-                <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white text-[10px] font-bold">VOUS</div>
-                <div>
-                  <h4 class="font-bold text-sm">Consultation Privée</h4>
-                  <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">45 Min · Visio</p>
-                </div>
-              </div>
-              <div class="p-5 flex-1 flex flex-col">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">Mardi 14 Octobre</p>
-                <div class="space-y-3 flex-1">
-                  <div class="w-full py-3 border border-gray-300 rounded text-sm text-center font-medium">09:00</div>
-                  <div class="w-full py-3 border border-gray-300 rounded text-sm text-center font-medium">11:30</div>
-                  <div class="w-full py-3 border-2 border-black bg-black text-white rounded text-sm text-center font-bold shadow-sm flex items-center justify-center gap-2">
-                    14:30 <span class="px-2 py-0.5 bg-white text-black text-[8px] rounded uppercase tracking-widest">Sélectionné</span>
-                  </div>
-                </div>
-                <button onclick="goToStep(1)" class="w-full py-4 bg-black text-white text-center text-[10px] font-bold uppercase tracking-widest rounded mt-4 hover:bg-gray-800 transition-colors">
-                  Confirmer le rendez-vous
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
-      </div>
+    </section>
 
+    <div id="simulator" class="relative bg-black w-full min-h-screen flex items-center py-20">
+        
+        <div class="w-full flex flex-col lg:flex-row items-center max-w-7xl mx-auto px-6 gap-12 lg:gap-0">
+            
+            <div class="w-full lg:w-1/2 relative flex flex-col justify-center lg:pr-12 z-10 min-h-[400px]">
+                
+                <div class="relative flex-1">
+                    
+                    <div id="text-1" class="step-text space-y-6 absolute inset-0">
+                        <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Étape 01</h2>
+                        <h3 class="text-4xl font-bold tracking-tight">L'Algorithme Invisible</h3>
+                        <p class="text-xl font-light italic text-gray-300 leading-relaxed border-l-2 border-white/20 pl-6 py-2">
+                            « Notre magie noire. Personne ne sait qui vous êtes, jusqu'à ce que le profil soit qualifié. »
+                        </p>
+                        <p class="text-sm text-gray-500 leading-relaxed">
+                            Nous déployons des publicités abstraites et haut de gamme. L'algorithme opère dans l'ombre : il cible vos futurs clients et capte leur attention sur le problème fiscal, tout en gardant votre identité strictement anonyme.
+                        </p>
+                    </div>
+
+                    <div id="text-2" class="step-text space-y-6 absolute inset-0">
+                        <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Étape 02</h2>
+                        <h3 class="text-4xl font-bold tracking-tight">Le Filtre Haute Précision</h3>
+                        <p class="text-xl font-light italic text-gray-300 leading-relaxed border-l-2 border-white/20 pl-6 py-2">
+                            « L'algorithme est votre garde du corps. Les curieux sont éliminés avant de voir votre nom. »
+                        </p>
+                        <p class="text-sm text-gray-500 leading-relaxed">
+                            Une interface intransigeante. Si le prospect n'a pas la TMI ou les leviers financiers nécessaires, il est stoppé net. Votre temps de cerveau est sanctuarisé.
+                        </p>
+                    </div>
+
+                    <div id="text-3" class="step-text space-y-6 absolute inset-0">
+                        <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Étape 03</h2>
+                        <h3 class="text-4xl font-bold tracking-tight">Le Mandat d'Autorité</h3>
+                        <p class="text-xl font-light italic text-gray-300 leading-relaxed border-l-2 border-white/20 pl-6 py-2">
+                            « C'est une procédure stricte. Vous n'êtes plus une option parmi d'autres, vous êtes l'évidence. »
+                        </p>
+                        <p class="text-sm text-gray-500 leading-relaxed">
+                            Le prospect qualifié visionne votre présentation (VSL). Ce n'est plus de la vente, c'est une consultation. Le transfert de confiance opère : vous devenez l'unique solution à son problème.
+                        </p>
+                    </div>
+
+                    <div id="text-4" class="step-text space-y-6 absolute inset-0">
+                        <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Étape 04</h2>
+                        <h3 class="text-4xl font-bold tracking-tight text-white">Prise de Rendez-vous</h3>
+                        <p class="text-xl font-light italic text-gray-300 leading-relaxed border-l-2 border-white/20 pl-6 py-2">
+                            « Zéro relance. Le client vient à vous. Le rapport de force est inversé. »
+                        </p>
+                        <p class="text-sm text-gray-500 leading-relaxed">
+                            Il valide le créneau dans votre agenda de lui-même. Vous restez en position d'offreur face à un dossier chaud, qualifié et pré-vendu.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="mt-12 lg:mt-32">
+                    <button id="btn-next" onclick="nextStep()" class="group flex items-center gap-4 px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs uppercase tracking-[0.2em] rounded transition-all duration-300">
+                        <span>Valider l'étape</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover:translate-x-1 transition-transform">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="w-full lg:w-1/2 flex items-center justify-center perspective-container">
+                <div id="phone-3d" class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    
+                    <div class="phone-screen">
+                        
+                        <div id="screen-1" class="screen-layer bg-gray-900 flex flex-col relative">
+                            <div class="px-4 pt-10 pb-3 border-b border-white/10 flex items-center gap-3 bg-black/50 backdrop-blur-md absolute top-0 w-full z-10">
+                                <div class="w-8 h-8 rounded bg-white/10 border border-white/20 flex items-center justify-center">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-white tracking-wide">Source Confidentielle</p>
+                                    <p class="text-[9px] text-gray-400 uppercase tracking-widest">Sponsorisé</p>
+                                </div>
+                            </div>
+                            <video class="w-full h-full object-cover" autoplay loop muted playsinline>
+                                <source src="https://player.vimeo.com/external/372333036.sd.mp4?s=d0107a97ef14ee158913d8063d86f2b1c8a1752b&profile_id=165" type="video/mp4">
+                            </video>
+                            <div class="absolute bottom-0 w-full p-5 bg-gradient-to-t from-black via-black/90 to-transparent">
+                                <p class="text-sm font-bold text-white mb-1">Optimisez votre TMI dès 2026</p>
+                                <p class="text-[10px] text-gray-300 mb-4 line-clamp-2 leading-relaxed">Découvrez la méthode mathématique pour transformer votre impôt en patrimoine sans alerter votre entourage.</p>
+                                <div class="w-full py-3 bg-white/10 border border-white/20 text-white text-center text-[10px] font-bold uppercase tracking-widest rounded shadow-md backdrop-blur-sm">Accéder au test crypté</div>
+                            </div>
+                        </div>
+
+                        <div id="screen-2" class="screen-layer bg-[#0a0a0a] flex flex-col justify-center px-6">
+                            <div class="absolute top-0 left-0 w-1/3 h-1 bg-white"></div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Contrôle d'accès</p>
+                            <h4 class="text-lg font-bold text-white mb-6">Quelle est votre Tranche Marginale d'Imposition (TMI) ?</h4>
+                            <div class="space-y-3">
+                                <div class="p-4 border border-white/10 rounded flex justify-between items-center group">
+                                    <span class="text-sm text-gray-400">11% ou 0%</span>
+                                </div>
+                                <div class="p-4 border border-white/10 rounded flex justify-between items-center group">
+                                    <span class="text-sm text-gray-400">30%</span>
+                                </div>
+                                <div class="p-4 border border-white bg-white/10 rounded flex items-center gap-3">
+                                    <div class="w-4 h-4 bg-white text-black flex items-center justify-center text-[10px] font-bold rounded-sm">✓</div>
+                                    <span class="text-sm font-bold text-white">41% ou 45%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="screen-3" class="screen-layer bg-[#050505] flex flex-col">
+                            <div class="w-full aspect-video bg-black relative mt-16 border-y border-white/10">
+                                <video class="w-full h-full object-cover" autoplay loop muted playsinline>
+                                    <source src="VSL.MP4" type="video/mp4">
+                                </video>
+                            </div>
+                            
+                            <div class="p-6 flex-1 flex flex-col justify-center">
+                                <div class="inline-flex items-center gap-2 px-2 py-1 bg-green-500/10 border border-green-500/20 rounded mb-4">
+                                    <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+                                    <span class="text-[9px] text-green-400 uppercase tracking-widest font-bold">Accès Autorisé</span>
+                                </div>
+                                <h4 class="text-xl font-bold text-white leading-tight mb-3">Protocole de Restructuration</h4>
+                                <p class="text-xs text-gray-400 leading-relaxed mb-6">Visionnez attentivement cette procédure avant toute demande de consultation. Les places sont strictement limitées aux profils éligibles.</p>
+                                <div class="w-full py-3 bg-white text-black text-center text-[10px] font-bold uppercase tracking-widest rounded">Initier la demande</div>
+                            </div>
+                        </div>
+
+                        <div id="screen-4" class="screen-layer bg-white text-black flex flex-col h-full">
+                            <div class="p-5 border-b border-gray-200 bg-gray-50 flex items-center gap-4 mt-8">
+                                <div class="w-10 h-10 bg-black rounded flex items-center justify-center text-white">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm">Consultation Privée</h4>
+                                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">45 Min · Confidentiel</p>
+                                </div>
+                            </div>
+                            <div class="p-5 flex-1">
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">Mardi 14 Octobre</p>
+                                <div class="space-y-3">
+                                    <div class="w-full py-3 border border-gray-300 rounded text-sm text-center font-medium opacity-50">09:00 (Complet)</div>
+                                    <div class="w-full py-3 border-2 border-black bg-black text-white rounded text-sm text-center font-bold shadow-sm flex items-center justify-center gap-2">
+                                        14:30 <span class="px-2 py-0.5 bg-white/20 text-white text-[8px] rounded uppercase tracking-widest">Confirmer</span>
+                                    </div>
+                                    <div class="w-full py-3 border border-gray-300 rounded text-sm text-center font-medium">16:00</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-  </div>
 
-  <script>
-    let currentStep = 1;
+    <script>
+        // État de l'application
+        let currentStep = 1;
+        const totalSteps = 4;
 
-    function setScreenAndText(step) {
-      // 1. Cacher tous les textes et écrans
-      gsap.to(".screen-layer", { opacity: 0, autoAlpha: 0, duration: 0.3 });
-      gsap.to(["#text-1", "#text-2", "#text-3", "#text-4"], { opacity: 0, autoAlpha: 0, y: -20, duration: 0.3 });
+        // Initialisation : afficher le texte 1 et l'écran 1
+        gsap.set("#text-1", { display: "block", opacity: 1 });
+        gsap.set("#screen-1", { opacity: 1, autoAlpha: 1 });
 
-      // 2. Afficher le texte et l'écran cible
-      gsap.to(`#screen-${step}`, { opacity: 1, autoAlpha: 1, duration: 0.4, delay: 0.2 });
-      gsap.fromTo(`#text-${step}`, 
-        { y: 20 }, 
-        { opacity: 1, autoAlpha: 1, y: 0, duration: 0.5, delay: 0.3 }
-      );
-    }
+        // Fonction principale déclenchée par le bouton
+        function nextStep() {
+            if (currentStep >= totalSteps) {
+                // Optionnel : rembobiner au début si on est à la fin
+                resetPresentation();
+                return;
+            }
 
-    function goToStep(step) {
-      currentStep = step;
-      setScreenAndText(step);
+            let prevStep = currentStep;
+            currentStep++;
 
-      // Gestion des animations 3D du téléphone selon l'étape
-      if (step === 1) {
-        gsap.to("#phone-3d", { rotationY: 0, rotationX: 0, scale: 1, duration: 0.8, ease: "power2.out" });
-      } else if (step === 2) {
-        gsap.to("#phone-3d", { rotationY: -15, rotationX: 0, scale: 1.05, duration: 0.8, ease: "power2.out" });
-      } else if (step === 3) {
-        gsap.to("#phone-3d", { rotationY: 0, rotationX: 0, scale: 1.1, duration: 0.8, ease: "power2.out" });
-      } else if (step === 4) {
-        gsap.to("#phone-3d", { rotationY: 0, rotationX: 5, scale: 1, duration: 0.8, ease: "power2.out" });
-      }
-    }
-  </script>
+            // 1. Gérer le bouton (Texte)
+            const btn = document.getElementById('btn-next');
+            if(currentStep === totalSteps) {
+                btn.querySelector('span').innerText = "Terminer la démo";
+            }
+
+            // 2. Animer la sortie de l'ancien texte
+            gsap.to(`#text-${prevStep}`, { 
+                opacity: 0, 
+                y: -20, 
+                duration: 0.4, 
+                onComplete: () => {
+                    gsap.set(`#text-${prevStep}`, { display: 'none' });
+                    
+                    // 3. Animer l'entrée du nouveau texte
+                    gsap.set(`#text-${currentStep}`, { display: 'block', y: 20 });
+                    gsap.to(`#text-${currentStep}`, { opacity: 1, y: 0, duration: 0.5 });
+                }
+            });
+
+            // 4. Changer l'écran du téléphone
+            gsap.to(`#screen-${prevStep}`, { opacity: 0, autoAlpha: 0, duration: 0.3 });
+            gsap.to(`#screen-${currentStep}`, { opacity: 1, autoAlpha: 1, duration: 0.3 });
+
+            // 5. Mouvements 3D du téléphone en fonction de l'étape
+            if (currentStep === 2) {
+                gsap.to("#phone-3d", { rotationY: -15, scale: 1.05, duration: 0.8, ease: "power2.out" });
+            } else if (currentStep === 3) {
+                gsap.to("#phone-3d", { rotationY: 0, scale: 1.1, duration: 0.8, ease: "power2.out" });
+            } else if (currentStep === 4) {
+                gsap.to("#phone-3d", { rotationX: 5, scale: 1, duration: 0.8, ease: "power2.out" });
+            }
+        }
+
+        // Fonction pour recommencer la présentation (boucle)
+        function resetPresentation() {
+            currentStep = 1;
+            document.getElementById('btn-next').querySelector('span').innerText = "Valider l'étape";
+            
+            // Reset Textes
+            gsap.to(".step-text", { opacity: 0, duration: 0.3, onComplete: () => {
+                gsap.set(".step-text", { display: 'none' });
+                gsap.set("#text-1", { display: 'block', y: 20 });
+                gsap.to("#text-1", { opacity: 1, y: 0, duration: 0.5 });
+            }});
+
+            // Reset Écrans
+            gsap.to(".screen-layer", { opacity: 0, autoAlpha: 0, duration: 0.3 });
+            gsap.to("#screen-1", { opacity: 1, autoAlpha: 1, duration: 0.3 });
+
+            // Reset Téléphone 3D
+            gsap.to("#phone-3d", { rotationY: 0, rotationX: 0, scale: 1, duration: 0.8, ease: "power2.out" });
+        }
+    </script>
 </body>
 </html>
