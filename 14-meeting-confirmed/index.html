@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Montis Media</title>
+    <title>Confirmation - Montis Media</title>
     
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <style>
@@ -40,7 +40,7 @@
             </svg>
         </div>
 
-        <h1 class="text-3xl md:text-4xl font-light tracking-tight text-white mb-4">
+        <h1 id="main-title" class="text-3xl md:text-4xl font-light tracking-tight text-white mb-4">
             Rendez-vous confirmé.
         </h1>
 
@@ -60,27 +60,28 @@
     </footer>
 
     <script>
-        // Extraction du nom dans l'URL
         const params = new URLSearchParams(window.location.search);
         const client = params.get('nom');
 
-        // Si un nom est détecté, on envoie la notif à Discord
         if (client) {
+            // --- 1. PERSONNALISATION DE LA PAGE ---
+            // On remplace le titre par "Rendez-vous confirmé, Julien."
+            document.getElementById('main-title').innerText = "Rendez-vous confirmé, " + client + ".";
+
+            // --- 2. ENVOI DE LA NOTIFICATION DISCORD ---
             const webhookURL = "https://discord.com/api/webhooks/1477867953386029177/yM8g4EQ5AywJcAYZeHP2DmTrGtROfWRFH8sAjJl4Hx_wsV_O5NnOu5rYphhJUXAnjILL";
 
             fetch(webhookURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    content: `🚀 **Clic détecté** : **${client}** vient d'ouvrir la page.`,
+                    content: `🚀 **Clic détecté** : **${client}** vient d'ouvrir sa page personnalisée.`,
                     embeds: [{
                         description: `Heure du clic : ${new Date().toLocaleTimeString('fr-FR')}`,
-                        color: 3447003 // Bleu pro
+                        color: 3447003
                     }]
                 })
-            })
-            .then(() => console.log("Notification envoyée pour : " + client))
-            .catch(err => console.error("Erreur Webhook:", err));
+            }).catch(err => console.error("Erreur Webhook:", err));
         }
     </script>
 </body>
