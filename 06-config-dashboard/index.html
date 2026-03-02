@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Montis Media - Master Infrastructure</title>
+  <title>Montis Media</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <style>
     html, body {
@@ -15,12 +15,12 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #000;
-      color: #fff;
+      color: #e5e7eb; /* Slightly brighter text globally */
       box-sizing: border-box;
     }
     
     .animate-in {
-      animation: fade-in 0.7s ease-out;
+      animation: fade-in 0.7s ease-out forwards;
     }
     
     @keyframes fade-in {
@@ -44,33 +44,45 @@
     /* Custom Range Slider */
     input[type=range] {
       -webkit-appearance: none;
-      background: rgba(255, 255, 255, 0.1);
-      height: 2px;
+      background: rgba(255, 255, 255, 0.2);
+      height: 4px; /* Thicker slider */
       border-radius: 2px;
       outline: none;
     }
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 20px; /* Larger thumb */
+      height: 20px;
       border-radius: 50%;
       background: #fff;
       cursor: pointer;
       transition: transform 0.1s;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
     }
     input[type=range]::-webkit-slider-thumb:hover {
       transform: scale(1.2);
     }
+
+    /* Calendar Animation Styles */
+    .cal-slot {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .cal-slot.show {
+      opacity: 1;
+      transform: scale(1);
+    }
   </style>
 </head>
-<body class="h-full bg-black text-white antialiased flex flex-col overflow-hidden">
+<body class="h-full bg-black text-gray-200 antialiased flex flex-col overflow-hidden">
   
-  <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+  <nav class="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/20">
     <div class="max-w-6xl mx-auto flex">
-      <button onclick="switchTab('horizon')" id="tab-horizon" class="tab-btn px-8 py-5 text-[10px] font-bold tracking-[0.3em] uppercase transition-all border-b-2 border-transparent text-gray-500 tab-active">Horizon</button> 
-      <button onclick="switchTab('veto')" id="tab-veto" class="tab-btn px-8 py-5 text-[10px] font-bold tracking-[0.3em] uppercase transition-all border-b-2 border-transparent text-gray-500">Veto</button> 
-      <button onclick="switchTab('sync')" id="tab-sync" class="tab-btn px-8 py-5 text-[10px] font-bold tracking-[0.3em] uppercase transition-all border-b-2 border-transparent text-gray-500">Sync</button>
+      <button onclick="switchTab('horizon')" id="tab-horizon" class="tab-btn px-8 py-5 text-xs font-bold tracking-[0.2em] uppercase transition-all border-b-2 border-transparent text-gray-400 tab-active">Horizon</button> 
+      <button onclick="switchTab('veto')" id="tab-veto" class="tab-btn px-8 py-5 text-xs font-bold tracking-[0.2em] uppercase transition-all border-b-2 border-transparent text-gray-400">Veto</button> 
+      <button onclick="switchTab('sync')" id="tab-sync" class="tab-btn px-8 py-5 text-xs font-bold tracking-[0.2em] uppercase transition-all border-b-2 border-transparent text-gray-400">Sync</button>
     </div>
   </nav>
 
@@ -80,18 +92,18 @@
       <div id="horizon-module" class="animate-in space-y-16">
         
         <div class="space-y-2">
-          <h1 class="text-6xl font-bold tracking-tighter italic uppercase">Horizon.</h1>
-          <p class="text-xs tracking-widest uppercase text-gray-500">Control Room / Bureau des Allocations</p>
+          <h1 class="text-6xl font-bold tracking-tighter italic uppercase text-white">Horizon.</h1>
+          <p class="text-sm tracking-widest uppercase text-gray-400">Control Room / Bureau des Allocations</p>
         </div>
 
-        <section class="p-8 border border-white/10 bg-white/5 space-y-8 rounded-sm">
-          <div class="flex justify-between items-end">
+        <section class="p-8 border border-white/20 bg-white/5 space-y-8 rounded-sm shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
-              <h2 class="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-1">01. Curseur de Haute Précision</h2>
-              <p class="text-2xl font-light italic">Calibrage de la matrice d'acquisition</p>
+              <h2 class="text-xs font-bold tracking-[0.2em] uppercase text-gray-300 mb-1">01. Curseur de Haute Précision</h2>
+              <p class="text-2xl font-light italic text-white">Calibrage de la matrice d'acquisition</p>
             </div>
             <div class="text-right">
-              <span id="tolerance-display" class="px-4 py-2 bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-widest text-white">
+              <span id="tolerance-display" class="px-5 py-3 bg-white/20 border border-white/40 text-sm font-bold uppercase tracking-widest text-white rounded">
                 Tolérance : TMI 45%+, Actifs > 150k€
               </span>
             </div>
@@ -99,7 +111,7 @@
           
           <div class="pt-6">
             <input type="range" min="1" max="3" value="3" class="w-full" id="precision-dial" oninput="updateTolerance(this.value)">
-            <div class="flex justify-between text-[9px] text-gray-600 uppercase tracking-[0.2em] mt-4 font-bold">
+            <div class="flex justify-between text-[10px] text-gray-400 uppercase tracking-[0.2em] mt-4 font-bold">
               <span>Volume (Standard)</span>
               <span>Haute Précision</span>
               <span class="text-white">Filtre Extrême</span>
@@ -108,99 +120,273 @@
         </section>
 
         <section class="space-y-6 pt-8">
-          <div class="flex justify-between items-center border-b border-white/10 pb-4">
-            <h2 class="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500">02. Demandes d'Études en attente (Live)</h2>
-            <span class="flex items-center gap-2 text-[9px] text-green-500 uppercase tracking-widest font-bold">
-              <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Flux Actif
+          <div class="flex justify-between items-center border-b border-white/20 pb-4">
+            <h2 class="text-xs font-bold tracking-[0.2em] uppercase text-gray-300">02. Demandes d'Études en attente (Live)</h2>
+            <span class="flex items-center gap-2 text-xs text-green-400 uppercase tracking-widest font-bold bg-green-900/20 px-3 py-1 rounded">
+              <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span> Flux Actif
             </span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="dossiers-grid">
             
-            <div class="p-6 bg-[#050505] border border-white/10 flex flex-col justify-between group hover:border-white/30 transition-all">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg" data-level="3">
               <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
-                    <p class="text-lg font-bold text-purple-400">Dr. Pierre G.</p>
-                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Lyon (69) - BNC</p>
+                    <p class="text-xl font-bold text-purple-400">Dr. Pierre G.</p>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Lyon (69) - BNC</p>
                   </div>
-                  <span class="px-2 py-1 bg-yellow-500/10 text-yellow-500 text-[8px] uppercase tracking-widest border border-yellow-500/20">En attente</span>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
                 </div>
                 <div class="space-y-3 mb-8 text-sm font-light">
-                  <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-gray-500 text-xs">TMI :</span> 
-                    <span class="text-white font-bold">41%</span>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI :</span> 
+                    <span class="text-white font-bold text-base">45%</span>
                   </div>
-                  <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-gray-500 text-xs">Capacité d'invest. :</span> 
-                    <span class="text-white font-bold">150k€</span>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Capacité invest. :</span> 
+                    <span class="text-white font-bold text-base">200k€</span>
                   </div>
                   <div class="flex flex-col gap-1 pt-1">
-                    <span class="text-gray-500 text-xs">Problématique :</span> 
-                    <span class="italic text-gray-300 text-xs leading-relaxed">« Pression fiscale libérale & besoin de structuration retraite. »</span>
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Pression fiscale libérale écrasante. »</span>
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '69')" class="w-full py-4 bg-white/5 border border-white/20 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all">
-                Allouer à mon cabinet
+              <button onclick="allocateDossier(this, '69')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
               </button>
             </div>
 
-            <div class="p-6 bg-[#050505] border border-white/10 flex flex-col justify-between group hover:border-white/30 transition-all">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg" data-level="3">
               <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
-                    <p class="text-lg font-bold text-blue-400">SARL Dupont</p>
-                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Nantes (44) - Dirigeant BIC</p>
+                    <p class="text-xl font-bold text-blue-400">SARL Dupont</p>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Nantes (44) - Dirigeant</p>
                   </div>
-                  <span class="px-2 py-1 bg-yellow-500/10 text-yellow-500 text-[8px] uppercase tracking-widest border border-yellow-500/20">En attente</span>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
                 </div>
                 <div class="space-y-3 mb-8 text-sm font-light">
-                  <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-gray-500 text-xs">TMI / IS :</span> 
-                    <span class="text-white font-bold">30% / 25%</span>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI / IS :</span> 
+                    <span class="text-white font-bold text-base">41% / 25%</span>
                   </div>
-                  <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-gray-500 text-xs">Trésorerie dispo :</span> 
-                    <span class="text-white font-bold">400k€</span>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Trésorerie dispo :</span> 
+                    <span class="text-white font-bold text-base">400k€</span>
                   </div>
                   <div class="flex flex-col gap-1 pt-1">
-                    <span class="text-gray-500 text-xs">Problématique :</span> 
-                    <span class="italic text-gray-300 text-xs leading-relaxed">« Trésorerie dormante, volonté de montage Holding / SCI. »</span>
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Trésorerie dormante, montage Holding. »</span>
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '44')" class="w-full py-4 bg-white/5 border border-white/20 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all">
-                Allouer à mon cabinet
+              <button onclick="allocateDossier(this, '44')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
               </button>
             </div>
 
-            <div class="p-6 bg-[#050505] border border-white/10 flex flex-col justify-between group hover:border-white/30 transition-all">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg" data-level="3">
               <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
-                    <p class="text-lg font-bold text-emerald-400">Marc L.</p>
-                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Paris (75) - Cadre Sup.</p>
+                    <p class="text-xl font-bold text-emerald-400">Marc L.</p>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Paris (75) - Cadre Sup.</p>
                   </div>
-                  <span class="px-2 py-1 bg-yellow-500/10 text-yellow-500 text-[8px] uppercase tracking-widest border border-yellow-500/20">En attente</span>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
                 </div>
                 <div class="space-y-3 mb-8 text-sm font-light">
-                  <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-gray-500 text-xs">TMI :</span> 
-                    <span class="text-white font-bold">45%</span>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI :</span> 
+                    <span class="text-white font-bold text-base">45%</span>
                   </div>
-                  <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-gray-500 text-xs">Revenus nets :</span> 
-                    <span class="text-white font-bold">250k€/an</span>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Revenus nets :</span> 
+                    <span class="text-white font-bold text-base">250k€/an</span>
                   </div>
                   <div class="flex flex-col gap-1 pt-1">
-                    <span class="text-gray-500 text-xs">Problématique :</span> 
-                    <span class="italic text-gray-300 text-xs leading-relaxed">« Massacre fiscal annuel. Cherche leviers de défiscalisation massive. »</span>
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Cherche leviers de défiscalisation massive. »</span>
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '75')" class="w-full py-4 bg-white/5 border border-white/20 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all">
-                Allouer à mon cabinet
+              <button onclick="allocateDossier(this, '75')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
+              </button>
+            </div>
+
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="2">
+              <div>
+                <div class="flex justify-between items-start mb-6">
+                  <div>
+                    <p class="text-xl font-bold text-purple-400">Sophie T.</p>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Bordeaux (69) - Avocate</p>
+                  </div>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
+                </div>
+                <div class="space-y-3 mb-8 text-sm font-light">
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI :</span> 
+                    <span class="text-white font-bold text-base">41%</span>
+                  </div>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Capacité invest. :</span> 
+                    <span class="text-white font-bold text-base">80k€</span>
+                  </div>
+                  <div class="flex flex-col gap-1 pt-1">
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Préparation retraite et baisse TMI. »</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="allocateDossier(this, '33')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
+              </button>
+            </div>
+
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="2">
+              <div>
+                <div class="flex justify-between items-start mb-6">
+                  <div>
+                    <p class="text-xl font-bold text-blue-400">EURL Martin</p>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Lille (44) - Artisan</p>
+                  </div>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
+                </div>
+                <div class="space-y-3 mb-8 text-sm font-light">
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI / IS :</span> 
+                    <span class="text-white font-bold text-base">30% / 15%</span>
+                  </div>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Trésorerie dispo :</span> 
+                    <span class="text-white font-bold text-base">120k€</span>
+                  </div>
+                  <div class="flex flex-col gap-1 pt-1">
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Optimisation rémunération gérant. »</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="allocateDossier(this, '44')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
+              </button>
+            </div>
+
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="2">
+               <div>
+                <div class="flex justify-between items-start mb-6">
+                  <div>
+                    <p class="text-xl font-bold text-emerald-400">Jean D.</p>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Toulouse (31) - Ingénieur</p>
+                  </div>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
+                </div>
+                <div class="space-y-3 mb-8 text-sm font-light">
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI :</span> 
+                    <span class="text-white font-bold text-base">41%</span>
+                  </div>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Revenus nets :</span> 
+                    <span class="text-white font-bold text-base">110k€/an</span>
+                  </div>
+                  <div class="flex flex-col gap-1 pt-1">
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Création déficit foncier. »</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="allocateDossier(this, '31')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
+              </button>
+            </div>
+
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="1">
+               <div>
+                <div class="flex justify-between items-start mb-6">
+                  <div>
+                    <p class="text-xl font-bold text-gray-400">Lucie M.</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mt-1">Rennes (59) - Salariée</p>
+                  </div>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
+                </div>
+                <div class="space-y-3 mb-8 text-sm font-light">
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI :</span> 
+                    <span class="text-white font-bold text-base">30%</span>
+                  </div>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Capacité invest. :</span> 
+                    <span class="text-white font-bold text-base">30k€</span>
+                  </div>
+                  <div class="flex flex-col gap-1 pt-1">
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Placement assurance-vie classique. »</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="allocateDossier(this, '59')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
+              </button>
+            </div>
+
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="1">
+               <div>
+                <div class="flex justify-between items-start mb-6">
+                  <div>
+                    <p class="text-xl font-bold text-gray-400">M. Dubois</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mt-1">Marseille (31) - Retraité</p>
+                  </div>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
+                </div>
+                <div class="space-y-3 mb-8 text-sm font-light">
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI :</span> 
+                    <span class="text-white font-bold text-base">30%</span>
+                  </div>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Capacité invest. :</span> 
+                    <span class="text-white font-bold text-base">50k€</span>
+                  </div>
+                  <div class="flex flex-col gap-1 pt-1">
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Transmission à ses petits-enfants. »</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="allocateDossier(this, '31')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
+              </button>
+            </div>
+
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="1">
+               <div>
+                <div class="flex justify-between items-start mb-6">
+                  <div>
+                    <p class="text-xl font-bold text-gray-400">SASU Bernard</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mt-1">Nice (13) - Consultant</p>
+                  </div>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[9px] font-bold uppercase tracking-widest border border-yellow-500/30 rounded">En attente</span>
+                </div>
+                <div class="space-y-3 mb-8 text-sm font-light">
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">TMI / IS :</span> 
+                    <span class="text-white font-bold text-base">30% / 15%</span>
+                  </div>
+                  <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Trésorerie dispo :</span> 
+                    <span class="text-white font-bold text-base">40k€</span>
+                  </div>
+                  <div class="flex flex-col gap-1 pt-1">
+                    <span class="text-gray-400">Problématique :</span> 
+                    <span class="italic text-gray-200 leading-relaxed">« Placer excédent de trésorerie court terme. »</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="allocateDossier(this, '13')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                Évaluer la demande
               </button>
             </div>
 
@@ -209,28 +395,67 @@
 
       </div>
 
-      <div id="veto-module" class="hidden animate-in space-y-24">
-        <h1 class="text-6xl font-bold tracking-tighter uppercase text-red-600">Veto.</h1>
-        <section class="bg-red-950/10 border border-red-900/20 p-12 space-y-8">
-          <h2 class="text-xs font-bold tracking-[0.2em] uppercase text-red-500">Filtrage Thématique</h2>
-          <p class="text-2xl font-light italic text-gray-300">Exclusion des activités carte T et IOBSP</p>
-          <div class="flex gap-4">
-            <button onclick="toggleFilter('deactivate')" id="btn-deactivate" class="px-8 py-3 bg-red-600 font-bold text-xs uppercase hover:bg-red-700 transition">Désactiver</button> 
-            <button onclick="toggleFilter('maintain')" id="btn-maintain" class="px-8 py-3 bg-white/10 font-bold text-xs uppercase hover:bg-white/20 transition text-gray-500">Maintenir</button>
-          </div>
-        </section>
+      <div id="veto-module" class="hidden animate-in space-y-16">
+        <h1 class="text-6xl font-bold tracking-tighter uppercase text-red-500 italic">Veto.</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <section class="bg-red-950/20 border border-red-900/30 p-8 rounded shadow-lg space-y-6">
+            <h2 class="text-sm font-bold tracking-[0.2em] uppercase text-red-400">Filtrage Réglementaire</h2>
+            <p class="text-xl font-light text-gray-200">Exclusion des activités <span class="font-bold text-white">Carte T</span> (Immobilier)</p>
+            <div class="flex gap-4">
+              <button onclick="toggleFilter(this, 'deactivate')" class="flex-1 py-3 bg-red-600 font-bold text-xs uppercase hover:bg-red-700 transition rounded text-white shadow-md">Désactiver</button> 
+              <button onclick="toggleFilter(this, 'maintain')" class="flex-1 py-3 bg-white/10 font-bold text-xs uppercase hover:bg-white/20 transition text-gray-300 rounded border border-white/10">Maintenir</button>
+            </div>
+          </section>
+
+          <section class="bg-red-950/20 border border-red-900/30 p-8 rounded shadow-lg space-y-6">
+            <h2 class="text-sm font-bold tracking-[0.2em] uppercase text-red-400">Filtrage Réglementaire</h2>
+            <p class="text-xl font-light text-gray-200">Exclusion des activités <span class="font-bold text-white">IOBSP</span> (Crédit)</p>
+            <div class="flex gap-4">
+              <button onclick="toggleFilter(this, 'deactivate')" class="flex-1 py-3 bg-red-600 font-bold text-xs uppercase hover:bg-red-700 transition rounded text-white shadow-md">Désactiver</button> 
+              <button onclick="toggleFilter(this, 'maintain')" class="flex-1 py-3 bg-white/10 font-bold text-xs uppercase hover:bg-white/20 transition text-gray-300 rounded border border-white/10">Maintenir</button>
+            </div>
+          </section>
+
+          <section class="bg-red-950/20 border border-red-900/30 p-8 rounded shadow-lg space-y-6 md:col-span-2">
+            <h2 class="text-sm font-bold tracking-[0.2em] uppercase text-red-400">Filtrage Réglementaire</h2>
+            <p class="text-xl font-light text-gray-200">Exclusion des activités <span class="font-bold text-white">IAS</span> (Assurance)</p>
+            <div class="flex gap-4 max-w-md">
+              <button onclick="toggleFilter(this, 'deactivate')" class="flex-1 py-3 bg-red-600 font-bold text-xs uppercase hover:bg-red-700 transition rounded text-white shadow-md">Désactiver</button> 
+              <button onclick="toggleFilter(this, 'maintain')" class="flex-1 py-3 bg-white/10 font-bold text-xs uppercase hover:bg-white/20 transition text-gray-300 rounded border border-white/10">Maintenir</button>
+            </div>
+          </section>
+        </div>
       </div>
 
       <div id="sync-module" class="hidden animate-in space-y-16">
-        <h1 class="text-6xl font-bold tracking-tighter uppercase text-center italic">Sync.</h1>
-        <div class="max-w-2xl mx-auto space-y-12">
-          <div class="space-y-4">
-            <label class="text-[10px] text-gray-500 uppercase tracking-widest">Email de Synchronisation</label> 
-            <input type="text" class="w-full bg-[#0a0a0a] border border-white/10 p-4 rounded outline-none focus:border-white transition-all" placeholder="votre.email@cabinet.fr">
+        <h1 class="text-6xl font-bold tracking-tighter uppercase text-center italic text-white">Sync.</h1>
+        <div class="max-w-3xl mx-auto space-y-12">
+          
+          <div class="space-y-4 bg-white/5 p-8 border border-white/20 rounded shadow-lg">
+            <label class="text-xs font-bold text-gray-300 uppercase tracking-widest block mb-2">Email de Synchronisation Calendrier</label> 
+            <input type="email" id="sync-email" class="w-full bg-[#0a0a0a] border border-white/30 p-4 rounded outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all text-white text-lg" placeholder="votre.nom@cabinet.fr">
+            
+            <div class="flex justify-center mt-8">
+              <button id="btn-sync" onclick="animateSync()" class="px-12 py-4 bg-white text-black font-bold text-sm uppercase tracking-widest hover:bg-gray-200 transition rounded shadow-[0_0_20px_rgba(255,255,255,0.2)]">Valider l'infrastructure</button>
+            </div>
           </div>
-          <div class="flex justify-center mt-12">
-            <button onclick="viewResults()" class="px-12 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition">Valider l'infrastructure</button>
+
+          <div id="calendar-view" class="hidden space-y-6 pt-8 border-t border-white/10">
+            <h3 class="text-center text-sm font-bold uppercase tracking-widest text-green-400">Synchronisation Réussie</h3>
+            <p class="text-center text-xs text-gray-400 mb-6">Simulation de remplissage automatique sur 30 jours.</p>
+            
+            <div class="grid grid-cols-7 gap-2 bg-[#0a0a0a] p-4 border border-white/20 rounded">
+              <div class="text-center text-[10px] uppercase text-gray-500 pb-2">Lun</div><div class="text-center text-[10px] uppercase text-gray-500 pb-2">Mar</div><div class="text-center text-[10px] uppercase text-gray-500 pb-2">Mer</div><div class="text-center text-[10px] uppercase text-gray-500 pb-2">Jeu</div><div class="text-center text-[10px] uppercase text-gray-500 pb-2">Ven</div><div class="text-center text-[10px] uppercase text-gray-500 pb-2">Sam</div><div class="text-center text-[10px] uppercase text-gray-500 pb-2">Dim</div>
+              
+              <script>
+                for(let i=1; i<=30; i++) {
+                  document.write(`<div id="day-${i}" class="aspect-square border border-white/5 flex flex-col p-1 relative"><span class="text-[9px] text-gray-600">${i}</span></div>`);
+                }
+              </script>
+            </div>
           </div>
+
         </div>
       </div>
 
@@ -249,15 +474,29 @@
     // Curseur de tolérance (Back-end UX)
     function updateTolerance(val) {
       const display = document.getElementById('tolerance-display');
+      const cards = document.querySelectorAll('.dossier-card');
+
       if (val == 1) {
-        display.innerText = "Tolérance : TMI 30%+, Intention 6 mois";
-        display.className = "px-4 py-2 bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400";
+        display.innerText = "Tolérance : Volume (Standard)";
+        display.className = "px-5 py-3 bg-white/5 border border-white/20 text-sm font-bold uppercase tracking-widest text-gray-300 rounded";
+        // Afficher tout (Niveaux 1, 2, 3)
+        cards.forEach(card => card.classList.remove('hidden'));
       } else if (val == 2) {
-        display.innerText = "Tolérance : TMI 41%+, Intention 3 mois";
-        display.className = "px-4 py-2 bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-widest text-gray-200";
+        display.innerText = "Tolérance : Haute Précision";
+        display.className = "px-5 py-3 bg-white/10 border border-white/30 text-sm font-bold uppercase tracking-widest text-white rounded";
+        // Afficher Niveaux 2, 3
+        cards.forEach(card => {
+          if(card.dataset.level === "1") card.classList.add('hidden');
+          else card.classList.remove('hidden');
+        });
       } else {
         display.innerText = "Tolérance : TMI 45%+, Actifs > 150k€";
-        display.className = "px-4 py-2 bg-white/20 border border-white/40 text-xs font-bold uppercase tracking-widest text-white";
+        display.className = "px-5 py-3 bg-white/20 border border-white/50 text-sm font-bold uppercase tracking-widest text-white rounded shadow-[0_0_15px_rgba(255,255,255,0.1)]";
+        // Afficher Niveau 3 uniquement
+        cards.forEach(card => {
+          if(card.dataset.level === "3") card.classList.remove('hidden');
+          else card.classList.add('hidden');
+        });
       }
     }
 
@@ -265,37 +504,82 @@
     function allocateDossier(btn, zone) {
       // 1. État de chargement (Scan)
       btn.disabled = true;
-      btn.className = "w-full py-4 bg-transparent border border-gray-600 text-gray-400 text-[9px] font-bold uppercase tracking-[0.2em]";
-      btn.innerText = "[ /// SCAN DE CONFORMITÉ... ]";
+      btn.className = "w-full py-4 bg-transparent border border-blue-500 text-blue-400 text-[10px] font-bold uppercase tracking-[0.2em] rounded";
+      btn.innerText = "[ SCAN DE CONFORMITÉ... ]";
       
       // 2. Étape intermédiaire
       setTimeout(() => {
-        btn.innerText = "[ VÉRIFICATION TERRITORIALE... ]";
+        btn.innerText = "[ VÉRIFICATION DISPO... ]";
         
         // 3. Le Coup de Grâce (Refus pour cause de non-activation)
         setTimeout(() => {
-          btn.className = "w-full py-3 bg-red-950/40 border border-red-600 text-red-500 text-[8px] font-bold uppercase tracking-widest leading-relaxed";
-          btn.innerHTML = `ACTION IMPOSSIBLE<br><span class="text-[7px] text-red-400">Dossier déjà alloué au Cabinet concurrent (Zone ${zone}).<br>Votre infrastructure n'est pas activée.</span>`;
+          btn.className = "w-full py-3 bg-red-950/60 border border-red-500 text-red-400 text-[9px] font-bold uppercase tracking-widest leading-relaxed rounded";
+          btn.innerHTML = `<span class="text-white text-[10px]">ACTION IMPOSSIBLE</span><br><span class="opacity-80">Dossier déjà attribué (Zone ${zone}).<br>Prenez-le en simulation.</span>`;
         }, 1500);
 
       }, 1200);
     }
 
-    // Fonctions Veto & Sync conservées
-    function toggleFilter(type) {
-      const deactivateBtn = document.getElementById('btn-deactivate');
-      const maintainBtn = document.getElementById('btn-maintain');
-      if (type === 'deactivate') {
-        deactivateBtn.className = "px-8 py-3 bg-red-600 font-bold text-xs uppercase transition";
-        maintainBtn.className = "px-8 py-3 bg-white/10 font-bold text-xs uppercase hover:bg-white/20 transition text-gray-500";
+    // Fonctions Veto dynamiques par bloc
+    function toggleFilter(btn, action) {
+      const container = btn.parentElement;
+      const deactivateBtn = container.children[0];
+      const maintainBtn = container.children[1];
+
+      if (action === 'deactivate') {
+        deactivateBtn.className = "flex-1 py-3 bg-red-600 font-bold text-xs uppercase transition rounded text-white shadow-md border border-red-500";
+        maintainBtn.className = "flex-1 py-3 bg-white/5 font-bold text-xs uppercase hover:bg-white/10 transition text-gray-500 rounded border border-white/5";
       } else {
-        maintainBtn.className = "px-8 py-3 bg-green-600 text-white font-bold text-xs uppercase transition";
-        deactivateBtn.className = "px-8 py-3 bg-white/10 font-bold text-xs uppercase hover:bg-white/20 transition text-gray-500";
+        maintainBtn.className = "flex-1 py-3 bg-green-600 text-white font-bold text-xs uppercase transition rounded shadow-md border border-green-500";
+        deactivateBtn.className = "flex-1 py-3 bg-white/5 font-bold text-xs uppercase hover:bg-white/10 transition text-gray-500 rounded border border-white/5";
       }
     }
 
-    function viewResults() {
-      alert("Redirection vers la validation du mandat / ROI Simulator.");
+    // Animation du calendrier dans Sync
+    function animateSync() {
+      const email = document.getElementById('sync-email').value;
+      const btn = document.getElementById('btn-sync');
+      const calView = document.getElementById('calendar-view');
+
+      if(!email) {
+        alert("Veuillez entrer une adresse email valide.");
+        return;
+      }
+
+      // Modifier le bouton
+      btn.innerText = "Synchronisation en cours...";
+      btn.classList.add('bg-blue-600', 'text-white', 'border-blue-500');
+      btn.classList.remove('bg-white', 'text-black');
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerText = "Infrastructure Validée";
+        btn.classList.replace('bg-blue-600', 'bg-green-600');
+        btn.classList.replace('border-blue-500', 'border-green-500');
+        
+        calView.classList.remove('hidden');
+        calView.classList.add('animate-in');
+
+        // Placer 4 RDVs aléatoires
+        const daysToFill = [4, 11, 18, 26]; // Jours factices
+        
+        daysToFill.forEach((day, index) => {
+          setTimeout(() => {
+            const dayCell = document.getElementById(`day-${day}`);
+            if(dayCell) {
+              const rdvBlock = document.createElement('div');
+              rdvBlock.className = "absolute inset-1 top-4 bg-blue-600/80 border border-blue-400 rounded-sm cal-slot flex items-center justify-center";
+              rdvBlock.innerHTML = `<span class="text-[8px] font-bold text-white uppercase truncate px-1">RDV TMI+</span>`;
+              dayCell.appendChild(rdvBlock);
+              
+              // Trigger reflow pour l'animation
+              void rdvBlock.offsetWidth;
+              rdvBlock.classList.add('show');
+            }
+          }, (index + 1) * 400); // Décalage de 400ms entre chaque apparition
+        });
+
+      }, 1500);
     }
   </script>
 </body>
