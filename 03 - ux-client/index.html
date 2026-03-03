@@ -283,8 +283,8 @@
         // Fonction principale déclenchée par le bouton
         function nextStep() {
             if (currentStep >= totalSteps) {
-                // Rembobiner au début si on est à la fin
-                resetPresentation();
+                // Redirection vers le dossier suivant 04-showcase
+                window.location.href = "../04-showcase/";
                 return;
             }
 
@@ -323,26 +323,6 @@
             } else if (currentStep === 4) {
                 gsap.to("#phone-3d", { rotationX: 5, scale: 1, duration: 0.8, ease: "power2.out" });
             }
-        }
-
-        // Fonction pour recommencer la présentation (boucle)
-        function resetPresentation() {
-            currentStep = 1;
-            document.getElementById('btn-next').querySelector('span').innerText = "Valider l'étape";
-            
-            // Reset Textes
-            gsap.to(".step-text", { opacity: 0, duration: 0.3, onComplete: () => {
-                gsap.set(".step-text", { display: 'none' });
-                gsap.set("#text-1", { display: 'block', y: 20 });
-                gsap.to("#text-1", { opacity: 1, y: 0, duration: 0.5 });
-            }});
-
-            // Reset Écrans
-            gsap.to(".screen-layer", { opacity: 0, autoAlpha: 0, duration: 0.3 });
-            gsap.to("#screen-1", { opacity: 1, autoAlpha: 1, duration: 0.3 });
-
-            // Reset Téléphone 3D
-            gsap.to("#phone-3d", { rotationY: 0, rotationX: 0, scale: 1, duration: 0.8, ease: "power2.out" });
         }
     </script>
 </body>
