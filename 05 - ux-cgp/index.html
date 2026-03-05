@@ -15,7 +15,7 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #000;
-      color: #e5e7eb; /* Slightly brighter text globally */
+      color: #e5e7eb;
       box-sizing: border-box;
     }
     
@@ -45,14 +45,14 @@
     input[type=range] {
       -webkit-appearance: none;
       background: rgba(255, 255, 255, 0.2);
-      height: 4px; /* Thicker slider */
+      height: 4px;
       border-radius: 2px;
       outline: none;
     }
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 20px; /* Larger thumb */
+      width: 20px;
       height: 20px;
       border-radius: 50%;
       background: #fff;
@@ -129,7 +129,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="dossiers-grid">
             
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg" data-level="3">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative" data-level="3">
               <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -153,12 +153,15 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '69')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '69')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg" data-level="3">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative" data-level="3">
               <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -182,12 +185,15 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '44')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '44')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg" data-level="3">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative" data-level="3">
               <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -211,12 +217,15 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '75')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '75')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="2">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative hidden" data-level="2">
               <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -240,12 +249,15 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '33')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '33')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="2">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative hidden" data-level="2">
               <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -269,12 +281,15 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '44')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '44')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="2">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative hidden" data-level="2">
                <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -298,12 +313,15 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '31')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '31')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="1">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative hidden" data-level="1">
                <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -327,12 +345,15 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '59')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '59')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="1">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative hidden" data-level="1">
                <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -356,12 +377,15 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '31')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '31')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
-            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg hidden" data-level="1">
+            <div class="dossier-card p-6 bg-[#0a0a0a] border border-white/20 flex flex-col justify-between group hover:border-white/40 transition-all rounded shadow-lg relative hidden" data-level="1">
                <div>
                 <div class="flex justify-between items-start mb-6">
                   <div>
@@ -385,9 +409,12 @@
                   </div>
                 </div>
               </div>
-              <button onclick="allocateDossier(this, '13')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
-                Évaluer la demande
-              </button>
+              <div>
+                <button onclick="allocateDossier(this, '13')" class="w-full py-4 bg-white/10 border border-white/30 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded">
+                  Évaluer la demande
+                </button>
+                <p class="timestamp text-[10px] text-gray-500 uppercase tracking-widest mt-3 text-center"></p>
+              </div>
             </div>
 
           </div>
@@ -463,6 +490,34 @@
   </main>
 
   <script>
+    // --- Fonction pour générer des dates aléatoires récentes ---
+    function getRandomRecentDate() {
+      const now = new Date();
+      const randomHours = Math.floor(Math.random() * 48);
+      const randomMinutes = Math.floor(Math.random() * 60);
+      
+      now.setHours(now.getHours() - randomHours);
+      now.setMinutes(now.getMinutes() - randomMinutes);
+
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+
+      return `Reçu le ${day}/${month}/${year} à ${hours}:${minutes}`;
+    }
+
+    // --- Assigner les dates au chargement de la page ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const timestamps = document.querySelectorAll('.timestamp');
+      timestamps.forEach(el => {
+        el.innerText = getRandomRecentDate();
+      });
+    });
+    // ----------------------------------------------------------------
+
     // Gestion des onglets
     function switchTab(tabId) {
       document.querySelectorAll('[id$="-module"]').forEach(m => m.classList.add('hidden'));
@@ -479,12 +534,10 @@
       if (val == 1) {
         display.innerText = "Tolérance : Volume (Standard)";
         display.className = "px-5 py-3 bg-white/5 border border-white/20 text-sm font-bold uppercase tracking-widest text-gray-300 rounded";
-        // Afficher tout (Niveaux 1, 2, 3)
         cards.forEach(card => card.classList.remove('hidden'));
       } else if (val == 2) {
         display.innerText = "Tolérance : Haute Précision";
         display.className = "px-5 py-3 bg-white/10 border border-white/30 text-sm font-bold uppercase tracking-widest text-white rounded";
-        // Afficher Niveaux 2, 3
         cards.forEach(card => {
           if(card.dataset.level === "1") card.classList.add('hidden');
           else card.classList.remove('hidden');
@@ -492,7 +545,6 @@
       } else {
         display.innerText = "Tolérance : TMI 45%+, Actifs > 150k€";
         display.className = "px-5 py-3 bg-white/20 border border-white/50 text-sm font-bold uppercase tracking-widest text-white rounded shadow-[0_0_15px_rgba(255,255,255,0.1)]";
-        // Afficher Niveau 3 uniquement
         cards.forEach(card => {
           if(card.dataset.level === "3") card.classList.remove('hidden');
           else card.classList.add('hidden');
@@ -502,16 +554,13 @@
 
     // Le Strike : La fausse allocation qui déclenche le FOMO
     function allocateDossier(btn, zone) {
-      // 1. État de chargement (Scan)
       btn.disabled = true;
       btn.className = "w-full py-4 bg-transparent border border-blue-500 text-blue-400 text-[10px] font-bold uppercase tracking-[0.2em] rounded";
       btn.innerText = "[ SCAN DE CONFORMITÉ... ]";
       
-      // 2. Étape intermédiaire
       setTimeout(() => {
         btn.innerText = "[ VÉRIFICATION DISPO... ]";
         
-        // 3. Le Coup de Grâce (Refus pour cause de non-activation)
         setTimeout(() => {
           btn.className = "w-full py-3 bg-red-950/60 border border-red-500 text-red-400 text-[9px] font-bold uppercase tracking-widest leading-relaxed rounded";
           btn.innerHTML = `<span class="text-white text-[10px]">ACTION IMPOSSIBLE</span><br><span class="opacity-80">Dossier déjà attribué (Zone ${zone}).<br>Prenez-le en simulation.</span>`;
@@ -535,7 +584,7 @@
       }
     }
 
-    // Animation du calendrier dans Sync
+    // Animation du calendrier dans Sync avec redirection modifiée
     function animateSync() {
       const email = document.getElementById('sync-email').value;
       const btn = document.getElementById('btn-sync');
@@ -546,7 +595,7 @@
         return;
       }
 
-      // Modifier le bouton
+      // Modifier le bouton pendant le chargement
       btn.innerText = "Synchronisation en cours...";
       btn.classList.add('bg-blue-600', 'text-white', 'border-blue-500');
       btn.classList.remove('bg-white', 'text-black');
@@ -561,7 +610,7 @@
         calView.classList.add('animate-in');
 
         // Placer 4 RDVs aléatoires
-        const daysToFill = [4, 11, 18, 26]; // Jours factices
+        const daysToFill = [4, 11, 18, 26];
         
         daysToFill.forEach((day, index) => {
           setTimeout(() => {
@@ -578,6 +627,23 @@
             }
           }, (index + 1) * 400); // Décalage de 400ms entre chaque apparition
         });
+
+        // --- NOUVEAU : Transformation du bouton pour redirection ---
+        // On attend que les animations de RDV soient terminées (environ 2.5 secondes)
+        setTimeout(() => {
+          btn.innerText = "Accéder au Simulateur ROI ➔";
+          // On passe le bouton en blanc pour le rendre cliquable et évident
+          btn.classList.replace('bg-green-600', 'bg-white');
+          btn.classList.replace('border-green-500', 'border-white');
+          btn.classList.remove('text-white');
+          btn.classList.add('text-black');
+          btn.disabled = false;
+          
+          // Action de redirection vers ton dossier '07-roi-simulator'
+          btn.onclick = () => {
+            window.location.href = '../07-roi-simulator/index.html';
+          };
+        }, 2500);
 
       }, 1500);
     }
