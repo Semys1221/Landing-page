@@ -187,8 +187,10 @@
         function initCalendly() {
             const container = document.getElementById('calendly-container');
             container.innerHTML = '';
+            
+            // L'URL de Calendly a été mise à jour ici tout en gardant les styles personnalisés
             Calendly.initInlineWidget({
-                url: 'https://calendly.com/julie-montislive/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000&text_color=ffffff&primary_color=3b82f6',
+                url: 'https://calendly.com/montismedia/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=000000&text_color=ffffff&primary_color=3b82f6',
                 parentElement: container
             });
         }
