@@ -1,1 +1,305 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wolf.OS - Closing & Straight Line</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #050505;
+            --border: #1a1a1a;
+            --accent-blue: #0070f3;
+            --text-question: #ffffff;
+            --text-answer: #888888;
+            
+            /* Tally Balistique Colors */
+            --c-vert: #10b981;
+            --c-rouge: #ef4444;
+            --c-jaune: #eab308;
+            --c-violet: #a855f7;
+            --c-gris: #4b5563;
 
+            --font-main: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text-question);
+            font-family: var(--font-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 1.5rem 2.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo-area h1 { font-size: 0.85rem; letter-spacing: 0.4rem; font-weight: 800; color: #fff; }
+        .logo-area p { font-size: 0.6rem; color: var(--c-jaune); text-transform: uppercase; margin-top: 0.3rem; letter-spacing: 2px;}
+
+        .metrics-area { display: flex; align-items: center; gap: 1.5rem; }
+
+        .certitude-box {
+            background: #111; border: 1px solid var(--border); padding: 0.5rem 1rem;
+            border-radius: 4px; font-family: monospace; font-size: 0.8rem; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .certitude-bar { width: 100px; height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
+        .certitude-fill { height: 100%; transition: width 0.3s ease, background 0.3s ease; }
+
+        .card-wrapper { position: relative; max-width: 750px; width: 90%; margin: 40px auto 60px auto; }
+        .nav-controls { display: flex; justify-content: flex-start; margin-bottom: 15px; }
+        .btn-back {
+            background: none; border: none; color: var(--text-answer); cursor: pointer;
+            font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            transition: color 0.2s;
+        }
+        .btn-back:hover { color: #fff; }
+        .btn-back[disabled] { opacity: 0; cursor: default; }
+
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 4rem 3.5rem; border-radius: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .question-id { 
+            display: block; font-size: 0.7rem; color: var(--c-jaune); 
+            margin-bottom: 1.5rem; font-family: monospace; letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        h2 { 
+            font-size: 1.6rem; font-weight: 400; line-height: 1.5; margin-bottom: 3rem; color: #ffffff;
+            letter-spacing: -0.01em; border-left: 3px solid var(--border); padding-left: 1.5rem;
+        }
+
+        h2.strike-text {
+            border-left: none; padding-left: 0; color: #fff; font-style: italic; font-weight: 300; font-size: 1.6rem;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .options { display: flex; flex-direction: column; gap: 1rem; }
+
+        button.option {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); color: #ccc;
+            padding: 1.2rem 1.5rem; text-align: left; cursor: pointer; font-size: 0.95rem;
+            transition: all 0.2s ease; border-radius: 4px; line-height: 1.4; display: flex; align-items: center;
+        }
+
+        button.option span.tag { 
+            font-size: 0.6rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 3px; 
+            margin-right: 15px; letter-spacing: 1px; text-transform: uppercase; min-width: 65px; text-align: center;
+        }
+
+        button.option.vert { border-left: 3px solid var(--c-vert); }
+        button.option.vert:hover { background: rgba(16,185,129,0.08); border-color: var(--c-vert); color: #fff; transform: translateX(5px); }
+        button.option.vert span.tag { background: rgba(16,185,129,0.2); color: var(--c-vert); }
+
+        button.option.rouge { border-left: 3px solid var(--c-rouge); }
+        button.option.rouge:hover { background: rgba(239,68,68,0.08); border-color: var(--c-rouge); color: #fff; transform: translateX(5px); }
+        button.option.rouge span.tag { background: rgba(239,68,68,0.2); color: var(--c-rouge); }
+
+        button.option.jaune { border-left: 3px solid var(--c-jaune); }
+        button.option.jaune:hover { background: rgba(234,179,8,0.08); border-color: var(--c-jaune); color: #fff; transform: translateX(5px); }
+        button.option.jaune span.tag { background: rgba(234,179,8,0.2); color: var(--c-jaune); }
+
+        .fade-slide { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>WOLF.OS</h1>
+            <p>Module de Closing</p>
+        </div>
+        <div class="metrics-area">
+            <div class="certitude-box">
+                CERTITUDE <span id="score-text">60</span>%
+                <div class="certitude-bar">
+                    <div id="score-fill" class="certitude-fill" style="width: 60%; background: var(--c-jaune);"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="app">
+        <div class="card-wrapper">
+            <div class="nav-controls">
+                <button class="btn-back" id="btn-back" onclick="goBack()" disabled>← Précédent</button>
+            </div>
+            <div id="card-content">
+                </div>
+        </div>
+    </main>
+
+    <script>
+        const closingData = {
+            "START": {
+                tag: "L'ANNONCE (THE DROP)",
+                text: "L'investissement pour l'installation complète du moteur BNC, c'est [X] euros. Basé sur tout ce qu'on vient de voir, c'est une proposition qui vous semble honnête, on est d'accord ?",
+                options: [
+                    { label: "VERT", text: "Donc c'est un grand oui, on lance la machine ?", next: "PAIEMENT", score: 40, type: "vert" },
+                    { label: "JAUNE", text: "Donc vous devez y réfléchir / voir un associé / pas la carte ?", next: "LOOP_1_DEFLECT", score: -10, type: "jaune" }
+                ]
+            },
+
+            // --- LOOP 1 : LE PRODUIT ---
+            "LOOP_1_DEFLECT": {
+                tag: "LOOP 1 : L'ESQUIVE & LE CALIBRAGE",
+                isStrike: true,
+                text: "Je comprends tout à fait, Jérémy. Mais laissez-moi vous poser une question : mettons l'argent (ou l'associé) de côté un instant. Est-ce que l'idée en elle-même vous semble logique ? Sur une échelle de 1 à 10, à quel point ce système répond à votre besoin ?",
+                options: [
+                    { label: "JAUNE", text: "Le prospect dit entre 5 et 7 (Incertitude Produit).", next: "LOOP_1_RESELL", score: -10, type: "jaune" },
+                    { label: "VERT", text: "Le prospect dit 8, 9 ou 10 (Le Produit est validé).", next: "LOOP_2_ME", score: 20, type: "vert" }
+                ]
+            },
+            "LOOP_1_RESELL": {
+                tag: "LOOP 1 : RE-VENTE LOGIQUE",
+                text: "Un 7 ? Ok, laissez-moi vous dire la vraie beauté de ce système : on ne parle pas de 'leads' virtuels. On parle d'un actif industriel qui filtre et vous pose 5 BNC sur votre bureau chaque mois. C'est une équation mathématique. Alors on lance la machine sur vos 5 premiers dossiers ?",
+                options: [
+                    { label: "VERT", text: "Donc la logique est claire, on y va ?", next: "PAIEMENT", score: 30, type: "vert" },
+                    { label: "JAUNE", text: "Donc vous sortez un nouvel écran de fumée ?", next: "LOOP_2_ME", score: 0, type: "jaune" }
+                ]
+            },
+
+            // --- LOOP 2 : LE CLOSER (TOI) ---
+            "LOOP_2_ME": {
+                tag: "LOOP 2 : VENDRE LA PERSONNE",
+                isStrike: true,
+                text: "Jérémy, si je travaillais pour vous gratuitement, si je traitais votre budget comme si c'était celui de ma propre famille, est-ce qu'on serait en train de discuter ? C'est une question de confiance. Faites-moi confiance sur ce coup-là, et je vous promets que vous ne le regretterez pas. On valide l'accès ?",
+                options: [
+                    { label: "VERT", text: "Donc vous me faites confiance, on passe à l'action ?", next: "PAIEMENT", score: 30, type: "vert" },
+                    { label: "JAUNE", text: "Donc la confiance est là, mais vous bloquez encore ?", next: "LOOP_3_COMPANY", score: -10, type: "jaune" }
+                ]
+            },
+
+            // --- LOOP 3 : LA BOÎTE & LE SEUIL D'ACTION ---
+            "LOOP_3_COMPANY": {
+                tag: "LOOP 3 : LA BOÎTE & LE RISQUE",
+                text: "Je comprends. Ce que vous vous demandez, c'est si Montis Media sera là pour assurer le SAV. Notre réputation est notre seul actif. On prend le risque opérationnel pour vous. Baissez la garde, donnez-moi juste le nom exact inscrit sur votre carte pour qu'on sécurise votre secteur.",
+                options: [
+                    { label: "VERT", text: "Donc le risque est écarté, on sécurise ?", next: "PAIEMENT", score: 30, type: "vert" },
+                    { label: "JAUNE", text: "Donc vous êtes terrifié par le passage à l'action ?", next: "PAIN_THRESHOLD", score: -10, type: "jaune" }
+                ]
+            },
+
+            // --- LE COUP DE GRÂCE (LA DOULEUR) ---
+            "PAIN_THRESHOLD": {
+                tag: "LE SEUIL DE DOULEUR",
+                isStrike: true,
+                text: "Jérémy, on a fait le tour. Si vous ne prenez pas de décision aujourd'hui, dans 6 mois vous serez toujours en train de perdre 5000€ par semaine à cause de vos petits dossiers chronophages. L'inaction vous coûte plus cher que ce système. Dites oui, et on commence à travailler.",
+                options: [
+                    { label: "VERT", text: "Donc la douleur l'emporte, on signe ?", next: "PAIEMENT", score: 40, type: "vert" },
+                    { label: "ROUGE", text: "Le prospect refuse catégoriquement d'avancer.", next: "DISQUALIFY", score: -100, type: "rouge" }
+                ]
+            },
+
+            // --- FINS ---
+            "PAIEMENT": {
+                tag: "💳 PROCÉDURE DE PAIEMENT",
+                text: "Parfait. J'ai un lien sécurisé devant moi. Quel est le nom exact qui figure sur la carte bancaire de la société ?",
+                options: []
+            },
+            "DISQUALIFY": {
+                tag: "FIN DE LA LIGNE",
+                text: "Le prospect est incapable de franchir son seuil d'action. On retire l'offre poliment. Vous êtes le Prix.",
+                options: []
+            }
+        };
+
+        // VARIABLES D'ÉTAT
+        let currentId = "START";
+        let score = 60; 
+        let historyStack = [];
+
+        function updateScoreUI() {
+            let clampedScore = Math.max(0, Math.min(100, score));
+            document.getElementById('score-text').innerText = clampedScore;
+            
+            const fill = document.getElementById('score-fill');
+            fill.style.width = clampedScore + '%';
+            
+            if(clampedScore < 50) fill.style.background = "var(--c-rouge)";
+            else if(clampedScore < 85) fill.style.background = "var(--c-jaune)";
+            else fill.style.background = "var(--c-vert)";
+        }
+
+        function render() {
+            const content = document.getElementById('card-content');
+            content.classList.remove('fade-slide');
+            void content.offsetWidth; 
+            content.classList.add('fade-slide');
+
+            const data = closingData[currentId];
+
+            // Écrans finaux
+            if (currentId === "PAIEMENT" || currentId === "DISQUALIFY") {
+                content.innerHTML = `
+                    <span class="question-id">VERDICT DU CLOSING</span>
+                    <h2 class="strike-text" style="color: ${currentId === 'PAIEMENT' ? 'var(--c-vert)' : 'var(--c-rouge)'}; border-left-color: ${currentId === 'PAIEMENT' ? 'var(--c-vert)' : 'var(--c-rouge)'}; text-align:left;">
+                        ${data.tag}
+                    </h2>
+                    <p style="color: #ccc; font-size:1.1rem; margin-top:2rem; line-height: 1.6;">${data.text}</p>
+                `;
+                document.getElementById('btn-back').disabled = historyStack.length === 0;
+                updateScoreUI();
+                return;
+            }
+
+            let titleClass = data.isStrike ? 'class="strike-text"' : '';
+            
+            content.innerHTML = `
+                <span class="question-id">${data.tag}</span>
+                <h2 ${titleClass}>"${data.text}"</h2>
+                <div class="options">
+                    ${data.options.map(o => `
+                        <button class="option ${o.type}" onclick="handleNext('${o.next}', ${o.score})">
+                            <span class="tag">${o.label}</span> ${o.text}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            
+            updateScoreUI();
+            document.getElementById('btn-back').disabled = historyStack.length === 0;
+        }
+
+        function handleNext(nextId, scoreImpact) {
+            historyStack.push({ id: currentId, score: score });
+            currentId = nextId;
+            score += scoreImpact;
+            render();
+        }
+
+        function goBack() {
+            if(historyStack.length === 0) return;
+            const prevState = historyStack.pop();
+            currentId = prevState.id;
+            score = prevState.score;
+            render();
+        }
+
+        // INITIALISATION
+        render();
+
+    </script>
+</body>
+</html>
