@@ -1,406 +1,565 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Audit CGP - Montis Media</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <title>Wolf.OS - Command Center</title>
     <style>
         :root {
-            --bg: #000000;
-            --surface: #050505;
-            --border: #1a1a1a;
-            --border-hover: #0070f3;
-            --accent-blue: #0070f3;
-            --text-question: #ffffff;
-            --text-answer: #888888;
-            --font-main: 'Inter', sans-serif;
+            --bg-color: #000000;
+            --border-color: #333333;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #eab308;
+            --purple: #a855f7;
+            --gray: #4b5563;
+            --blue: #3b82f6;
+            --orange: #f97316;
+            --cyan: #06b6d4;
+            --white: #ffffff;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
         body {
-            background: var(--bg);
-            color: var(--text-question);
-            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* SIDEBAR NAVIGATION */
+        .sidebar {
+            width: 260px;
+            position: fixed;
+            height: 100vh;
+            background-color: #050505;
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
+            gap: 2rem;
+            z-index: 100;
         }
 
-        header {
-            padding: 2.5rem;
-            border-bottom: 1px solid var(--border);
-            text-align: center;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        header h1 { font-size: 0.85rem; letter-spacing: 0.5rem; font-weight: 800; margin: 0 0 0.6rem 0; color: #fff; }
-        header p { font-size: 0.6rem; color: var(--accent-blue); text-transform: uppercase; margin: 0; letter-spacing: 2px;}
-
-        .progress-container {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            padding: 20px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .step-segment { height: 2px; flex: 1; background: var(--border); transition: 0.4s; }
-        .step-segment.active { background: var(--accent-blue); box-shadow: 0 0 10px var(--accent-blue); }
-
-        /* CARD STRUCTURE */
-        .card {
-            max-width: 650px;
-            width: 90%;
-            margin: 40px auto;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 4rem 3rem;
-            border-radius: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-
-        .question-id { 
-            display: block; 
-            font-size: 0.7rem; 
-            color: var(--accent-blue); 
-            margin-bottom: 1.5rem; 
-            font-family: monospace;
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
             letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* QUESTION STYLE */
-        h2 { 
-            font-size: 1.5rem; 
-            font-weight: 400; 
-            line-height: 1.5; 
-            margin-bottom: 3rem; 
-            color: #ffffff;
-            letter-spacing: -0.02em;
-            border-left: 2px solid var(--accent-blue);
-            padding-left: 1.5rem;
-        }
-
-        /* STRIKE STYLE (Vérité brutale) */
-        h2.strike-text {
-            border-left: none;
-            padding-left: 0;
-            color: var(--accent-blue);
-            font-style: italic;
-            font-weight: 300;
-            font-size: 1.8rem;
+            color: var(--text-main);
             text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        /* OPTIONS CONTAINER */
-        .options { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 1.2rem;
-            margin-top: 2rem;
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        /* BUTTONS / ANSWERS */
-        button.option {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            color: #aaaaaa;
-            padding: 1.4rem 1.5rem;
-            text-align: left;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            border-radius: 2px;
-            line-height: 1.4;
-        }
-
-        button.option:hover { 
-            border-color: var(--accent-blue); 
-            color: #ffffff; 
-            background: rgba(0, 112, 243, 0.05);
-            transform: translateX(8px);
-        }
-
-        button.option.center-btn {
-            text-align: center;
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
             font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.95rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover { color: var(--text-main); background-color: #111; }
+        .nav-link.l-white { border-left-color: var(--white); }
+        .nav-link.l-red { border-left-color: var(--red); }
+        .nav-link.l-yellow { border-left-color: var(--yellow); }
+        .nav-link.l-blue { border-left-color: var(--blue); }
+        .nav-link.l-orange { border-left-color: var(--orange); }
+        .nav-link.l-cyan { border-left-color: var(--cyan); }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 2rem 4rem;
+            box-sizing: border-box;
+        }
+
+        .bloc-section {
+            margin-bottom: 6rem;
+            padding-top: 2rem;
+        }
+
+        .bloc-header {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1px;
+            background-color: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* CARD DESIGN */
+        .card {
+            background-color: var(--bg-color);
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.2s;
+        }
+
+        .card:hover { background-color: #0a0a0a; }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            letter-spacing: -0.03em;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .speaker-text {
+            color: #d1d5db;
+            font-style: italic;
+            border-left: 2px solid;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        /* BUTTONS & LINKS */
+        .btn-group { display: flex; flex-direction: column; gap: 0.75rem; }
+        
+        .action-link {
+            display: flex; align-items: center; text-decoration: none;
+            font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0;
+            border-bottom: 1px solid transparent; width: fit-content;
         }
         
-        button.option.center-btn:hover {
-            transform: translateY(-2px);
+        .action-link.green { color: var(--green); }
+        .action-link.red { color: var(--red); }
+        .action-link.yellow { color: var(--yellow); }
+        .action-link.purple { color: var(--purple); }
+        .action-link.gray { color: var(--gray); }
+        .action-link.cyan { color: var(--cyan); }
+        
+        .action-link span.arrow { margin-right: 0.5rem; font-size: 1.2rem; line-height: 1; }
+        .action-link:hover { border-bottom-color: currentColor; }
+
+        .badge {
+            font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px;
+            margin-left: 0.5rem; border: 1px solid; white-space: nowrap;
         }
+        .badge.pos { color: var(--green); border-color: var(--green); }
+        .badge.neg { color: var(--red); border-color: var(--red); }
+        .badge.neut { color: var(--gray); border-color: var(--gray); }
 
-        /* RESULT VERDICT STYLES */
-        .result-label { font-size: 0.8rem; color: var(--accent-blue); text-transform: uppercase; margin: 0 0 1rem 0; font-family: monospace; letter-spacing: 2px; }
-        .verdict { font-size: 2.5rem; font-weight: 800; margin-bottom: 1.5rem; color: #ffffff; border:none; padding:0; text-transform: uppercase; font-style: italic;}
-        .diagnostic-text { color: #dddddd; line-height: 1.8; margin-bottom: 3rem; font-size: 1.1rem; font-weight: 300;}
-
-        .btn-primary { 
-            background: var(--accent-blue); 
-            color: white; 
-            font-weight: 700; 
-            text-align: center; 
-            border: none;
-            padding: 1.4rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            background: #0056b3;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 112, 243, 0.2);
-        }
-
-        .fade-slide { animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(15px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        main { flex: 1; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>MONTIS MEDIA</h1>
-        <p>Master Audit CGP : Le Tally Balistique</p>
-    </header>
+    <aside class="sidebar">
+        <div class="sidebar-logo">▲ WOLF.OS</div>
+        <nav class="nav-links">
+            <a href="#bloc1" class="nav-link l-white">1. Cadre & Conformité</a>
+            <a href="#bloc2" class="nav-link l-red">2. Douleur & Diagnostic</a>
+            <a href="#bloc3" class="nav-link l-yellow">3. Lead Killing</a>
+            <a href="#bloc4" class="nav-link l-blue">4. Désir & Objectifs</a>
+            <a href="#bloc5" class="nav-link l-orange">5. Réalité & Structure</a>
+            <a href="#bloc6" class="nav-link l-cyan">6. Engagement & Pitch</a>
+        </nav>
+    </aside>
 
-    <div class="progress-container" id="progress"></div>
-    
-    <main id="app">
-        <div id="intro-screen" class="fade-slide card">
-            <span class="question-id">SYSTEM_STATUS: READY</span>
-            <h2>Initialisation du protocole de qualification.</h2>
-            <p class="diagnostic-text" style="font-size: 0.95rem; color: #888;">Cet audit a pour but d'identifier avec précision votre goulot d'étranglement actuel et de valider votre éligibilité à la Master Infrastructure.</p>
-            <div class="options">
-                <button class="option center-btn" onclick="startAudit()">[ DÉMARRER L'AUDIT ]</button>
-            </div>
-        </div>
-    </main>
+    <main class="main-content">
 
-    <script>
-        // La base de données de l'Audit (Questions, Réponses, Strikes et Résultat)
-        const auditData = {
-            questions: {
-                "Q_START": {
-                    tag: "ÉTAPE 1 : LE TRIAGE (THE AS-IS)",
-                    text: "Julien, priorité de scale aujourd'hui : SOURCER plus de flux (Volume) ou FILTRER les dossiers chronophages (Qualité) ?",
-                    options: [
-                        { text: "J'ai besoin de plus de volume / de clients.", next: "Q_VOL_1" },
-                        { text: "J'ai trop de petits dossiers / Je veux monter en gamme.", next: "Q_QUAL_1" }
-                    ]
-                },
-
-                // --- BRANCHE VOLUME ---
-                "Q_VOL_1": {
-                    tag: "BRANCHE : LA DÉPENDANCE",
-                    text: "Pourquoi le volume ? C'est ton réseau d'apporteurs qui s'atrophie, ou c'est toi qui veux scaler agressivement ton CA ?",
-                    options: [
-                        { text: "Mes apporteurs m'envoient moins de choses / Je dépends d'eux.", next: "S_VOL_A" },
-                        { text: "Je veux scaler et grossir vite.", next: "S_VOL_B" }
-                    ]
-                },
-                "S_VOL_A": {
-                    tag: "ANALYSE SYSTÈME",
-                    isStrike: true,
-                    text: "Donc ton cabinet est sous respiration artificielle. Si ce robinet se coupe, tu survis combien de temps ? 3 mois ? 6 mois ?",
-                    options: [{ text: "Continuer l'audit →", next: "Q_GAP_1" }]
-                },
-                "S_VOL_B": {
-                    tag: "ANALYSE SYSTÈME",
-                    isStrike: true,
-                    text: "Ok. C'est quoi ton goulot d'étranglement pour scaler ? Ton temps de prospection manuel ou ton manque de process pour closer du froid ?",
-                    options: [{ text: "Continuer l'audit →", next: "Q_GAP_1" }]
-                },
-
-                // --- BRANCHE QUALITÉ ---
-                "Q_QUAL_1": {
-                    tag: "BRANCHE : LE BURNOUT",
-                    text: "C'est quoi le plus lourd au quotidien ? Les petits dossiers (TMI < 30%) qui bouffent ton temps, ou le fait de devoir 'prouver' ta valeur à des prospects froids ?",
-                    options: [
-                        { text: "Les petits dossiers me prennent trop de temps pour rien.", next: "S_QUAL_A" },
-                        { text: "Je perds du temps à expliquer mon métier / Ils me comparent.", next: "S_QUAL_B" }
-                    ]
-                },
-                "S_QUAL_A": {
-                    tag: "ANALYSE SYSTÈME",
-                    isStrike: true,
-                    text: "Tu as fait un Bac+5 pour finir par faire du bénévolat social ? Honnêtement, quel pourcentage de ta semaine est cramé sur du prospect non-rentable ? 30% ? 50% ?",
-                    options: [{ text: "Continuer l'audit →", next: "Q_GAP_1" }]
-                },
-                "S_QUAL_B": {
-                    tag: "ANALYSE SYSTÈME",
-                    isStrike: true,
-                    text: "C'est un problème de 'Transfert d'Autorité'. Tu n'en as pas marre d'arriver en R1 et de passer pour un commercial au lieu d'être perçu comme l'Expert ?",
-                    options: [{ text: "Continuer l'audit →", next: "Q_GAP_1" }]
-                },
-
-                // --- LE GAP ---
-                "Q_GAP_1": {
-                    tag: "ÉTAPE 2 : LE GAP (THE TO-BE)",
-                    text: "Oublions la tuyauterie un instant. Si on fait sauter ton verrou actuel, tu vises quel palier de CA d'ici 12 mois pour te dire 'Ok, on a changé de dimension' ?",
-                    options: [
-                        { text: "+ 50k€ à 100k€", next: "S_GAP" },
-                        { text: "+ 150k€ à 300k€", next: "S_GAP" },
-                        { text: "+ 500k€ et plus", next: "S_GAP" }
-                    ]
-                },
-                "S_GAP": {
-                    tag: "ANALYSE SYSTÈME",
-                    isStrike: true,
-                    text: "Arithmétiquement, comment tu comptes aller chercher ça en gardant une méthode qui t'a pris des années pour arriver là ? C'est mathématiquement impossible sans une infrastructure externe.",
-                    options: [{ text: "Passer au Qualif-Check →", next: "Q_LOG_1" }]
-                },
-
-                // --- LOGISTICS & MONEY ---
-                "Q_LOG_1": {
-                    tag: "ÉTAPE 3 : QUALIF-CHECK",
-                    text: "Pour verrouiller ton exclusivité territoriale, on parle de 500 € de setup + un AdSpend de minimum 1000 €/mois. On est sur des chiffres qui te font transpirer, ou c'est totalement absorbable pour ton acquisition ?",
-                    options: [
-                        { text: "C'est absorbable / Pas de problème.", next: "Q_LOG_2" },
-                        { text: "C'est un peu chaud / Faut voir le ROI / Je n'ai pas le budget.", next: "S_LOG_1" }
-                    ]
-                },
-                "S_LOG_1": {
-                    tag: "ANALYSE SYSTÈME",
-                    isStrike: true,
-                    text: "Julien, si investir 1500 balles dans ton propre moteur d'acquisition te fait peur, c'est que tu n'es pas prêt à scaler. Tu veux bricoler ou tu veux bâtir ?",
-                    options: [{ text: "Continuer l'audit →", next: "Q_LOG_2" }]
-                },
-
-                "Q_LOG_2": {
-                    tag: "ÉTAPE 4 : DÉCISION",
-                    text: "Dernier point. Tu es le seul 'Master à bord' pour valider cette infrastructure ou tu dois demander la permission à un associé ?",
-                    options: [
-                        { text: "Je décide seul.", next: "RESULT_PITCH" },
-                        { text: "J'ai un associé / Je dois en parler.", next: "S_LOG_2" }
-                    ]
-                },
-                "S_LOG_2": {
-                    tag: "ANALYSE SYSTÈME",
-                    isStrike: true,
-                    text: "Ok, mais si la mécanique fait sens pour TOI aujourd'hui, est-ce que tu as le pouvoir de dire 'GO' ou c'est lui qui signe les chèques ?",
-                    options: [{ text: "Voir l'infrastructure →", next: "RESULT_PITCH" }]
-                }
-            },
-
-            results: {
-                "RESULT_PITCH": { 
-                    tag: "DATA CONFIRMÉE", 
-                    diag: "Julien, tu n'as pas besoin d'une agence de leads, tu as besoin de reprendre ta souveraineté. Laisse-moi te montrer comment fonctionne la Master Infrastructure.", 
-                    cta: "DÉPLOYER LA MASTER INFRASTRUCTURE",
-                    url: "../02-access-gate/"
-                }
-            }
-        };
-
-        // Variable globale pour suivre l'avancée (utilisé pour la barre de progression)
-        let stepCount = 0;
-        const totalStepsEst = 7; // Estimation du nombre de clics pour remplir la barre
-
-        function startAudit() {
-            stepCount = 1;
-            updateProgress();
-            render("Q_START");
-        }
-
-        function render(id) {
-            const app = document.getElementById('app');
-            
-            // Relancer l'animation CSS à chaque nouvelle question
-            app.classList.remove('fade-slide');
-            void app.offsetWidth; 
-            app.classList.add('fade-slide');
-
-            // Si c're l'écran final (Pitch)
-            if(id.startsWith('RESULT')) return showVerdict(id);
-
-            const data = auditData.questions[id];
-            
-            // Si c'est un "Strike" (Vérité brutale), on change le design
-            if (data.isStrike) {
-                app.innerHTML = `
-                    <div class="card fade-slide">
-                        <span class="question-id">${data.tag}</span>
-                        <h2 class="strike-text">"${data.text}"</h2>
-                        <div class="options" style="margin-top: 3rem;">
-                            ${data.options.map(o => `<button class="option center-btn" onclick="nextStep('${o.next}')">${o.text}</button>`).join('')}
+        <section id="bloc1" class="bloc-section">
+            <h1 class="bloc-header" style="color: var(--white);">1. Cadre et Conformité (L'Audit)</h1>
+            <div class="grid">
+                
+                <div class="card">
+                    <h2 class="card-title">Q1_AUDIO & Q2_INTENTION</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--white);">
+                            "Est-ce que le son est OK ? [...] D'après votre expérience, quelle serait la manière la plus utile de passer cet appel ?"
                         </div>
                     </div>
-                `;
-            } else {
-                // Rendu standard de question
-                app.innerHTML = `
-                    <div class="card fade-slide">
-                        <span class="question-id">${data.tag}</span>
-                        <h2>${data.text}</h2>
-                        <div class="options">
-                            ${data.options.map(o => `<button class="option" onclick="nextStep('${o.next}')">[ ${o.text} ]</button>`).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function nextStep(nextId) {
-            stepCount++;
-            updateProgress();
-            render(nextId);
-        }
-
-        function updateProgress() {
-            const container = document.getElementById('progress');
-            // Création des segments si c'est le début
-            if(container.children.length === 0) {
-                for(let i=0; i < totalStepsEst; i++) container.innerHTML += '<div class="step-segment"></div>';
-            }
-            const segments = document.querySelectorAll('.step-segment');
-            // Allumer le segment actuel sans dépasser le max
-            const currentIndex = Math.min(stepCount - 1, totalStepsEst - 1);
-            if(segments[currentIndex]) {
-                segments[currentIndex].classList.add('active');
-            }
-        }
-
-        function showVerdict(type) {
-            const app = document.getElementById('app');
-            app.classList.remove('fade-slide');
-            void app.offsetWidth;
-            app.classList.add('fade-slide');
-
-            const res = auditData.results[type];
-            app.innerHTML = `
-                <div class="card fade-slide" style="text-align: center;">
-                    <p class="result-label">VERDICT ARCHITECTE</p>
-                    <h2 class="verdict">${res.tag}</h2>
-                    <div class="diagnostic-text">${res.diag}</div>
-                    <div class="options" style="align-items: center; margin-top: 1rem;">
-                        <button class="btn-primary" onclick="window.location.href='${res.url}'">${res.cta}</button>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Arrêter le hasard pour mes dossiers." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#bloc2" class="action-link purple"><span class="arrow">→</span> "Catastrophe, besoin de BNC urgent." <span class="badge pos">JUMP B2</span></a>
+                        <a href="#" class="action-link yellow"><span class="arrow">→</span> "Faites vite, montrez vos prix." <span class="badge neg">-10 PTS</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "Je regarde, je suis curieux." <span class="badge neg">-10 PTS</span></a>
                     </div>
                 </div>
-            `;
-            
-            // Remplir complètement la barre de progression à la fin
-            document.querySelectorAll('.step-segment').forEach(seg => seg.classList.add('active'));
-        }
-    </script>
+
+                <div class="card">
+                    <h2 class="card-title">Looping Engine (Q2)<br>Curiosité & Autorité</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--red);">
+                            N1: "On ne bloque pas 45min par curiosité. La curiosité ne paie pas les factures, d'accord ?"<br><br>
+                            N2: "Un dirigeant qui va bien ne perd pas 45min. On coupe ou on parle vrai ?"<br><br>
+                            N3: "On remet à zéro. Quel est le VRAI objectif de l'appel ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Ok, on parle vrai." <span class="badge pos">+10 (SAS)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">↺</span> "Non, je suis juste curieux." <span class="badge neg">-20 (NEXT)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q3_ACCRÉDITATIONS & Q4_VISIO</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--gray);">
+                            "Vous êtes à jour sur vos accréditations SIF/IOBSP/Carte T ? [...] Vous opérez en visio nationalement ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link gray"><span class="arrow">→</span> "Tout est à jour et visio OK." <span class="badge neut">0 PTS (NEXT)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">✕</span> "Non / Je ne fais que du local." <span class="badge neg">DISQUALIFIER</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q5_ENGAGEMENT FINAL</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--white);">
+                            "J'investis mon budget. Je vais poser des questions, j’attends de la coopération. Cohérent ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#bloc2" class="action-link green"><span class="arrow">↓</span> "Absolument, l'approche est saine." <span class="badge pos">+10 (GO BLOC 2)</span></a>
+                        <a href="#" class="action-link yellow"><span class="arrow">→</span> "Posez vos questions, on verra." <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="bloc2" class="bloc-section">
+            <h1 class="bloc-header" style="color: var(--red);">2. Douleur et Diagnostic (L'Hémorragie)</h1>
+            <div class="grid">
+
+                <div class="card">
+                    <h2 class="card-title">Q1_STRATÉGIE</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--red);">
+                            "Pourquoi maintenant ? Pourquoi ne pas simplement doubler votre stratégie actuelle ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "La recommandation a ses limites." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "Je pourrais, je manque de temps." <span class="badge neg">-10 PTS (LOOP N1)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Looping Engine (Q1)<br>Stratégie Hasardeuse</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--red);">
+                            N1: "Doubler du hasard = 2x plus de hasard."<br>
+                            N2: "Si vous maîtrisiez, on ne serait pas là."<br>
+                            N3: "On remet à zéro. Pourquoi ne pas juste doubler ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "C'est vrai, ça ne suffit plus." <span class="badge pos">+10 (SAS)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">↺</span> "Ma stratégie fonctionne !" <span class="badge neg">-20 (NEXT)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q2_CIBLE & Q3_TICKET</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--red);">
+                            "Spécialité : capital pur ou complexe (BNC) ? [...] Si vous passez 2h pour 4000€, vous brûlez votre temps, d'accord ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Exact, je perds trop de temps." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#bloc3" class="action-link purple"><span class="arrow">→</span> "C'est un enfer, je veux tout couper." <span class="badge pos">JUMP B3</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "4000€ c'est toujours ça de pris." <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q4_URGENCE</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--red);">
+                            "Depuis combien de temps ça persiste et comment ça affecte votre croissance ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#bloc3" class="action-link green"><span class="arrow">↓</span> "Ça fait 6 mois, je plafonne." <span class="badge pos">+10 (GO BLOC 3)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "Ça n'affecte pas, on survit." <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="bloc3" class="bloc-section">
+            <h1 class="bloc-header" style="color: var(--yellow);">3. Alternatives et Critères (Lead Killing)</h1>
+            <div class="grid">
+
+                <div class="card">
+                    <h2 class="card-title">Q1_ALTERNATIVES</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--yellow);">
+                            "Quelles autres solutions entrantes avez-vous explorées ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Acheté des leads, c'était cata." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "Rien, j'attends la recommandation." <span class="badge neg">-10 PTS (LOOP N1)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Looping Engine (Q1)<br>L'Inaction Coupable</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--yellow);">
+                            N1: "Sous-traiter sa croissance au hasard est dangereux. Attendre n'est pas une stratégie, d'accord ?"<br>
+                            N2: "Si vous ne testez rien, vos concurrents raflent le marché. On reste passif ?"<br>
+                            N3: "On reprend. Quelle démarche active avez-vous testée ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "C'est vrai, je dois tester." <span class="badge pos">+10 (SAS)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">↺</span> "J'ai pas besoin d'acheter de la pub." <span class="badge neg">-20 (NEXT)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q2_CONSULTATIONS</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--yellow);">
+                            "Qui avez-vous consulté spécifiquement et qu'est-ce qui a empêché de signer ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Prospects pas qualifiés, secrétariat." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#" class="action-link yellow"><span class="arrow">→</span> "Que des escrocs sur le marché !" <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q3_CRITÈRES</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--yellow);">
+                            "Quelles seraient pour vous les 3 qualités idéales chez un partenaire de croissance ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#bloc4" class="action-link green"><span class="arrow">↓</span> "Filtrage, prédictibilité, forts enjeux." <span class="badge pos">+10 (GO BLOC 4)</span></a>
+                        <a href="#" class="action-link yellow"><span class="arrow">→</span> "Du lead pas cher et exclusif." <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="bloc4" class="bloc-section">
+            <h1 class="bloc-header" style="color: var(--blue);">4. Désir et Objectifs (La Vision Héritage)</h1>
+            <div class="grid">
+
+                <div class="card">
+                    <h2 class="card-title">Q1_VOLUME & Q2_REVENU</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--blue);">
+                            "Flux idéal mensuel ? [...] Combien de revenus personnels ça vous apporterait ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "5 dossiers/mois, ça doublerait le net." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#" class="action-link yellow"><span class="arrow">→</span> "Restons sur la boîte, pas mon salaire." <span class="badge neg">-10 PTS (LOOP N1)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Looping Engine (Q2)<br>Briser le Masque</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--blue);">
+                            N1: "Sans carotte personnelle, vous lâcherez. L'entreprise sert VOTRE vie, d'accord ?"<br>
+                            N2: "Si on me cache l'enjeu réel, je ne peux pas calibrer l'urgence. On joue franc jeu ?"<br>
+                            N3: "On met l'ego de côté. Ça met combien dans votre poche ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Ok, je prendrais X€." <span class="badge pos">+10 (SAS)</span></a>
+                        <a href="#" class="action-link yellow"><span class="arrow">↺</span> "C'est privé." <span class="badge neg">-20 (NEXT)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q3_THE_WHY</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--blue);">
+                            "Qu'est-ce que cet argent vous permettrait de faire sur un plan personnel (famille) ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Solder le prêt, abriter la famille." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#bloc5" class="action-link purple"><span class="arrow">→</span> "Arrêter de stresser pour mes enfants." <span class="badge pos">JUMP B5</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q4_HÉRITAGE</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--blue);">
+                            "À quoi ressemble le succès ultime, l'entreprise 'héritage' pour votre famille ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#bloc5" class="action-link green"><span class="arrow">↓</span> "Un cabinet autonome à transmettre." <span class="badge pos">+10 (GO BLOC 5)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "Pas pensé, on vit au jour le jour." <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="bloc5" class="bloc-section">
+            <h1 class="bloc-header" style="color: var(--orange);">5. Réalité et Conséquences (Audit Structure)</h1>
+            <div class="grid">
+
+                <div class="card">
+                    <h2 class="card-title">Q1_GAP & Q2_CRM</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--orange);">
+                            "Proche du but ? [...] Si je vous envoie 20 dirigeants demain, vous avez un CRM ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Loin du but. Je suis sur Excel (faible)." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "Mon fichier Excel est suffisant." <span class="badge neg">-10 PTS (LOOP N1)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Looping Engine (Q2)<br>Détruire l'Archaïsme</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--orange);">
+                            N1: "20 dirigeants/mois sur Excel = suicide. Il faut un vrai système, d'accord ?"<br>
+                            N2: "Sans suivi béton, je perds mon argent. Prêt à vous structurer ?"<br>
+                            N3: "Avez-vous la technologie pour suivre le rythme, oui ou non ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Je dois me structurer." <span class="badge pos">+10 (SAS)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">↺</span> "Pas besoin de logiciel." <span class="badge neg">-20 (NEXT)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q3_NO_SHOWS</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--orange);">
+                            "Comment gérez-vous vos no-shows et la replanification pour éviter les trous ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Manuel, pas mal de pertes." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "Ils viennent toujours." <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q4_URGENCE FINALE</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--orange);">
+                            "Prêt à vous résigner à l'échec ? Pourquoi régler ça MAINTENANT ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#bloc6" class="action-link green"><span class="arrow">↓</span> "C'est vital, on ne repousse plus." <span class="badge pos">+10 (GO BLOC 6)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "On verra bien si ça marche." <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="bloc6" class="bloc-section" style="margin-bottom: 2rem;">
+            <h1 class="bloc-header" style="color: var(--cyan);">6. Engagement et Transition (The Pitch)</h1>
+            <div class="grid">
+
+                <div class="card">
+                    <h2 class="card-title">Q1_DIAGNOSTIC FINAL</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--cyan);">
+                            "On est d'accord que le goulot, c'est l'acquisition artisanale, et qu'il faut un moteur industriel ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "C'est exactement le résumé." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">→</span> "Ce n'est pas artisanal." <span class="badge neg">-10 PTS (LOOP N1)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Looping Engine (Q1)<br>Validation du Remède</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--cyan);">
+                            N1: "Si c'était industriel, ce serait prédictible. On est d'accord que c'est artisanal ?"<br>
+                            N2: "Mentir sur le diagnostic = mauvais remède. On accepte la réalité ?"<br>
+                            N3: "Quel est le VRAI terme pour un système hasardeux ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "C'est vrai, c'est artisanal." <span class="badge pos">+10 (SAS)</span></a>
+                        <a href="#" class="action-link red"><span class="arrow">↺</span> "J'ai juste pas de chance." <span class="badge neg">-20 (NEXT)</span></a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Q2_PERMISSION</h2>
+                    <div class="card-desc">
+                        <div class="speaker-text" style="border-color: var(--cyan);">
+                            "Je pense qu'on a le fit. Je peux vous montrer comment ma mécanique va vous emmener de A vers B ?"
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link green"><span class="arrow">→</span> "Avec plaisir, je vous écoute." <span class="badge pos">+10 PTS</span></a>
+                        <a href="#" class="action-link yellow"><span class="arrow">→</span> "C'est quoi le prix ?" <span class="badge neg">-10 PTS (LOOP)</span></a>
+                    </div>
+                </div>
+
+                <div class="card" style="grid-column: 1 / -1; border: 1px solid var(--cyan);">
+                    <h2 class="card-title" style="color: var(--cyan);">LANCEMENT DU PITCH</h2>
+                    <div class="card-desc">
+                        Le prospect est qualifié (Douleur, Urgence, Capacité). Il a donné son accord. L'arborescence logique s'arrête ici pour laisser place à la présentation de ta solution.
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="action-link cyan" style="font-size: 1.1rem; font-weight: bold;"><span class="arrow">►</span> DÉMARRER LA PRÉSENTATION</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
 </body>
 </html>
