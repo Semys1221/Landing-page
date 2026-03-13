@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montis Media | Protocole d'Activation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        montisBlue: '#2563eb', // Le bleu de tes surtitres
+                        montisDark: '#0a0a0a', // Le fond de tes cartes
+                        montisBorder: '#27272a' // La bordure subtile
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #000000; color: #ffffff; }
+        /* Style pour masquer la barre de défilement pour un look plus "SaaS" */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-20">
+
+    <div class="max-w-3xl mx-auto pt-16 px-6 text-center">
+        <p class="text-montisBlue text-[11px] font-bold tracking-[0.2em] uppercase mb-4">
+            Infrastructure Montis Media
+        </p>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2">Protocole d'Activation</h1>
+        <p class="text-gray-400 text-sm">Accord d'Allocation BNC/BIC – 90 Jours</p>
+    </div>
+
+    <div class="max-w-3xl mx-auto mt-12 px-6">
+        <div class="space-y-8 text-gray-300 text-sm md:text-base leading-relaxed border-b border-montisBorder pb-12">
+            
+            <section>
+                <h3 class="text-white font-semibold mb-2">1. L'Objet : L'Allocation de Flux</h3>
+                <p>Montis Media ("Le Sourcing") alloue au Cabinet un accès exclusif à son infrastructure de détection et de qualification de profils à forte pression fiscale (BNC/BIC/TNS). Le Sourcing livre des <strong class="text-white font-medium">dossiers pré-diagnostiqués (R1 effectués)</strong>. Le Cabinet intervient uniquement en phase d'étude personnalisée et de clôture.</p>
+            </section>
+
+            <section>
+                <h3 class="text-white font-semibold mb-2">2. Engagement de Livraison (La Garantie)</h3>
+                <p>Le Sourcing s’engage contractuellement sur un volume de <strong class="text-white font-medium">20 Audits Qualifiés</strong> sur une période de 90 jours. Un audit est considéré comme « Qualifié » s'il répond aux critères cumulatifs suivants : Décideur final, cible fiscale validée et présentation effective au rendez-vous (Honoré).</p>
+            </section>
+
+            <section>
+                <h3 class="text-white font-semibold mb-2">3. Modalités Financières</h3>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong class="text-white">Frais d’Activation : 500 € HT</strong> (Réglables immédiatement pour l'ouverture des accès).</li>
+                    <li><strong class="text-white">Rémunération à la Performance : 89 € HT</strong> par Audit Qualifié et Honoré.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3 class="text-white font-semibold mb-2">4. Délais et Activation</h3>
+                <p>L’activation du flux est immédiate après signature du présent protocole et règlement des frais d’activation. La période de 90 jours débute dès la livraison du premier dossier qualifié.</p>
+            </section>
+        </div>
+
+        <div class="bg-montisDark border border-montisBorder rounded-xl p-6 md:p-8 mt-12">
+            <h2 class="text-lg font-bold text-white mb-6 uppercase tracking-wider text-sm">Informations du Cabinet</h2>
+            
+            <form id="activationForm" class="space-y-5" onsubmit="event.preventDefault(); window.location.href='TON_LIEN_QONTO_ICI';">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs text-gray-400 uppercase tracking-wide mb-2">Raison Sociale</label>
+                        <input type="text" required class="w-full bg-black border border-montisBorder rounded-md px-4 py-3 text-white focus:outline-none focus:border-montisBlue transition-colors" placeholder="Ex: Cabinet Dupont & Associés">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 uppercase tracking-wide mb-2">SIRET</label>
+                        <input type="text" required class="w-full bg-black border border-montisBorder rounded-md px-4 py-3 text-white focus:outline-none focus:border-montisBlue transition-colors" placeholder="N° SIRET">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 uppercase tracking-wide mb-2">Représentant Légal & Email</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <input type="text" required class="w-full bg-black border border-montisBorder rounded-md px-4 py-3 text-white focus:outline-none focus:border-montisBlue transition-colors" placeholder="Nom et Prénom">
+                        <input type="email" required class="w-full bg-black border border-montisBorder rounded-md px-4 py-3 text-white focus:outline-none focus:border-montisBlue transition-colors" placeholder="email@cabinet.com">
+                    </div>
+                </div>
+
+                <div class="pt-6 mt-6 border-t border-montisBorder">
+                    <label class="block text-xs text-montisBlue font-bold uppercase tracking-wide mb-3">Signature Électronique</label>
+                    <p class="text-xs text-gray-500 mb-3">En tapant votre nom ci-dessous, vous validez juridiquement ce protocole (Loi n° 2000-230).</p>
+                    <input type="text" required class="w-full bg-black border border-montisBorder rounded-md px-4 py-3 text-white focus:outline-none focus:border-montisBlue transition-colors font-medium" placeholder="Tapez votre nom complet pour valider">
+                </div>
+
+                <button type="submit" class="w-full mt-8 bg-white text-black font-semibold py-4 px-6 rounded hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <span>SIGNER ET PAYER LES FRAIS D'ACCÈS (500€)</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <p class="text-center text-xs text-gray-500 mt-4 flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    Redirection sécurisée vers la passerelle Qonto
+                </p>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
