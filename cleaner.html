@@ -1,226 +1,297 @@
-import os
-import io
-import json
-import zipfile
-import requests
-import pandas as pd
-from flask import Flask, request, send_file, jsonify
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montis Media DB</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        .upload-card { background: rgba(255,255,255,0.02); transition: all 0.3s ease; }
+        .upload-card:hover { border-color: #3b82f6; background: rgba(59,130,246,0.05); }
+        .stat-card { border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); }
+        select { background: #000; }
+        select option { background: #111; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen items-center py-12 px-6">
+<div class="w-full max-w-4xl space-y-12">
 
-app = Flask(__name__)
+    <div class="text-center space-y-2">
+        <h1 class="text-xs font-bold text-blue-500 uppercase tracking-[0.4em]">Montis Media DB</h1>
+        <p class="text-3xl font-light text-gray-300">Master Hub</p>
+    </div>
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+    <!-- STATS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="stat-card p-6 text-center rounded-sm">
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Total DB</p>
+            <p class="text-3xl font-light text-white" id="stat-total">...</p>
+        </div>
+        <div class="stat-card p-6 text-center rounded-sm border-blue-500/30">
+            <p class="text-[10px] text-blue-500 uppercase tracking-widest mb-2">À Contacter</p>
+            <p class="text-3xl font-light text-white" id="stat-tocontact">...</p>
+        </div>
+        <div class="stat-card p-6 text-center rounded-sm border-orange-500/30">
+            <p class="text-[10px] text-orange-500 uppercase tracking-widest mb-2">Déjà Contactés</p>
+            <p class="text-3xl font-light text-white" id="stat-contacted">...</p>
+        </div>
+        <div class="stat-card p-6 text-center rounded-sm border-red-500/30">
+            <p class="text-[10px] text-red-500 uppercase tracking-widest mb-2">Block List</p>
+            <p class="text-3xl font-light text-white" id="stat-blacklist">...</p>
+        </div>
+    </div>
 
-HEADERS = {
-    "apikey": SUPABASE_KEY,
-    "Authorization": f"Bearer {SUPABASE_KEY}",
-    "Content-Type": "application/json",
-}
+    <!-- STEP 1 : UPLOAD -->
+    <div id="step-upload" class="max-w-xl mx-auto p-8 border border-white/10 bg-white/5 rounded-sm space-y-6">
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">
+            Étape 1 — Charger le CSV
+        </h2>
+        <label for="csv-file" class="upload-card block p-10 cursor-pointer rounded-sm border-dashed border-2 border-white/20 text-center">
+            <svg class="w-6 h-6 mx-auto mb-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <span id="file-name" class="text-sm font-light text-gray-400">Glisse ton CSV ici</span>
+            <input type="file" id="csv-file" accept=".csv" class="hidden">
+        </label>
+    </div>
 
-def sb_select():
-    try:
-        r = requests.get(
-            f"{SUPABASE_URL}/rest/v1/leads?select=email,status",
-            headers=HEADERS, timeout=10
-        )
-        return r.json() if r.ok else []
-    except Exception as e:
-        print(f"sb_select error: {e}")
-        return []
+    <!-- STEP 2 : MAPPING (caché au départ) -->
+    <div id="step-mapping" class="hidden max-w-xl mx-auto p-8 border border-white/10 bg-white/5 rounded-sm space-y-6">
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">
+            Étape 2 — Mapper les colonnes
+        </h2>
+        <p class="text-xs text-gray-500 text-center">Associe chaque champ Supabase à la colonne correspondante dans ton CSV.</p>
 
-def sb_upsert(records):
-    if not records:
-        return
-    seen = set()
-    unique = []
-    for r in records:
-        email = r.get("email", "").lower().strip()
-        if email and email not in seen:
-            seen.add(email)
-            unique.append(r)
-    try:
-        r = requests.post(
-            f"{SUPABASE_URL}/rest/v1/leads",
-            headers={**HEADERS, "Prefer": "resolution=merge-duplicates,return=minimal"},
-            json=unique, timeout=30
-        )
-        print(f"UPSERT status: {r.status_code}, response: {r.text[:200]}")
-    except Exception as e:
-        print(f"sb_upsert error: {e}")
+        <div class="space-y-3" id="mapping-fields">
+            <!-- généré dynamiquement -->
+        </div>
+    </div>
 
-def safe_str(val):
-    try:
-        if pd.isna(val):
-            return ""
-    except Exception:
-        pass
-    return str(val).strip() if val is not None else ""
+    <!-- STEP 3 : OPTIONS + LANCER (caché au départ) -->
+    <div id="step-options" class="hidden max-w-xl mx-auto p-8 border border-white/10 bg-white/5 rounded-sm space-y-6">
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">
+            Étape 3 — Options & Import
+        </h2>
 
-@app.route('/api/cleaner', methods=['POST'])
-def clean_csv():
-    try:
-        mapping   = json.loads(request.form.get('mapping', '{}'))
-        do_clean  = request.form.get('do_clean') == 'true'
-        force_old = request.form.get('force_old') == 'true'
-        intent    = request.form.get('intent', 'to_contact')
-        file      = request.files.get('file')
+        <div class="space-y-3">
+            <div class="flex items-center justify-between p-4 bg-black border border-white/10 rounded-sm">
+                <label for="do-clean" class="text-sm font-light text-gray-300 cursor-pointer">
+                    Appliquer le nettoyage métier ?
+                    <span class="block text-xs text-gray-600 mt-1">Filtre par catégorie pro, statut email, préfixes génériques</span>
+                </label>
+                <input type="checkbox" id="do-clean" class="w-5 h-5 accent-blue-500 cursor-pointer">
+            </div>
 
-        if not file:
-            return jsonify({"error": "Aucun fichier reçu."}), 400
-        if not mapping.get('email'):
-            return jsonify({"error": "Colonne email non mappée."}), 400
+            <div class="flex items-center justify-between p-4 bg-black border border-white/10 rounded-sm">
+                <label for="force-old" class="text-sm font-light text-orange-400 cursor-pointer">
+                    Archive : Marquer comme "Déjà contactés" ?
+                </label>
+                <input type="checkbox" id="force-old" class="w-5 h-5 accent-orange-500 cursor-pointer">
+            </div>
 
-        # --- LECTURE CSV ---
-        df = None
-        for encoding in ['utf-8', 'latin1', 'cp1252']:
-            try:
-                file.seek(0)
-                df = pd.read_csv(file, sep=None, engine='python',
-                                 encoding=encoding, on_bad_lines='skip', dtype=str)
-                break
-            except Exception:
-                continue
+            <div class="space-y-2 pt-2">
+                <label class="text-[10px] text-gray-500 uppercase tracking-widest">Destination Finale</label>
+                <select id="lead-intent" class="w-full border border-white/20 p-4 text-sm font-light text-white outline-none focus:border-blue-500 rounded-sm">
+                    <option value="to_contact">À CONTACTER (Génère ZIP : Neufs & Relances)</option>
+                    <option value="blacklist">BLOCK LIST (Ajoute en Ne pas contacter)</option>
+                </select>
+            </div>
+        </div>
 
-        if df is None or df.empty:
-            return jsonify({"error": "Impossible de lire le fichier CSV."}), 400
+        <button onclick="processFile()" id="process-btn" class="w-full py-4 bg-blue-600 text-white text-xs uppercase tracking-[0.3em] font-bold hover:bg-blue-700 transition-all rounded-sm">
+            Lancer l'algorithme
+        </button>
+        <p id="status-message" class="text-sm text-center text-gray-400 font-light h-4"></p>
+    </div>
 
-        df.columns = df.columns.str.strip()
-        print(f"Colonnes CSV: {list(df.columns)}")
-        print(f"Mapping reçu: {mapping}")
+</div>
 
-        # --- EMAIL via mapping ---
-        email_col = mapping['email']
-        if email_col not in df.columns:
-            return jsonify({"error": f"Colonne '{email_col}' introuvable dans le CSV."}), 400
+<script>
+    // Champs à mapper : [clé interne, label affiché, obligatoire]
+    const FIELDS = [
+        { key: 'email',        label: 'Email',                  required: true  },
+        { key: 'company_name', label: 'Company Name',           required: false },
+        { key: 'status',       label: 'Statut',                 required: false },
+        { key: 'last_contact', label: 'Date dernier contact',   required: false },
+        { key: 'localisation', label: 'Localisation',           required: false },
+        { key: 'phone',        label: 'Numéro de téléphone',    required: false },
+        { key: 'site_web',     label: 'Site Web',               required: false },
+    ];
 
-        df[email_col] = df[email_col].astype(str).str.strip().str.lower()
-        df = df[df[email_col].str.contains('@', na=False)].copy()
-        df = df[df[email_col].str.len() > 5].copy()
-        df = df.drop_duplicates(subset=[email_col], keep='first').copy()
+    let csvColumns = [];
 
-        if df.empty:
-            return jsonify({"error": "Aucun email valide dans le fichier."}), 400
+    // --- STATS ---
+    async function fetchCRMStats() {
+        try {
+            const res = await fetch('/api/crm');
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('stat-total').innerText     = data.stats.total || 0;
+                document.getElementById('stat-tocontact').innerText = data.stats.to_contact || 0;
+                document.getElementById('stat-contacted').innerText = data.stats.contacted || 0;
+                if (data.stats.blacklist !== undefined)
+                    document.getElementById('stat-blacklist').innerText = data.stats.blacklist;
+            }
+        } catch(e) { console.error(e); }
+    }
+    window.onload = fetchCRMStats;
 
-        # --- NETTOYAGE MÉTIER (optionnel) ---
-        if do_clean:
-            valid_cat = ['conseil', 'conseiller', 'consultant', 'planificateur',
-                         'financial', 'courtier', 'broker', 'investment',
-                         'gestionnaire', 'patrimoine']
+    // --- UPLOAD & LECTURE COLONNES ---
+    document.getElementById('csv-file').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-            # Cherche colonne catégorie dans le CSV (pas via mapping)
-            cat_col = None
-            for col in df.columns:
-                col_norm = col.lower().replace(' ', '').replace('_', '')
-                if any(k in col_norm for k in ['category', 'categorie', 'profession', 'metier']):
-                    cat_col = col
-                    break
+        document.getElementById('file-name').innerText = file.name;
+        document.getElementById('file-name').classList.add('text-white');
 
-            if cat_col:
-                df = df[df[cat_col].fillna('').str.contains(
-                    '|'.join(valid_cat), case=False, na=False)].copy()
+        // Lit juste la première ligne pour extraire les colonnes
+        const text = await readFirstLine(file);
+        csvColumns = parseCSVHeader(text);
 
-            # Filtre statut email
-            status_csv_col = None
-            for col in df.columns:
-                col_norm = col.lower().replace(' ', '').replace('_', '')
-                if any(k in col_norm for k in ['emailstatus', 'email1', 'emailvalid']):
-                    status_csv_col = col
-                    break
+        buildMappingUI();
 
-            if status_csv_col:
-                bad = ['invalid', 'unknown', 'blacklisted', 'catch all', 'complainer']
-                df  = df[~df[status_csv_col].fillna('').str.lower().isin(bad)].copy()
+        document.getElementById('step-mapping').classList.remove('hidden');
+        document.getElementById('step-options').classList.remove('hidden');
+    });
 
-            # Filtre préfixes génériques
-            prefixes = ('contact@', 'info@', 'admin@', 'hello@', 'support@', 'sales@', 'office@')
-            df = df[~df[email_col].str.startswith(prefixes)].copy()
+    function readFirstLine(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsText(file.slice(0, 2000)); // Lit juste le début
+        });
+    }
 
-            if df.empty:
-                return jsonify({"error": "Aucun lead valide après nettoyage."}), 400
+    function parseCSVHeader(text) {
+        const firstLine = text.split('\n')[0];
+        // Gère les séparateurs , et ;
+        const sep = firstLine.includes(';') ? ';' : ',';
+        return firstLine.split(sep).map(c => c.replace(/["\r]/g, '').trim());
+    }
 
-        # --- MAPPING VERS SUPABASE ---
-        def get_mapped(col_name):
-            col = mapping.get(col_name)
-            if col and col in df.columns:
-                return df[col].apply(safe_str).values
-            return ''
+    function buildMappingUI() {
+        const container = document.getElementById('mapping-fields');
+        container.innerHTML = '';
 
-        df_mapped = pd.DataFrame()
-        df_mapped['Email']        = df[email_col].apply(safe_str).values
-        df_mapped['Company Name'] = pd.Series(get_mapped('company_name')).apply(lambda x: x.title() if x else '').values
-        df_mapped['Site Web']     = pd.Series(get_mapped('site_web')).apply(lambda x: x.lower() if x else '').values
-        df_mapped['Phone']        = get_mapped('phone')
-        df_mapped['Localisation'] = get_mapped('localisation')
+        FIELDS.forEach(field => {
+            // Auto-détection intelligente
+            const autoMatch = autoDetect(field.key, csvColumns);
 
-        df_mapped = df_mapped.drop_duplicates(subset=['Email'], keep='first').copy()
-        print(f"Leads après mapping: {len(df_mapped)}")
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between p-3 bg-black border border-white/10 rounded-sm gap-4';
+            div.innerHTML = `
+                <label class="text-sm font-light text-gray-300 w-40 shrink-0">
+                    ${field.label}
+                    ${field.required ? '<span class="text-blue-500 ml-1">*</span>' : ''}
+                </label>
+                <select id="map-${field.key}" class="flex-1 border border-white/20 p-2 text-sm font-light text-white outline-none focus:border-blue-500 rounded-sm">
+                    <option value="">— Ignorer —</option>
+                    ${csvColumns.map(col => `
+                        <option value="${col}" ${col === autoMatch ? 'selected' : ''}>${col}</option>
+                    `).join('')}
+                </select>
+            `;
+            container.appendChild(div);
+        });
+    }
 
-        # --- MASTER DB ---
-        db_data  = sb_select()
-        db_leads = {}
-        if isinstance(db_data, list):
-            db_leads = {item['email'].lower(): item['status']
-                        for item in db_data if isinstance(item, dict) and 'email' in item}
+    function autoDetect(fieldKey, columns) {
+        const rules = {
+            email:        ['email', 'mail', 'e-mail'],
+            company_name: ['company', 'cabinet', 'société', 'societe', 'name', 'nom', 'entreprise'],
+            status:       ['status', 'statut', 'état', 'etat'],
+            last_contact: ['last', 'contact', 'date', 'contacted'],
+            localisation: ['location', 'city', 'ville', 'adresse', 'address', 'pays', 'localisation'],
+            phone:        ['phone', 'tel', 'mobile', 'numero', 'number', 'portable', 'téléphone'],
+            site_web:     ['website', 'site', 'url', 'web', 'http'],
+        };
 
-        # --- MODE BLACKLIST ---
-        if intent == 'blacklist':
-            records = [
-                {"email": r['Email'], "company_name": r['Company Name'],
-                 "site_web": r['Site Web'], "status": "blacklist"}
-                for _, r in df_mapped.iterrows() if r['Email']
-            ]
-            sb_upsert(records)
-            return jsonify({"message": f"✅ {len(records)} leads ajoutés à la Block List."}), 200
+        const keywords = rules[fieldKey] || [];
+        for (const col of columns) {
+            const colNorm = col.toLowerCase().replace(/[\s_-]/g, '');
+            for (const kw of keywords) {
+                if (colNorm.includes(kw.replace(/[\s_-]/g, ''))) return col;
+            }
+        }
+        return '';
+    }
 
-        # --- MODE À CONTACTER ---
-        def categorize_lead(email):
-            status = db_leads.get(email.lower(), 'new')
-            if status == 'blacklist':
-                return 'drop'
-            if force_old or status in ['contacted', 'to_contact']:
-                return 'relance'
-            return 'new'
+    // --- PROCESS ---
+    async function processFile() {
+        const file = document.getElementById('csv-file').files[0];
+        if (!file) return;
 
-        df_mapped['category'] = df_mapped['Email'].apply(categorize_lead)
-        df_neufs    = df_mapped[df_mapped['category'] == 'new'].drop(columns=['category']).copy()
-        df_relances = df_mapped[df_mapped['category'] == 'relance'].drop(columns=['category']).copy()
+        // Récupère le mapping
+        const mapping = {};
+        FIELDS.forEach(field => {
+            const val = document.getElementById(`map-${field.key}`).value;
+            if (val) mapping[field.key] = val;
+        });
 
-        if not df_neufs.empty:
-            records_new = [
-                {"email": r['Email'], "company_name": r['Company Name'],
-                 "site_web": r['Site Web'], "status": "to_contact"}
-                for _, r in df_neufs.iterrows() if r['Email']
-            ]
-            sb_upsert(records_new)
+        if (!mapping.email) {
+            document.getElementById('status-message').innerText = '❌ La colonne Email est obligatoire.';
+            document.getElementById('status-message').className = 'text-sm text-center text-red-500 font-light h-4';
+            return;
+        }
 
-        if force_old and not df_relances.empty:
-            records_old = [
-                {"email": r['Email'], "company_name": r['Company Name'],
-                 "site_web": r['Site Web'], "status": "contacted"}
-                for _, r in df_relances.iterrows() if r['Email']
-            ]
-            sb_upsert(records_old)
+        const doClean  = document.getElementById('do-clean').checked;
+        const forceOld = document.getElementById('force-old').checked;
+        const intent   = document.getElementById('lead-intent').value;
 
-        # --- EXPORT ZIP ---
-        memory_file = io.BytesIO()
-        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
-            if not df_neufs.empty:
-                zf.writestr('1_campagne_leads_neufs.csv',
-                            df_neufs.to_csv(index=False, sep=';', encoding='utf-8-sig'))
-            if not df_relances.empty:
-                zf.writestr('2_campagne_relances_60j.csv',
-                            df_relances.to_csv(index=False, sep=';', encoding='utf-8-sig'))
-            if df_neufs.empty and df_relances.empty:
-                zf.writestr('vide.txt', 'Tous les leads étaient en blacklist ou déjà traités.')
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('mapping', JSON.stringify(mapping));
+        formData.append('do_clean', doClean);
+        formData.append('force_old', forceOld);
+        formData.append('intent', intent);
 
-        memory_file.seek(0)
-        return send_file(memory_file, mimetype="application/zip",
-                         as_attachment=True, download_name="smartlead_exports.zip")
+        const btn = document.getElementById('process-btn');
+        btn.innerText = 'Algorithme en cours...';
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.disabled = true;
 
-    except Exception as e:
-        import traceback
-        print(traceback.format_exc())
-        return jsonify({"error": str(e)}), 500
+        const statusMsg = document.getElementById('status-message');
+        statusMsg.innerText = 'Analyse et requête vers Supabase...';
+        statusMsg.className = 'text-sm text-center text-blue-400 font-light h-4';
 
-if __name__ == "__main__":
-    app.run()
+        try {
+            const response = await fetch('/api/cleaner', { method: 'POST', body: formData });
+
+            if (response.ok) {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    statusMsg.innerText = data.message;
+                    statusMsg.className = 'text-sm text-center text-green-500 font-light h-4';
+                } else {
+                    const blob = await response.blob();
+                    const url  = window.URL.createObjectURL(blob);
+                    const a    = document.createElement('a');
+                    a.href     = url;
+                    a.download = 'smartlead_exports.zip';
+                    document.body.appendChild(a);
+                    a.click(); a.remove();
+                    window.URL.revokeObjectURL(url);
+                    statusMsg.innerText = '✅ ZIP généré !';
+                    statusMsg.className = 'text-sm text-center text-green-500 font-light h-4';
+                }
+                fetchCRMStats();
+            } else {
+                const err = await response.json();
+                statusMsg.innerText = '❌ Erreur : ' + (err.error || 'Erreur serveur.');
+                statusMsg.className = 'text-sm text-center text-red-500 font-light h-4';
+            }
+        } catch(error) {
+            statusMsg.innerText = '❌ Erreur de connexion.';
+            statusMsg.className = 'text-sm text-center text-red-500 font-light h-4';
+        } finally {
+            btn.innerText = 'Lancer l\'algorithme';
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
