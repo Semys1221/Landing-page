@@ -77,18 +77,40 @@ def clean_csv():
             # Supprime les lignes où le téléphone est vide après nettoyage
             df = df[df[phone_col].str.strip() != '']
 
-        # 7. DÉDUPLICATION MASTER DB (Supabase)
-        # On récupère tous les emails déjà dans Supabase
-        res = supabase.table("leads").select("email").execute()
-        master_emails = {item['email'].lower() for item in res.data} if res.data else set()
+        # --- 7. DÉDUPLICATION & TRI INTELLIGENT (Supabase) ---
         
-        # On ne garde que les prospects FRAIS
-        df = df[~df[email_col].isin(master_emails)]
+        # On récupère les emails et leur statut depuis Supabase
+        res = supabase.table("leads").select("email, status").execute()
+        
+        # On crée un dictionnaire : {'jean@mail.com': 'blacklist', 'marc@mail.com': 'contacted'}
+        db_leads = {item['email'].lower(): item['status'] for item in res.data} if res.data else {}
 
-        # S'il n'y a plus de leads après filtrage
-        if df.empty:
-            return jsonify({"message": "Tous les leads de ce fichier ont déjà été contactés ou filtrés."}), 200
+        # Fonction pour catégoriser chaque ligne du CSV
+        def categorize_lead(email):
+            status = db_leads.get(email, 'new') # 'new' si inconnu
+            if status == 'blacklist':
+                return 'drop'
+            elif status == 'contacted' or status == 'to_contact':
+                return 'relance_60j'
+            else:
+                return 'new'
 
+        # On applique la catégorie
+        df['lead_category'] = df[email_col].apply(categorize_lead)
+
+        # On supprime les 'drop' (blacklistés)
+        df = df[df['lead_category'] != 'drop']
+
+        # --- 8. SÉPARATION DES FICHIERS ---
+        
+        # Les tout neufs
+        df_neufs = df[df['lead_category'] == 'new'].drop(columns=['lead_category'])
+        
+        # Ceux à relancer dans 60 jours
+        df_relances = df[df['lead_category'] == 'relance_60j'].drop(columns=['lead_category'])
+
+        # (Tu appliques ensuite ton Mapping des 5 colonnes sur ces deux dataframes...)
+        
         # 8. MAPPING FINAL (Les 5 colonnes magiques)
         name_col = get_column(df, ['name', 'company', 'cabinet', 'first name'])
         web_col = get_column(df, ['website', 'site', 'url'])
