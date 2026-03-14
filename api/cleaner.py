@@ -20,8 +20,7 @@ def sb_select():
     try:
         r = requests.get(
             f"{SUPABASE_URL}/rest/v1/leads?select=email,status",
-            headers=HEADERS,
-            timeout=10
+            headers=HEADERS, timeout=10
         )
         return r.json() if r.ok else []
     except Exception as e:
@@ -31,7 +30,6 @@ def sb_select():
 def sb_upsert(records):
     if not records:
         return
-    # Déduplique les records avant envoi
     seen = set()
     unique_records = []
     for r in records:
@@ -39,27 +37,28 @@ def sb_upsert(records):
         if email and email not in seen:
             seen.add(email)
             unique_records.append(r)
-    
     try:
         r = requests.post(
             f"{SUPABASE_URL}/rest/v1/leads",
             headers={**HEADERS, "Prefer": "resolution=merge-duplicates,return=minimal"},
-            json=unique_records,
-            timeout=30
+            json=unique_records, timeout=30
         )
         print(f"UPSERT status: {r.status_code}, response: {r.text[:200]}")
     except Exception as e:
         print(f"sb_upsert error: {e}")
 
 def get_column(df, keywords):
-    for col in df.columns:
-        if any(key.lower() in str(col).lower() for key in keywords):
-            return col
+    """Cherche une colonne par keywords — insensible à la casse et aux espaces"""
+    cols_normalized = {col: col.lower().replace(' ', '').replace('_', '') for col in df.columns}
+    keywords_normalized = [k.lower().replace(' ', '').replace('_', '') for k in keywords]
+    for col, col_norm in cols_normalized.items():
+        for kw in keywords_normalized:
+            if kw in col_norm:
+                return col
     return None
 
 def safe_str(val):
-    """Convertit une valeur en string propre, gère NaN/None"""
-    if pd.isna(val) or val is None:
+    if pd.isna(val) if not isinstance(val, str) else False:
         return ""
     return str(val).strip()
 
@@ -80,8 +79,7 @@ def clean_csv():
             try:
                 file.seek(0)
                 df = pd.read_csv(file, sep=None, engine='python',
-                                 encoding=encoding, on_bad_lines='skip',
-                                 dtype=str)  # Tout en string pour éviter les erreurs de type
+                                 encoding=encoding, on_bad_lines='skip', dtype=str)
                 break
             except Exception:
                 continue
@@ -89,35 +87,42 @@ def clean_csv():
         if df is None or df.empty:
             return jsonify({"error": "Impossible de lire le fichier CSV."}), 400
 
-        # Nettoie les noms de colonnes
         df.columns = df.columns.str.strip()
+        print(f"Colonnes détectées: {list(df.columns)}")
 
-        # --- COLONNE EMAIL ---
-        email_col = get_column(df, ['email', 'mail'])
+        # --- DÉTECTION DES COLONNES ---
+        email_col    = get_column(df, ['email', 'mail'])
+        name_col     = get_column(df, ['company', 'cabinet', 'firstname', 'name'])
+        web_col      = get_column(df, ['website', 'site', 'url'])
+        phone_col    = get_column(df, ['phone', 'tel', 'mobile', 'numero'])
+        loc_col      = get_column(df, ['location', 'address', 'adresse', 'localisation', 'city'])
+        cat_col      = get_column(df, ['category', 'column6', 'profession'])
+        status_col   = get_column(df, ['status', 'email1'])
+
+        print(f"Mapping: email={email_col}, name={name_col}, web={web_col}, "
+              f"phone={phone_col}, loc={loc_col}, cat={cat_col}, status={status_col}")
+
         if not email_col:
             return jsonify({"error": "Aucune colonne email trouvée."}), 400
 
+        # --- NETTOYAGE EMAIL ---
         df[email_col] = df[email_col].astype(str).str.strip().str.lower()
         df = df[df[email_col].str.contains('@', na=False)].copy()
-        df = df[df[email_col].str.len() > 5].copy()  # Filtre emails trop courts
+        df = df[df[email_col].str.len() > 5].copy()
+        df = df.drop_duplicates(subset=[email_col], keep='first').copy()
 
         if df.empty:
             return jsonify({"error": "Aucun email valide dans le fichier."}), 400
-
-        # Déduplique le CSV source
-        df = df.drop_duplicates(subset=[email_col], keep='first').copy()
 
         # --- NETTOYAGE MÉTIER ---
         if not is_already_clean:
             valid_cat = ['conseil', 'conseiller', 'consultant', 'planificateur',
                          'financial', 'courtier', 'broker', 'investment',
                          'gestionnaire', 'patrimoine']
-            cat_col = get_column(df, ['category', 'column 6', 'profession'])
             if cat_col:
                 df = df[df[cat_col].fillna('').str.contains(
                     '|'.join(valid_cat), case=False, na=False)].copy()
 
-            status_col = get_column(df, ['status', 'email_1'])
             if status_col:
                 bad_status = ['invalid', 'unknown', 'blacklisted', 'catch all', 'complainer']
                 df = df[~df[status_col].fillna('').str.lower().isin(bad_status)].copy()
@@ -125,7 +130,6 @@ def clean_csv():
             prefixes = ('contact@', 'info@', 'admin@', 'hello@', 'support@', 'sales@', 'office@')
             df = df[~df[email_col].str.startswith(prefixes)].copy()
 
-            phone_col = get_column(df, ['phone', 'tel', 'mobile', 'column 8'])
             if phone_col:
                 df[phone_col] = (df[phone_col].astype(str)
                                  .str.replace('+33', '0', regex=False)
@@ -135,19 +139,13 @@ def clean_csv():
             return jsonify({"error": "Aucun lead valide après nettoyage."}), 400
 
         # --- MAPPING ---
-        name_col = get_column(df, ['name', 'company', 'cabinet', 'first name'])
-        web_col = get_column(df, ['website', 'site', 'url'])
-        phone_col = get_column(df, ['phone', 'tel', 'mobile'])
-        loc_col = get_column(df, ['location', 'address', 'adresse', 'localisation'])
-
         df_mapped = pd.DataFrame()
-        df_mapped['Email'] = df[email_col].values
+        df_mapped['Email']        = df[email_col].apply(safe_str).values
         df_mapped['Company Name'] = df[name_col].apply(lambda x: safe_str(x).title()).values if name_col else ''
-        df_mapped['Site Web'] = df[web_col].apply(lambda x: safe_str(x).lower()).values if web_col else ''
-        df_mapped['Phone'] = df[phone_col].apply(safe_str).values if phone_col else ''
+        df_mapped['Site Web']     = df[web_col].apply(lambda x: safe_str(x).lower()).values if web_col else ''
+        df_mapped['Phone']        = df[phone_col].apply(safe_str).values if phone_col else ''
         df_mapped['Localisation'] = df[loc_col].apply(safe_str).values if loc_col else ''
 
-        # Déduplique après mapping (sécurité double)
         df_mapped = df_mapped.drop_duplicates(subset=['Email'], keep='first').copy()
 
         # --- MASTER DB ---
@@ -155,17 +153,14 @@ def clean_csv():
         db_leads = {}
         if isinstance(db_data, list):
             db_leads = {item['email'].lower(): item['status']
-                       for item in db_data if isinstance(item, dict) and 'email' in item}
+                        for item in db_data if isinstance(item, dict) and 'email' in item}
 
         # --- MODE BLACKLIST ---
         if intent == 'blacklist':
             records = [
-                {"email": r['Email'],
-                 "company_name": r['Company Name'],
-                 "site_web": r['Site Web'],
-                 "status": "blacklist"}
-                for _, r in df_mapped.iterrows()
-                if r['Email']
+                {"email": r['Email'], "company_name": r['Company Name'],
+                 "site_web": r['Site Web'], "status": "blacklist"}
+                for _, r in df_mapped.iterrows() if r['Email']
             ]
             sb_upsert(records)
             return jsonify({"message": f"✅ {len(records)} leads ajoutés à la Block List."}), 200
@@ -180,7 +175,7 @@ def clean_csv():
             return 'new'
 
         df_mapped['category'] = df_mapped['Email'].apply(categorize_lead)
-        df_neufs = df_mapped[df_mapped['category'] == 'new'].drop(columns=['category']).copy()
+        df_neufs    = df_mapped[df_mapped['category'] == 'new'].drop(columns=['category']).copy()
         df_relances = df_mapped[df_mapped['category'] == 'relance'].drop(columns=['category']).copy()
 
         if not df_neufs.empty:
