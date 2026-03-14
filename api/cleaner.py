@@ -48,7 +48,6 @@ def sb_upsert(records):
         print(f"sb_upsert error: {e}")
 
 def get_column(df, keywords):
-    """Cherche une colonne par keywords — insensible à la casse et aux espaces"""
     cols_normalized = {col: col.lower().replace(' ', '').replace('_', '') for col in df.columns}
     keywords_normalized = [k.lower().replace(' ', '').replace('_', '') for k in keywords]
     for col, col_norm in cols_normalized.items():
@@ -58,17 +57,20 @@ def get_column(df, keywords):
     return None
 
 def safe_str(val):
-    if pd.isna(val) if not isinstance(val, str) else False:
-        return ""
-    return str(val).strip()
+    try:
+        if pd.isna(val):
+            return ""
+    except Exception:
+        pass
+    return str(val).strip() if val is not None else ""
 
 @app.route('/api/cleaner', methods=['POST'])
 def clean_csv():
     try:
         is_already_clean = request.form.get('is_clean') == 'true'
-        force_old = request.form.get('force_old') == 'true'
-        intent = request.form.get('intent', 'to_contact')
-        file = request.files.get('file')
+        force_old        = request.form.get('force_old') == 'true'
+        intent           = request.form.get('intent', 'to_contact')
+        file             = request.files.get('file')
 
         if not file:
             return jsonify({"error": "Aucun fichier reçu."}), 400
@@ -90,22 +92,11 @@ def clean_csv():
         df.columns = df.columns.str.strip()
         print(f"Colonnes détectées: {list(df.columns)}")
 
-        # --- DÉTECTION DES COLONNES ---
-        email_col    = get_column(df, ['email', 'mail'])
-        name_col     = get_column(df, ['company', 'cabinet', 'firstname', 'name'])
-        web_col      = get_column(df, ['website', 'site', 'url'])
-        phone_col    = get_column(df, ['phone', 'tel', 'mobile', 'numero'])
-        loc_col      = get_column(df, ['location', 'address', 'adresse', 'localisation', 'city'])
-        cat_col      = get_column(df, ['category', 'column6', 'profession'])
-        status_col   = get_column(df, ['status', 'email1'])
-
-        print(f"Mapping: email={email_col}, name={name_col}, web={web_col}, "
-              f"phone={phone_col}, loc={loc_col}, cat={cat_col}, status={status_col}")
-
+        # --- EMAIL ---
+        email_col = get_column(df, ['email', 'mail'])
         if not email_col:
             return jsonify({"error": "Aucune colonne email trouvée."}), 400
 
-        # --- NETTOYAGE EMAIL ---
         df[email_col] = df[email_col].astype(str).str.strip().str.lower()
         df = df[df[email_col].str.contains('@', na=False)].copy()
         df = df[df[email_col].str.len() > 5].copy()
@@ -114,15 +105,17 @@ def clean_csv():
         if df.empty:
             return jsonify({"error": "Aucun email valide dans le fichier."}), 400
 
-        # --- NETTOYAGE MÉTIER ---
+        # --- NETTOYAGE MÉTIER (seulement si pas pré-nettoyé) ---
         if not is_already_clean:
             valid_cat = ['conseil', 'conseiller', 'consultant', 'planificateur',
                          'financial', 'courtier', 'broker', 'investment',
                          'gestionnaire', 'patrimoine']
+            cat_col = get_column(df, ['category', 'column6', 'profession'])
             if cat_col:
                 df = df[df[cat_col].fillna('').str.contains(
                     '|'.join(valid_cat), case=False, na=False)].copy()
 
+            status_col = get_column(df, ['status', 'email1'])
             if status_col:
                 bad_status = ['invalid', 'unknown', 'blacklisted', 'catch all', 'complainer']
                 df = df[~df[status_col].fillna('').str.lower().isin(bad_status)].copy()
@@ -130,15 +123,29 @@ def clean_csv():
             prefixes = ('contact@', 'info@', 'admin@', 'hello@', 'support@', 'sales@', 'office@')
             df = df[~df[email_col].str.startswith(prefixes)].copy()
 
-            if phone_col:
-                df[phone_col] = (df[phone_col].astype(str)
-                                 .str.replace('+33', '0', regex=False)
-                                 .str.replace(r'\D', '', regex=True))
+            phone_col_clean = get_column(df, ['phone', 'tel', 'mobile', 'numero', 'number', 'portable'])
+            if phone_col_clean:
+                df[phone_col_clean] = (df[phone_col_clean].astype(str)
+                                       .str.replace('+33', '0', regex=False)
+                                       .str.replace(r'\D', '', regex=True))
 
         if df.empty:
             return jsonify({"error": "Aucun lead valide après nettoyage."}), 400
 
-        # --- MAPPING ---
+        # --- MAPPING (élargi si pré-nettoyé) ---
+        if is_already_clean:
+            name_col  = get_column(df, ['company', 'cabinet', 'firstname', 'first', 'name', 'nom', 'prenom', 'société', 'societe'])
+            web_col   = get_column(df, ['website', 'site', 'url', 'web', 'http', 'linkedin'])
+            phone_col = get_column(df, ['phone', 'tel', 'mobile', 'numero', 'number', 'portable', 'téléphone', 'telephone'])
+            loc_col   = get_column(df, ['location', 'address', 'adresse', 'localisation', 'city', 'ville', 'pays', 'region'])
+        else:
+            name_col  = get_column(df, ['company', 'cabinet', 'firstname', 'name'])
+            web_col   = get_column(df, ['website', 'site', 'url'])
+            phone_col = get_column(df, ['phone', 'tel', 'mobile', 'numero'])
+            loc_col   = get_column(df, ['location', 'address', 'adresse', 'localisation', 'city'])
+
+        print(f"MAPPING — email={email_col}, name={name_col}, web={web_col}, phone={phone_col}, loc={loc_col}")
+
         df_mapped = pd.DataFrame()
         df_mapped['Email']        = df[email_col].apply(safe_str).values
         df_mapped['Company Name'] = df[name_col].apply(lambda x: safe_str(x).title()).values if name_col else ''
@@ -149,7 +156,7 @@ def clean_csv():
         df_mapped = df_mapped.drop_duplicates(subset=['Email'], keep='first').copy()
 
         # --- MASTER DB ---
-        db_data = sb_select()
+        db_data  = sb_select()
         db_leads = {}
         if isinstance(db_data, list):
             db_leads = {item['email'].lower(): item['status']
@@ -175,45 +182,4 @@ def clean_csv():
             return 'new'
 
         df_mapped['category'] = df_mapped['Email'].apply(categorize_lead)
-        df_neufs    = df_mapped[df_mapped['category'] == 'new'].drop(columns=['category']).copy()
-        df_relances = df_mapped[df_mapped['category'] == 'relance'].drop(columns=['category']).copy()
-
-        if not df_neufs.empty:
-            records_new = [
-                {"email": r['Email'], "company_name": r['Company Name'],
-                 "site_web": r['Site Web'], "status": "to_contact"}
-                for _, r in df_neufs.iterrows() if r['Email']
-            ]
-            sb_upsert(records_new)
-
-        if force_old and not df_relances.empty:
-            records_old = [
-                {"email": r['Email'], "company_name": r['Company Name'],
-                 "site_web": r['Site Web'], "status": "contacted"}
-                for _, r in df_relances.iterrows() if r['Email']
-            ]
-            sb_upsert(records_old)
-
-        # --- EXPORT ZIP ---
-        memory_file = io.BytesIO()
-        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
-            if not df_neufs.empty:
-                zf.writestr('1_campagne_leads_neufs.csv',
-                            df_neufs.to_csv(index=False, sep=';', encoding='utf-8-sig'))
-            if not df_relances.empty:
-                zf.writestr('2_campagne_relances_60j.csv',
-                            df_relances.to_csv(index=False, sep=';', encoding='utf-8-sig'))
-            if df_neufs.empty and df_relances.empty:
-                zf.writestr('vide.txt', 'Tous les leads étaient en blacklist ou déjà traités.')
-
-        memory_file.seek(0)
-        return send_file(memory_file, mimetype="application/zip",
-                         as_attachment=True, download_name="smartlead_exports.zip")
-
-    except Exception as e:
-        import traceback
-        print(traceback.format_exc())
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == "__main__":
-    app.run()
+        df_neufs    = df_mapped[df_mapped['category'] == '
