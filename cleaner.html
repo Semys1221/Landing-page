@@ -3,173 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Montis Media - Hub & CRM</title>
+    <title>Montis Media DB</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        .upload-card { background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; }
-        .upload-card:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); }
-        .stat-card { border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.02); }
+        .upload-card { background: rgba(255,255,255,0.02); transition: all 0.3s ease; }
+        .upload-card:hover { border-color: #3b82f6; background: rgba(59,130,246,0.05); }
+        .stat-card { border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); }
+        select { background: #000; }
+        select option { background: #111; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen items-center py-12 px-6">
+<div class="w-full max-w-4xl space-y-12">
 
-    <div class="w-full max-w-4xl space-y-12">
-        
-        <div class="text-center space-y-2">
-            <h1 class="text-xs font-bold text-blue-500 uppercase tracking-[0.4em]">Montis Media DB</h1>
-            <p class="text-3xl font-light text-gray-300">Master Hub</p>
+    <div class="text-center space-y-2">
+        <h1 class="text-xs font-bold text-blue-500 uppercase tracking-[0.4em]">Montis Media DB</h1>
+        <p class="text-3xl font-light text-gray-300">Master Hub</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="stat-card p-6 text-center rounded-sm">
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Total DB</p>
+            <p class="text-3xl font-light text-white" id="stat-total">...</p>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="stat-card p-6 text-center rounded-sm">
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Total DB</p>
-                <p class="text-3xl font-light text-white" id="stat-total">...</p>
-            </div>
-            <div class="stat-card p-6 text-center rounded-sm border-blue-500/30">
-                <p class="text-[10px] text-blue-500 uppercase tracking-widest mb-2">À Contacter</p>
-                <p class="text-3xl font-light text-white" id="stat-tocontact">...</p>
-            </div>
-            <div class="stat-card p-6 text-center rounded-sm border-orange-500/30">
-                <p class="text-[10px] text-orange-500 uppercase tracking-widest mb-2">Déjà Contactés</p>
-                <p class="text-3xl font-light text-white" id="stat-contacted">...</p>
-            </div>
-            <div class="stat-card p-6 text-center rounded-sm border-red-500/30">
-                <p class="text-[10px] text-red-500 uppercase tracking-widest mb-2">Block List</p>
-                <p class="text-3xl font-light text-white" id="stat-blacklist">...</p>
-            </div>
+        <div class="stat-card p-6 text-center rounded-sm border-blue-500/30">
+            <p class="text-[10px] text-blue-500 uppercase tracking-widest mb-2">À Contacter</p>
+            <p class="text-3xl font-light text-white" id="stat-tocontact">...</p>
         </div>
-
-        <div class="max-w-xl mx-auto p-8 border border-white/10 bg-white/5 rounded-sm space-y-8">
-            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">Configuration de l'Import</h2>
-
-            <div class="space-y-4 text-left">
-                <div class="flex items-center justify-between p-4 bg-black border border-white/10 rounded-sm">
-                    <label for="is-clean" class="text-sm font-light text-gray-300 cursor-pointer">1. Le fichier est-il déjà pré-nettoyé ?</label>
-                    <input type="checkbox" id="is-clean" class="w-5 h-5 accent-blue-500 cursor-pointer">
-                </div>
-
-                <div class="flex items-center justify-between p-4 bg-black border border-white/10 rounded-sm">
-                    <label for="force-old" class="text-sm font-light text-gray-300 cursor-pointer text-orange-400">2. Archive : Marquer comme "Déjà contactés" ?</label>
-                    <input type="checkbox" id="force-old" class="w-5 h-5 accent-orange-500 cursor-pointer">
-                </div>
-
-                <div class="space-y-2 pt-2">
-                    <label class="text-[10px] text-gray-500 uppercase tracking-widest">3. Destination Finale :</label>
-                    <select id="lead-intent" class="w-full bg-black border border-white/20 p-4 text-sm font-light text-white outline-none focus:border-blue-500 rounded-sm">
-                        <option value="to_contact">À CONTACTER (Génère ZIP : Neufs & Relances)</option>
-                        <option value="blacklist">BLOCK LIST (Ajoute en Ne pas contacter - Aucun export)</option>
-                    </select>
-                </div>
-            </div>
-
-            <label for="csv-file" class="upload-card block p-10 cursor-pointer rounded-sm border-dashed border-2 border-white/20 text-center">
-                <svg class="w-6 h-6 mx-auto mb-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                <span id="file-name" class="text-sm font-light text-gray-400">Glisse ton CSV ici</span>
-                <input type="file" id="csv-file" accept=".csv" class="hidden">
-            </label>
-
-            <button onclick="processFile()" id="process-btn" class="hidden w-full py-4 bg-blue-600 text-white text-xs uppercase tracking-[0.3em] font-bold hover:bg-blue-700 transition-all rounded-sm">
-                Lancer l'algorithme
-            </button>
-            <p id="status-message" class="text-sm text-center text-gray-400 font-light h-4"></p>
+        <div class="stat-card p-6 text-center rounded-sm border-orange-500/30">
+            <p class="text-[10px] text-orange-500 uppercase tracking-widest mb-2">Déjà Contactés</p>
+            <p class="text-3xl font-light text-white" id="stat-contacted">...</p>
+        </div>
+        <div class="stat-card p-6 text-center rounded-sm border-red-500/30">
+            <p class="text-[10px] text-red-500 uppercase tracking-widest mb-2">Block List</p>
+            <p class="text-3xl font-light text-white" id="stat-blacklist">...</p>
         </div>
     </div>
 
-    <script>
-        // --- CHARGEMENT DU CRM ---
-        async function fetchCRMStats() {
-            try {
-                const res = await fetch('/api/crm');
-                if(res.ok) {
-                    const data = await res.json();
-                    document.getElementById('stat-total').innerText = data.stats.total || 0;
-                    document.getElementById('stat-tocontact').innerText = data.stats.to_contact || 0;
-                    document.getElementById('stat-contacted').innerText = data.stats.contacted || 0;
-                    // Si api/crm.py compte la blacklist (ajoute la ligne dans crm.py si besoin)
-                    if(data.stats.blacklist !== undefined) {
-                        document.getElementById('stat-blacklist').innerText = data.stats.blacklist;
-                    }
-                }
-            } catch (e) { console.error("Erreur CRM:", e); }
-        }
-        window.onload = fetchCRMStats;
+    <!-- STEP 1 : UPLOAD -->
+    <div id="step-upload" class="max-w-xl mx-auto p-8 border border-white/10 bg-white/5 rounded-sm space-y-6">
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">
+            Étape 1 — Charger le CSV
+        </h2>
+        <label for="csv-file" class="upload-card block p-10 cursor-pointer rounded-sm border-dashed border-2 border-white/20 text-center">
+            <svg class="w-6 h-6 mx-auto mb-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <span id="file-name" class="text-sm font-light text-gray-400">Glisse ton CSV ici</span>
+            <input type="file" id="csv-file" accept=".csv" class="hidden">
+        </label>
+    </div>
 
-        // --- GESTION DE L'UPLOAD ---
-        const fileInput = document.getElementById('csv-file');
-        const fileNameDisplay = document.getElementById('file-name');
-        const processBtn = document.getElementById('process-btn');
-        const statusMsg = document.getElementById('status-message');
+    <!-- STEP 2 : MAPPING (caché au départ) -->
+    <div id="step-mapping" class="hidden max-w-xl mx-auto p-8 border border-white/10 bg-white/5 rounded-sm space-y-6">
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">
+            Étape 2 — Mapper les colonnes
+        </h2>
+        <p class="text-xs text-gray-500 text-center">Associe chaque champ Supabase à la colonne correspondante dans ton CSV.</p>
 
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                fileNameDisplay.innerText = e.target.files[0].name;
-                fileNameDisplay.classList.add('text-white');
-                processBtn.classList.remove('hidden');
-                statusMsg.innerText = "";
+        <div class="space-y-3" id="mapping-fields">
+            <!-- généré dynamiquement -->
+        </div>
+    </div>
+
+    <!-- STEP 3 : OPTIONS + LANCER (caché au départ) -->
+    <div id="step-options" class="hidden max-w-xl mx-auto p-8 border border-white/10 bg-white/5 rounded-sm space-y-6">
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">
+            Étape 3 — Options & Import
+        </h2>
+
+        <div class="space-y-3">
+            <div class="flex items-center justify-between p-4 bg-black border border-white/10 rounded-sm">
+                <label for="do-clean" class="text-sm font-light text-gray-300 cursor-pointer">
+                    Appliquer le nettoyage métier ?
+                    <span class="block text-xs text-gray-600 mt-1">Filtre par catégorie pro, statut email, préfixes génériques</span>
+                </label>
+                <input type="checkbox" id="do-clean" class="w-5 h-5 accent-blue-500 cursor-pointer">
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-black border border-white/10 rounded-sm">
+                <label for="force-old" class="text-sm font-light text-orange-400 cursor-pointer">
+                    Archive : Marquer comme "Déjà contactés" ?
+                </label>
+                <input type="checkbox" id="force-old" class="w-5 h-5 accent-orange-500 cursor-pointer">
+            </div>
+
+            <div class="space-y-2 pt-2">
+                <label class="text-[10px] text-gray-500 uppercase tracking-widest">Destination Finale</label>
+                <select id="lead-intent" class="w-full border border-white/20 p-4 text-sm font-light text-white outline-none focus:border-blue-500 rounded-sm">
+                    <option value="to_contact">À CONTACTER (Génère ZIP : Neufs & Relances)</option>
+                    <option value="blacklist">BLOCK LIST (Ajoute en Ne pas contacter)</option>
+                </select>
+            </div>
+        </div>
+
+        <button onclick="processFile()" id="process-btn" class="w-full py-4 bg-blue-600 text-white text-xs uppercase tracking-[0.3em] font-bold hover:bg-blue-700 transition-all rounded-sm">
+            Lancer l'algorithme
+        </button>
+        <p id="status-message" class="text-sm text-center text-gray-400 font-light h-4"></p>
+    </div>
+
+</div>
+
+<script>
+    // Champs à mapper : [clé interne, label affiché, obligatoire]
+    const FIELDS = [
+        { key: 'email',        label: 'Email',                  required: true  },
+        { key: 'company_name', label: 'Company Name',           required: false },
+        { key: 'status',       label: 'Statut',                 required: false },
+        { key: 'last_contact', label: 'Date dernier contact',   required: false },
+        { key: 'localisation', label: 'Localisation',           required: false },
+        { key: 'phone',        label: 'Numéro de téléphone',    required: false },
+        { key: 'site_web',     label: 'Site Web',               required: false },
+    ];
+
+    let csvColumns = [];
+
+    // --- STATS ---
+    async function fetchCRMStats() {
+        try {
+            const res = await fetch('/api/crm');
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('stat-total').innerText     = data.stats.total || 0;
+                document.getElementById('stat-tocontact').innerText = data.stats.to_contact || 0;
+                document.getElementById('stat-contacted').innerText = data.stats.contacted || 0;
+                if (data.stats.blacklist !== undefined)
+                    document.getElementById('stat-blacklist').innerText = data.stats.blacklist;
             }
+        } catch(e) { console.error(e); }
+    }
+    window.onload = fetchCRMStats;
+
+    // --- UPLOAD & LECTURE COLONNES ---
+    document.getElementById('csv-file').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        document.getElementById('file-name').innerText = file.name;
+        document.getElementById('file-name').classList.add('text-white');
+
+        // Lit juste la première ligne pour extraire les colonnes
+        const text = await readFirstLine(file);
+        csvColumns = parseCSVHeader(text);
+
+        buildMappingUI();
+
+        document.getElementById('step-mapping').classList.remove('hidden');
+        document.getElementById('step-options').classList.remove('hidden');
+    });
+
+    function readFirstLine(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsText(file.slice(0, 2000)); // Lit juste le début
+        });
+    }
+
+    function parseCSVHeader(text) {
+        const firstLine = text.split('\n')[0];
+        // Gère les séparateurs , et ;
+        const sep = firstLine.includes(';') ? ';' : ',';
+        return firstLine.split(sep).map(c => c.replace(/["\r]/g, '').trim());
+    }
+
+    function buildMappingUI() {
+        const container = document.getElementById('mapping-fields');
+        container.innerHTML = '';
+
+        FIELDS.forEach(field => {
+            // Auto-détection intelligente
+            const autoMatch = autoDetect(field.key, csvColumns);
+
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between p-3 bg-black border border-white/10 rounded-sm gap-4';
+            div.innerHTML = `
+                <label class="text-sm font-light text-gray-300 w-40 shrink-0">
+                    ${field.label}
+                    ${field.required ? '<span class="text-blue-500 ml-1">*</span>' : ''}
+                </label>
+                <select id="map-${field.key}" class="flex-1 border border-white/20 p-2 text-sm font-light text-white outline-none focus:border-blue-500 rounded-sm">
+                    <option value="">— Ignorer —</option>
+                    ${csvColumns.map(col => `
+                        <option value="${col}" ${col === autoMatch ? 'selected' : ''}>${col}</option>
+                    `).join('')}
+                </select>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function autoDetect(fieldKey, columns) {
+        const rules = {
+            email:        ['email', 'mail', 'e-mail'],
+            company_name: ['company', 'cabinet', 'société', 'societe', 'name', 'nom', 'entreprise'],
+            status:       ['status', 'statut', 'état', 'etat'],
+            last_contact: ['last', 'contact', 'date', 'contacted'],
+            localisation: ['location', 'city', 'ville', 'adresse', 'address', 'pays', 'localisation'],
+            phone:        ['phone', 'tel', 'mobile', 'numero', 'number', 'portable', 'téléphone'],
+            site_web:     ['website', 'site', 'url', 'web', 'http'],
+        };
+
+        const keywords = rules[fieldKey] || [];
+        for (const col of columns) {
+            const colNorm = col.toLowerCase().replace(/[\s_-]/g, '');
+            for (const kw of keywords) {
+                if (colNorm.includes(kw.replace(/[\s_-]/g, ''))) return col;
+            }
+        }
+        return '';
+    }
+
+    // --- PROCESS ---
+    async function processFile() {
+        const file = document.getElementById('csv-file').files[0];
+        if (!file) return;
+
+        // Récupère le mapping
+        const mapping = {};
+        FIELDS.forEach(field => {
+            const val = document.getElementById(`map-${field.key}`).value;
+            if (val) mapping[field.key] = val;
         });
 
-        async function processFile() {
-            if (fileInput.files.length === 0) return;
-
-            // Récupération des choix UI
-            const isClean = document.getElementById('is-clean').checked;
-            const forceOld = document.getElementById('force-old').checked; // Variable Archive
-            const intent = document.getElementById('lead-intent').value;
-            
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-            formData.append('is_clean', isClean);
-            formData.append('force_old', forceOld);
-            formData.append('intent', intent);
-
-            // Mise à jour UI
-            processBtn.innerText = "Algorithme en cours...";
-            processBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            processBtn.disabled = true;
-            statusMsg.innerText = "Analyse et requête vers Supabase...";
-            statusMsg.className = "text-sm text-center text-blue-400 font-light h-4";
-
-            try {
-                const response = await fetch('/api/cleaner', { method: 'POST', body: formData });
-                
-                if (response.ok) {
-                    const contentType = response.headers.get("content-type");
-                    
-                    if (contentType && contentType.includes("application/json")) {
-                        const data = await response.json();
-                        statusMsg.innerText = data.message;
-                        statusMsg.className = "text-sm text-center text-green-500 font-light h-4";
-                    } else {
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = "smartlead_exports.zip";
-                        document.body.appendChild(a);
-                        a.click(); a.remove();
-                        window.URL.revokeObjectURL(url);
-                        
-                        statusMsg.innerText = "✅ ZIP généré ! (Vérifie les dossiers Neufs/Relances)";
-                        statusMsg.className = "text-sm text-center text-green-500 font-light h-4";
-                    }
-                    fetchCRMStats(); 
-                } else {
-                    const err = await response.json();
-                    statusMsg.innerText = "❌ Erreur : " + (err.error || "Erreur serveur.");
-                    statusMsg.className = "text-sm text-center text-red-500 font-light h-4";
-                }
-            } catch (error) {
-                statusMsg.innerText = "❌ Erreur de connexion au serveur.";
-                statusMsg.className = "text-sm text-center text-red-500 font-light h-4";
-            } finally {
-                processBtn.innerText = "Lancer l'algorithme";
-                processBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                processBtn.disabled = false;
-            }
+        if (!mapping.email) {
+            document.getElementById('status-message').innerText = '❌ La colonne Email est obligatoire.';
+            document.getElementById('status-message').className = 'text-sm text-center text-red-500 font-light h-4';
+            return;
         }
-    </script>
+
+        const doClean  = document.getElementById('do-clean').checked;
+        const forceOld = document.getElementById('force-old').checked;
+        const intent   = document.getElementById('lead-intent').value;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('mapping', JSON.stringify(mapping));
+        formData.append('do_clean', doClean);
+        formData.append('force_old', forceOld);
+        formData.append('intent', intent);
+
+        const btn = document.getElementById('process-btn');
+        btn.innerText = 'Algorithme en cours...';
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.disabled = true;
+
+        const statusMsg = document.getElementById('status-message');
+        statusMsg.innerText = 'Analyse et requête vers Supabase...';
+        statusMsg.className = 'text-sm text-center text-blue-400 font-light h-4';
+
+        try {
+            const response = await fetch('/api/cleaner', { method: 'POST', body: formData });
+
+            if (response.ok) {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    statusMsg.innerText = data.message;
+                    statusMsg.className = 'text-sm text-center text-green-500 font-light h-4';
+                } else {
+                    const blob = await response.blob();
+                    const url  = window.URL.createObjectURL(blob);
+                    const a    = document.createElement('a');
+                    a.href     = url;
+                    a.download = 'smartlead_exports.zip';
+                    document.body.appendChild(a);
+                    a.click(); a.remove();
+                    window.URL.revokeObjectURL(url);
+                    statusMsg.innerText = '✅ ZIP généré !';
+                    statusMsg.className = 'text-sm text-center text-green-500 font-light h-4';
+                }
+                fetchCRMStats();
+            } else {
+                const err = await response.json();
+                statusMsg.innerText = '❌ Erreur : ' + (err.error || 'Erreur serveur.');
+                statusMsg.className = 'text-sm text-center text-red-500 font-light h-4';
+            }
+        } catch(error) {
+            statusMsg.innerText = '❌ Erreur de connexion.';
+            statusMsg.className = 'text-sm text-center text-red-500 font-light h-4';
+        } finally {
+            btn.innerText = 'Lancer l\'algorithme';
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.disabled = false;
+        }
+    }
+</script>
 </body>
 </html>
