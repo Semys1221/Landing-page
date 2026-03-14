@@ -1,2 +1,7 @@
 flask
 requests
+google-generativeai
+pandas
+supabase
+python-dotenv
+pytz
