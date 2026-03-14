@@ -22,11 +22,17 @@ def sb_select():
     return r.json() if r.ok else []
 
 def sb_upsert(records):
-    requests.post(
+    r = requests.post(
         f"{SUPABASE_URL}/rest/v1/leads",
-        headers={**HEADERS, "Prefer": "resolution=merge-duplicates"},
+        headers={
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json",
+            "Prefer": "resolution=merge-duplicates,return=minimal"
+        },
         json=records
     )
+    print(f"UPSERT status: {r.status_code}, response: {r.text}")
 
 def get_column(df, keywords):
     for col in df.columns:
