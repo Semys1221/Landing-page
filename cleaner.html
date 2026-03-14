@@ -3,43 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Montis Media - Cleaner</title>
+    <title>Montis Media</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
         .upload-card { border: 1px dashed rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.03); transition: all 0.3s ease; }
         .upload-card:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); }
+        .stat-card { border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.02); }
     </style>
 </head>
-<body class="flex flex-col min-h-screen items-center justify-center px-6">
+<body class="flex flex-col min-h-screen items-center py-12 px-6">
 
-    <div class="w-full max-w-xl text-center space-y-8">
-        <div class="space-y-4">
-            <h1 class="text-sm font-bold text-blue-500 uppercase tracking-[0.4em]">Montis Media DB</h1>
-            <p class="text-2xl font-light text-gray-300">Nettoyeur & Séparateur de Leads</p>
+    <div class="w-full max-w-4xl space-y-12">
+        
+        <div class="text-center space-y-2">
+            <h1 class="text-xs font-bold text-blue-500 uppercase tracking-[0.4em]">Montis Media DB</h1>
+            <p class="text-3xl font-light text-gray-300">Master Hub</p>
         </div>
 
-        <label for="csv-file" class="upload-card block p-16 cursor-pointer rounded-sm">
-            <svg class="w-10 h-10 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-            <span id="file-name" class="text-lg font-light text-gray-400">Clique ou glisse ton CSV ici</span>
-            <input type="file" id="csv-file" accept=".csv" class="hidden">
-        </label>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="stat-card p-6 text-center rounded-sm">
+                <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">Total DB</p>
+                <p class="text-4xl font-light text-white" id="stat-total">...</p>
+            </div>
+            <div class="stat-card p-6 text-center rounded-sm border-blue-500/30">
+                <p class="text-xs text-blue-500 uppercase tracking-widest mb-2">À Contacter</p>
+                <p class="text-4xl font-light text-white" id="stat-tocontact">...</p>
+            </div>
+            <div class="stat-card p-6 text-center rounded-sm border-green-500/30">
+                <p class="text-xs text-green-500 uppercase tracking-widest mb-2">Déjà Contactés</p>
+                <p class="text-4xl font-light text-white" id="stat-contacted">...</p>
+            </div>
+        </div>
 
-        <button onclick="processFile()" id="process-btn" class="hidden w-full py-4 border border-white/20 text-xs uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all">
-            Nettoyer le fichier
-        </button>
-        
-        <p id="status-message" class="text-sm text-gray-500 font-light mt-4 h-4"></p>
+        <div class="max-w-xl mx-auto text-center space-y-6">
+            <label for="csv-file" class="upload-card block p-12 cursor-pointer rounded-sm">
+                <svg class="w-8 h-8 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                <span id="file-name" class="text-sm font-light text-gray-400">Glisse ton CSV House Scraper ici pour le nettoyer</span>
+                <input type="file" id="csv-file" accept=".csv" class="hidden">
+            </label>
+
+            <button onclick="processFile()" id="process-btn" class="hidden w-full py-4 bg-white text-black text-xs uppercase tracking-[0.3em] font-bold hover:bg-blue-500 hover:text-white transition-all rounded-sm">
+                Nettoyer & Séparer
+            </button>
+            <p id="status-message" class="text-sm text-gray-500 font-light h-4"></p>
+        </div>
+
+        <div class="border border-white/10 rounded-sm overflow-hidden bg-white/5">
+            <div class="p-4 border-b border-white/10 bg-black/50">
+                <p class="text-xs text-gray-400 uppercase tracking-widest">Derniers ajouts dans la Master DB</p>
+            </div>
+            <table class="w-full text-sm text-left text-gray-400 font-light">
+                <thead class="text-xs uppercase bg-white/5 text-gray-500">
+                    <tr>
+                        <th class="px-6 py-3 font-normal tracking-widest">Email</th>
+                        <th class="px-6 py-3 font-normal tracking-widest">Entreprise</th>
+                        <th class="px-6 py-3 font-normal tracking-widest text-right">Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="leads-table-body">
+                    </tbody>
+            </table>
+        </div>
+
     </div>
 
     <script>
+        // --- LOGIQUE DU DASHBOARD CRM ---
+        async function fetchCRMStats() {
+            try {
+                const res = await fetch('/api/crm');
+                if(res.ok) {
+                    const data = await res.json();
+                    
+                    // MàJ des Chiffres
+                    document.getElementById('stat-total').innerText = data.stats.total;
+                    document.getElementById('stat-tocontact').innerText = data.stats.to_contact;
+                    document.getElementById('stat-contacted').innerText = data.stats.contacted;
+
+                    // MàJ du Tableau
+                    const tbody = document.getElementById('leads-table-body');
+                    tbody.innerHTML = '';
+                    if(data.recent && data.recent.length > 0) {
+                        data.recent.forEach(lead => {
+                            const statusColor = lead.status === 'to_contact' ? 'text-blue-400' : 'text-gray-500';
+                            tbody.innerHTML += `
+                                <tr class="border-b border-white/5 hover:bg-white/5">
+                                    <td class="px-6 py-4 text-white">${lead.email}</td>
+                                    <td class="px-6 py-4">${lead.company_name || '-'}</td>
+                                    <td class="px-6 py-4 text-right uppercase text-[10px] tracking-widest ${statusColor}">${lead.status}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-gray-600">Aucun lead pour le moment</td></tr>';
+                    }
+                }
+            } catch (e) {
+                console.error("Erreur de chargement du CRM:", e);
+            }
+        }
+
+        // Charger les stats au démarrage de la page
+        window.onload = fetchCRMStats;
+
+        // --- LOGIQUE D'UPLOAD (Inchangée) ---
         const fileInput = document.getElementById('csv-file');
         const fileNameDisplay = document.getElementById('file-name');
         const processBtn = document.getElementById('process-btn');
         const statusMsg = document.getElementById('status-message');
 
-        // Quand on sélectionne un fichier
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 fileNameDisplay.innerText = e.target.files[0].name;
@@ -49,61 +123,46 @@
             }
         });
 
-        // Fonction d'envoi à Vercel
         async function processFile() {
             if (fileInput.files.length === 0) return;
-
-            const file = fileInput.files[0];
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('file', fileInput.files[0]);
 
-            // UI Feedback
-            processBtn.innerText = "Traitement en cours (Pandas x Supabase)...";
+            processBtn.innerText = "Traitement en cours...";
             processBtn.classList.add('opacity-50', 'cursor-not-allowed');
             processBtn.disabled = true;
-            statusMsg.innerText = "Analyse, nettoyage et déduplication en cours...";
+            statusMsg.innerText = "Nettoyage et déduplication...";
 
             try {
-                // Appel vers ton script Python sur Vercel
-                const response = await fetch('/api/cleaner', {
-                    method: 'POST',
-                    body: formData
-                });
-
+                const response = await fetch('/api/cleaner', { method: 'POST', body: formData });
                 if (response.ok) {
-                    // Si Vercel renvoie le ZIP
                     const blob = await response.blob();
-                    
                     if (blob.type === "application/json") {
-                        // S'il n'y a plus de leads (tous filtrés)
-                        const text = await blob.text();
-                        const data = JSON.parse(text);
+                        const data = JSON.parse(await blob.text());
                         statusMsg.innerText = data.message || "Fichier vide après filtrage.";
                     } else {
-                        // Téléchargement du ZIP
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
                         a.download = "leads_nettoyes_split.zip";
                         document.body.appendChild(a);
-                        a.click();
-                        a.remove();
+                        a.click(); a.remove();
                         window.URL.revokeObjectURL(url);
                         
-                        statusMsg.innerText = "✅ Fichier ZIP téléchargé avec succès !";
+                        statusMsg.innerText = "✅ Fichier ZIP téléchargé !";
                         statusMsg.classList.replace('text-gray-500', 'text-green-500');
+                        
+                        // RAFRAICHIR LE DASHBOARD APRÈS L'UPLOAD
+                        fetchCRMStats(); 
                     }
                 } else {
-                    const err = await response.json();
-                    statusMsg.innerText = "❌ Erreur : " + (err.error || "Problème serveur.");
+                    statusMsg.innerText = "❌ Erreur serveur.";
                     statusMsg.classList.replace('text-gray-500', 'text-red-500');
                 }
             } catch (error) {
-                console.error(error);
-                statusMsg.innerText = "❌ Erreur de connexion avec l'API.";
+                statusMsg.innerText = "❌ Erreur de connexion.";
                 statusMsg.classList.replace('text-gray-500', 'text-red-500');
             } finally {
-                // Reset bouton
                 processBtn.innerText = "Nettoyer un autre fichier";
                 processBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 processBtn.disabled = false;
