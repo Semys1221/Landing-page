@@ -1,4 +1,18 @@
 import os
+
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+
+print(f"DEBUG - URL: {SUPABASE_URL}")
+print(f"DEBUG - KEY exists: {SUPABASE_KEY is not None}")
+
+try:
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    print("DEBUG - Supabase init OK")
+except Exception as e:
+    print(f"Erreur init Supabase: {e}")
+    supabase = None
+import os
 import io
 import zipfile
 import pandas as pd
