@@ -122,9 +122,9 @@ def handle_smartlead():
 
 @app.route('/api/webhook/test', methods=['POST'])
 def test_webhook():
-    data = request.json or {}
-    message = data.get('message', 'oui je suis intéressé')
-    email   = data.get('email', 'test@montismedia.com')
+    data     = request.json or {}
+    message  = data.get('message', 'oui je suis intéressé')
+    email    = data.get('email', 'test@montismedia.com')
     category = classify(message)
 
     discord_payload = {"embeds": [{"title": f"🧪 TEST — {category}",
@@ -133,3 +133,7 @@ def test_webhook():
     requests.post(DISCORD_WEBHOOK, json=discord_payload, timeout=5)
 
     return jsonify({"status": "test_ok", "category": category, "discord": "notif envoyée"}), 200
+
+
+if __name__ == "__main__":
+    app.run()
