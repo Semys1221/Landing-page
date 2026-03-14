@@ -6,6 +6,7 @@
     <title>Montis Media</title>
     
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
@@ -116,7 +117,7 @@
 
         <div id="redirect-step" class="hidden w-full max-w-md text-center space-y-6 fade-in">
             <div class="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
-            <p class="text-sm uppercase tracking-[0.2em] text-gray-400">Redirection vers l'agenda...</p>
+            <p class="text-sm uppercase tracking-[0.2em] text-gray-400">Ouverture de l'agenda...</p>
         </div>
 
     </main>
@@ -129,32 +130,59 @@
     </footer>
 
     <script>
+        // CONFIGURATION DES APIS
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1482238647502766192/lfd8E3ZsPjqZI8R0VcoknPvP6u-an49eBvIReIe8qtF_9kJa1PA6LDTH02jJlUJejn28";
+        const CALENDLY_API_KEY = "eyJraWQiOiIxY2UxZTEzNjE3ZGNmNzY2YjNjZWJjY2Y4ZGM1YmFmYThhNjVlNjg0MDIzZjdjMzJiZTgzNDliMjM4MDEzNWI0IiwidHlwIjoiUEFUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2F1dGguY2FsZW5kbHkuY29tIiwiaWF0IjoxNzczMDIyMzgyLCJqdGkiOiI2NTljYjYzMy0xM2VjLTRlZjgtOGI3NS1iNTJjNTVjYjA1YTEiLCJ1c2VyX3V1aWQiOiJkODM4ZTY4Mi1lZWQ5LTQ3YTAtODM5ZC0yYzBiZThlM2M5ZGQiLCJzY29wZSI6ImF2YWlsYWJpbGl0eTpyZWFkIGF2YWlsYWJpbGl0eTp3cml0ZSBldmVudF90eXBlczpyZWFkIGV2ZW50X3R5cGVzOndyaXRlIGxvY2F0aW9uczpyZWFkIHJvdXRpbmdfZm9ybXM6cmVhZCBzaGFyZXM6d3JpdGUgc2NoZWR1bGVkX2V2ZW50czpyZWFkIHNjaGVkdWxlZF9ldmVudHM6d3JpdGUgc2NoZWR1bGluZ19saW5rczp3cml0ZSBncm91cHM6cmVhZCBvcmdhbml6YXRpb25zOnJlYWQgb3JnYW5pemF0aW9uczpyZWFkIHVzZXJzOnJlYWQgYWN0aXZpdHlfbG9nOnJlYWQgZGF0YV9jb21wbGlhbmNlOndyaXRlIG91dGdvaW5nX2NvbW11bmljYXRpb25zOnJlYWQgd2ViaG9va3M6cmVhZCB3ZWJob29rczp3cml0ZSJ9.QX5KMcdg8OUwPltbltMec7hM6qXQr010KUzJayC4hkWbM6gE3Sgshy2PPjQFtc-jX7H_Zzn5xPSzPtAHfMheNA";
+
         let responses = { delegation: null, budget: null, obj: null };
 
+        // FONCTION : Envoyer un message vers Discord
+        function sendToDiscord(status, name = "Non identifié", email = "Non renseigné", color = 15158332) {
+            const payload = {
+                username: "Montis Bot",
+                avatar_url: "https://calendly.com/assets/favicon.ico",
+                embeds: [{
+                    title: status,
+                    color: color,
+                    fields: [
+                        { name: "👤 Nom", value: name, inline: true },
+                        { name: "📧 Email", value: email, inline: true },
+                        { name: "Délégation", value: responses.delegation || "N/A", inline: true },
+                        { name: "Horizon d'action", value: responses.budget || "N/A", inline: true },
+                        { name: "Objectif 20 audits", value: responses.obj || "N/A", inline: true }
+                    ],
+                    timestamp: new Date()
+                }]
+            };
+
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.error("Erreur Discord:", err));
+        }
+
+        // LOGIQUE DU FORMULAIRE
         function selectOption(el, category, value, currentStepId, nextStepId) {
-            // Mise en surbrillance de l'option
             const siblings = el.parentElement.querySelectorAll('.option-card');
             siblings.forEach(s => s.classList.remove('selected'));
             el.classList.add('selected');
             
-            // Enregistrement de la réponse
             responses[category] = value;
 
-            // Auto-advance après un léger délai pour que l'utilisateur voie son clic
             setTimeout(() => {
                 document.getElementById(currentStepId).classList.add('hidden');
-                
                 if (nextStepId === 'evaluate') {
                     evaluateFirstStep();
                 } else {
                     document.getElementById(nextStepId).classList.remove('hidden');
                 }
-            }, 350); // 350ms de délai
+            }, 350);
         }
 
         function evaluateFirstStep() {
-            // Logique de filtrage : Disqualification si Délégation "Non"
             if (responses.delegation === 'non') {
+                sendToDiscord("❌ Prospect Disqualifié (Refus délégation)", "N/A", "N/A", 15158332);
                 document.getElementById('refusal-step').classList.remove('hidden');
             } else {
                 document.getElementById('sms-step').classList.remove('hidden');
@@ -165,27 +193,67 @@
             document.getElementById('sms-step').classList.add('hidden');
 
             if (response === 'non') {
+                sendToDiscord("⚠️ Blocage à l'étape SMS", "N/A", "N/A", 16753920);
                 document.getElementById('sms-refusal-step').classList.remove('hidden');
             } else {
-                // Afficher un petit loader de redirection
                 document.getElementById('redirect-step').classList.remove('hidden');
                 
-                // Redirection vers la page Calendly
+                // Signal Discord que quelqu'un ouvre l'agenda
+                sendToDiscord("👀 Quelqu'un ouvre l'agenda (En attente de réservation)", "N/A", "N/A", 3447003);
+
                 setTimeout(() => {
-                    window.location.href = 'https://calendly.com/montismedia/30min';
+                    // Ouverture de l'agenda
+                    Calendly.initPopupWidget({
+                        url: 'https://calendly.com/montismedia/30min'
+                    });
+                    document.getElementById('redirect-step').classList.add('hidden');
+                    document.getElementById('step-1').classList.remove('hidden'); // Reset bg
                 }, 800);
             }
         }
 
+        // ECOUTEUR CALENDLY + REQUETE API POUR INFOS CLIENT
+        window.addEventListener('message', async function(e) {
+            if (e.data.event && e.data.event === 'calendly.event_scheduled') {
+                
+                // Récupération de l'URI de l'invité depuis l'event du widget
+                const inviteeUri = e.data.payload.invitee.uri;
+                
+                try {
+                    // Appel à l'API Calendly avec ton Token pour récupérer Nom/Email
+                    const response = await fetch(inviteeUri, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${CALENDLY_API_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if(response.ok) {
+                        const data = await response.json();
+                        const clientName = data.resource.name;
+                        const clientEmail = data.resource.email;
+                        
+                        // Envoi de toutes les datas au Discord (Succès vert)
+                        sendToDiscord("✅ BINGO ! Nouveau RDV Confirmé !", clientName, clientEmail, 3066993);
+                    } else {
+                        // Si l'API bloque la requête navigateur (CORS), on envoie quand même l'alerte
+                        sendToDiscord("✅ BINGO ! RDV Confirmé ! (Info manuelle requise)", "Vérifier Calendly", "Vérifier Calendly", 3066993);
+                    }
+
+                } catch (error) {
+                    console.error("Impossible de fetch l'API Calendly", error);
+                    sendToDiscord("✅ BINGO ! RDV Confirmé !", "Vérifier Calendly", "Vérifier Calendly", 3066993);
+                }
+            }
+        });
+
+        // UTILITAIRES DE RESET
         function resetForm() {
             responses = { delegation: null, budget: null, obj: null };
             document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
-            
-            // Masquer tous les écrans de fin
             document.getElementById('refusal-step').classList.add('hidden');
             document.getElementById('sms-refusal-step').classList.add('hidden');
-            
-            // Revenir à l'étape 1
             document.getElementById('step-1').classList.remove('hidden');
         }
 
