@@ -120,33 +120,16 @@ def handle_smartlead():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/api/webhook/test', methods=['GET'])
+@app.route('/api/webhook/test', methods=['POST'])
 def test_webhook():
-    """Simule un prospect intéressé pour tester le flow complet"""
-    fake_data = {
-        "sl_lead_email": "test@montismedia.com",
-        "campaign_name": "TEST CAMPAIGN",
-        "campaign_id": None,
-        "stats_id": None,
-        "reply_message": {"text": "oui je suis intéressé, comment ça marche ?"}
-    }
+    data = request.json or {}
+    message = data.get('message', 'oui je suis intéressé')
+    email   = data.get('email', 'test@montismedia.com')
+    category = classify(message)
 
-    message_body = fake_data["reply_message"]["text"]
-    category = classify(message_body)
-
-    discord_payload = {"embeds": [{"title": f"🧪 TEST — Catégorie détectée : {category}",
-        "description": f"**Message simulé :** {message_body}\n\n✅ Webhook opérationnel",
+    discord_payload = {"embeds": [{"title": f"🧪 TEST — {category}",
+        "description": f"**De :** {email}\n**Message :** {message}\n\n✅ Webhook opérationnel",
         "color": 9807270}]}
-
     requests.post(DISCORD_WEBHOOK, json=discord_payload, timeout=5)
 
-    return jsonify({
-        "status": "test_ok",
-        "category": category,
-        "message": message_body,
-        "discord": "notif envoyée"
-    }), 200
-
-
-if __name__ == "__main__":
-    app.run()
+    return jsonify({"status": "test_ok", "category": category, "discord": "notif envoyée"}), 200
