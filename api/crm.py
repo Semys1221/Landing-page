@@ -1,39 +1,47 @@
 import os
+import requests
 from flask import Flask, jsonify
-from supabase import create_client, Client
 
 app = Flask(__name__)
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 
+HEADERS = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": f"Bearer {SUPABASE_KEY}",
+    "Content-Type": "application/json"
+}
+
 @app.route('/api/crm', methods=['GET'])
 def get_crm_stats():
     try:
-        supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-        
-        # 1. Compter les leads par statut
-        # (On limite à 1 pour ne pas télécharger la data, on veut juste le chiffre "count")
-        to_contact = supabase.table("leads").select("email", count="exact").eq("status", "to_contact").limit(1).execute()
-        contacted = supabase.table("leads").select("email", count="exact").eq("status", "contacted").limit(1).execute()
-        
-        count_to_contact = to_contact.count if to_contact.count else 0
-        count_contacted = contacted.count if contacted.count else 0
+        def count_by_status(status):
+            r = requests.get(
+                f"{SUPABASE_URL}/rest/v1/leads?status=eq.{status}&select=email",
+                headers={**HEADERS, "Prefer": "count=exact", "Range-Unit": "items", "Range": "0-0"}
+            )
+            return int(r.headers.get("Content-Range", "0/0").split("/")[-1])
 
-        # 2. Récupérer les 5 derniers leads ajoutés pour la preview
-        # Assure-toi d'avoir une colonne 'created_at' dans Supabase, sinon trie par 'email'
-        recent_leads = supabase.table("leads").select("email, company_name, status").limit(5).execute()
+        to_contact = count_by_status("to_contact")
+        contacted = count_by_status("contacted")
+        blacklist = count_by_status("blacklist")
+        total = to_contact + contacted + blacklist
 
-        data = {
+        recent = requests.get(
+            f"{SUPABASE_URL}/rest/v1/leads?select=email,company_name,status&limit=5",
+            headers=HEADERS
+        ).json()
+
+        return jsonify({
             "stats": {
-                "total": count_to_contact + count_contacted,
-                "to_contact": count_to_contact,
-                "contacted": count_contacted
+                "total": total,
+                "to_contact": to_contact,
+                "contacted": contacted,
+                "blacklist": blacklist
             },
-            "recent": recent_leads.data
-        }
-
-        return jsonify(data), 200
+            "recent": recent
+        }), 200
 
     except Exception as e:
         import traceback
