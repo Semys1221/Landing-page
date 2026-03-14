@@ -4,39 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Montis Media</title>
-    
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
-        
         html, body { height: 100%; width: 100%; margin: 0; padding: 0; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        
         .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .option-card { 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            background: rgba(255, 255, 255, 0.03); 
-            transition: all 0.3s ease; 
-            cursor: pointer; 
-            color: #d1d5db; 
-        }
-        
-        .option-card:hover { 
-            border-color: rgba(59, 130, 246, 0.5); 
-            background: rgba(59, 130, 246, 0.05); 
-            color: #fff;
-        }
-        
-        .selected { 
-            border-color: #3b82f6 !important; 
-            background: rgba(59, 130, 246, 0.1) !important; 
-            color: #fff !important;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); 
-        }
-        
+        .option-card { border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.03); transition: all 0.3s ease; cursor: pointer; color: #d1d5db; }
+        .option-card:hover { border-color: rgba(59, 130, 246, 0.5); background: rgba(59, 130, 246, 0.05); color: #fff; }
+        .selected { border-color: #3b82f6 !important; background: rgba(59, 130, 246, 0.1) !important; color: #fff !important; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -49,217 +25,121 @@
     </header>
 
     <main class="flex-1 flex flex-col items-center justify-center px-6 py-12">
-        
         <div id="step-1" class="w-full max-w-3xl space-y-12 fade-in text-center">
             <div class="space-y-4 mb-8">
-                <h1 class="text-sm font-light tracking-tight text-blue-500 uppercase tracking-[0.2em]">Préparation de l'échange (1/3)</h1>
-                <p class="text-2xl md:text-4xl font-light leading-tight">Acceptez-vous de déléguer la prise de contact des prospects ?</p>
+                <h1 class="text-sm font-light text-blue-500 uppercase tracking-[0.2em]">Préparation (1/3)</h1>
+                <p class="text-2xl md:text-4xl font-light">Acceptez-vous de déléguer la prise de contact ?</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
-                <div class="option-card p-8 rounded-sm text-center text-lg uppercase tracking-widest font-medium" onclick="selectOption(this, 'delegation', 'oui', 'step-1', 'step-2')">Oui</div>
-                <div class="option-card p-8 rounded-sm text-center text-lg uppercase tracking-widest font-medium" onclick="selectOption(this, 'delegation', 'non', 'step-1', 'step-2')">Non</div>
+                <div class="option-card p-8 rounded-sm text-lg uppercase tracking-widest" onclick="selectOption(this, 'delegation', 'oui', 'step-1', 'step-2')">Oui</div>
+                <div class="option-card p-8 rounded-sm text-lg uppercase tracking-widest" onclick="selectOption(this, 'delegation', 'non', 'step-1', 'step-2')">Non</div>
             </div>
         </div>
 
         <div id="step-2" class="hidden w-full max-w-4xl space-y-12 fade-in text-center">
             <div class="space-y-4 mb-8">
-                <h1 class="text-sm font-light tracking-tight text-blue-500 uppercase tracking-[0.2em]">Préparation de l'échange (2/3)</h1>
-                <p class="text-2xl md:text-4xl font-light leading-tight">Quel est l'horizon d’action envisagé pour ce projet ?</p>
+                <h1 class="text-sm font-light text-blue-500 uppercase tracking-[0.2em]">Préparation (2/3)</h1>
+                <p class="text-2xl md:text-4xl font-light">Quel est l'horizon d’action envisagé ?</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="option-card p-8 rounded-sm text-center text-sm md:text-base uppercase tracking-widest font-medium flex items-center justify-center" onclick="selectOption(this, 'budget', 'immédiat', 'step-2', 'step-3')">Immédiat</div>
-                <div class="option-card p-8 rounded-sm text-center text-sm md:text-base uppercase tracking-widest font-medium flex items-center justify-center" onclick="selectOption(this, 'budget', '30-60', 'step-2', 'step-3')">Sous 30–60 jours</div>
-                <div class="option-card p-8 rounded-sm text-center text-sm md:text-base uppercase tracking-widest font-medium flex items-center justify-center" onclick="selectOption(this, 'budget', '3-6', 'step-2', 'step-3')">Sous 3–6 mois</div>
+                <div class="option-card p-8 rounded-sm text-sm uppercase tracking-widest" onclick="selectOption(this, 'budget', 'immédiat', 'step-2', 'step-3')">Immédiat</div>
+                <div class="option-card p-8 rounded-sm text-sm uppercase tracking-widest" onclick="selectOption(this, 'budget', '30-60 jours', 'step-2', 'step-3')">30–60 jours</div>
+                <div class="option-card p-8 rounded-sm text-sm uppercase tracking-widest" onclick="selectOption(this, 'budget', '3-6 mois', 'step-2', 'step-3')">3–6 mois</div>
             </div>
         </div>
 
         <div id="step-3" class="hidden w-full max-w-3xl space-y-12 fade-in text-center">
             <div class="space-y-4 mb-8">
-                <h1 class="text-sm font-light tracking-tight text-blue-500 uppercase tracking-[0.2em]">Préparation de l'échange (3/3)</h1>
-                <p class="text-2xl md:text-4xl font-light leading-tight">Avez-vous la disponibilité pour réaliser 20 nouveaux audits en 90 jours ?</p>
+                <h1 class="text-sm font-light text-blue-500 uppercase tracking-[0.2em]">Préparation (3/3)</h1>
+                <p class="text-2xl md:text-4xl font-light">Disponibilité pour 20 nouveaux audits ?</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
-                <div class="option-card p-8 rounded-sm text-center text-lg uppercase tracking-widest font-medium" onclick="selectOption(this, 'obj', 'oui', 'step-3', 'evaluate')">Oui</div>
-                <div class="option-card p-8 rounded-sm text-center text-lg uppercase tracking-widest font-medium" onclick="selectOption(this, 'obj', 'non', 'step-3', 'evaluate')">Non</div>
+                <div class="option-card p-8 rounded-sm text-lg uppercase tracking-widest" onclick="selectOption(this, 'obj', 'oui', 'step-3', 'evaluate')">Oui</div>
+                <div class="option-card p-8 rounded-sm text-lg uppercase tracking-widest" onclick="selectOption(this, 'obj', 'non', 'step-3', 'evaluate')">Non</div>
             </div>
         </div>
 
         <div id="sms-step" class="hidden w-full max-w-3xl space-y-12 fade-in text-center">
             <div class="space-y-4 mb-8">
-                <h2 class="text-3xl md:text-4xl font-light uppercase tracking-widest text-white">Confirmation</h2>
-                <p class="text-lg text-gray-400 font-light mt-4">
-                    Acceptez-vous de recevoir un rappel SMS afin de sécuriser le rendez-vous ?
-                </p>
+                <h2 class="text-3xl font-light uppercase tracking-widest">Confirmation</h2>
+                <p class="text-lg text-gray-400 font-light">Acceptez-vous de recevoir un rappel SMS ?</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
-                <div class="option-card p-8 rounded-sm text-center text-lg uppercase tracking-widest font-bold" onclick="handleSmsResponse('oui')">Oui</div>
-                <div class="option-card p-8 rounded-sm text-center text-lg uppercase tracking-widest font-bold" onclick="handleSmsResponse('non')">Non</div>
+                <div class="option-card p-8 rounded-sm text-lg uppercase tracking-widest font-bold" onclick="handleSmsResponse('oui')">Oui</div>
+                <div class="option-card p-8 rounded-sm text-lg uppercase tracking-widest font-bold" onclick="handleSmsResponse('non')">Non</div>
             </div>
         </div>
 
         <div id="refusal-step" class="hidden w-full max-w-2xl text-center space-y-8 fade-in">
             <h2 class="text-3xl font-light text-gray-300">Modèle non compatible.</h2>
-            <p class="text-lg text-gray-400 font-light leading-relaxed">
-                Nos stratégies de croissance sont conçues pour des structures prêtes à déléguer et disposant d'un projet concret. <br><br>
-                <span class="text-white">Nous ne pourrons malheureusement pas vous accompagner pour le moment.</span>
-            </p>
-            <button onclick="resetForm()" class="inline-block mt-8 text-xs uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors bg-transparent cursor-pointer">Recommencer</button>
-        </div>
-
-        <div id="sms-refusal-step" class="hidden w-full max-w-2xl text-center space-y-8 fade-in">
-            <h2 class="text-3xl font-light text-gray-300">Sécurisation requise.</h2>
-            <p class="text-lg text-gray-400 font-light leading-relaxed">
-                Afin de vous garantir un échange de haute qualité, la confirmation par numéro de téléphone est une étape indispensable. <br><br>
-                <span class="text-white">Si vous changez d'avis, n'hésitez pas à reprendre la réservation.</span>
-            </p>
-            <button onclick="retrySms()" class="inline-block mt-8 text-xs uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500 hover:border-blue-500 transition-colors bg-transparent cursor-pointer">Changer d'avis</button>
+            <button onclick="location.reload()" class="text-xs uppercase tracking-[0.3em] border-b border-white/20 pb-1">Recommencer</button>
         </div>
 
         <div id="redirect-step" class="hidden w-full max-w-md text-center space-y-6 fade-in">
             <div class="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
-            <p class="text-sm uppercase tracking-[0.2em] text-gray-400">Ouverture de l'agenda...</p>
+            <p class="text-sm uppercase tracking-[0.2em] text-gray-400">Redirection vers Calendly...</p>
         </div>
-
     </main>
 
-    <footer class="p-8 border-t border-white/5 w-full mt-auto">
-        <div class="max-w-6xl mx-auto flex justify-between items-center text-[8px] md:text-[10px] font-mono uppercase tracking-[0.4em] text-gray-700">
-            <span>Stratégie de Croissance</span> 
-            <span>Montis Media / 2026</span>
-        </div>
-    </footer>
-
     <script>
-        // CONFIGURATION DES APIS
         const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1482238647502766192/lfd8E3ZsPjqZI8R0VcoknPvP6u-an49eBvIReIe8qtF_9kJa1PA6LDTH02jJlUJejn28";
-        const CALENDLY_API_KEY = "eyJraWQiOiIxY2UxZTEzNjE3ZGNmNzY2YjNjZWJjY2Y4ZGM1YmFmYThhNjVlNjg0MDIzZjdjMzJiZTgzNDliMjM4MDEzNWI0IiwidHlwIjoiUEFUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2F1dGguY2FsZW5kbHkuY29tIiwiaWF0IjoxNzczMDIyMzgyLCJqdGkiOiI2NTljYjYzMy0xM2VjLTRlZjgtOGI3NS1iNTJjNTVjYjA1YTEiLCJ1c2VyX3V1aWQiOiJkODM4ZTY4Mi1lZWQ5LTQ3YTAtODM5ZC0yYzBiZThlM2M5ZGQiLCJzY29wZSI6ImF2YWlsYWJpbGl0eTpyZWFkIGF2YWlsYWJpbGl0eTp3cml0ZSBldmVudF90eXBlczpyZWFkIGV2ZW50X3R5cGVzOndyaXRlIGxvY2F0aW9uczpyZWFkIHJvdXRpbmdfZm9ybXM6cmVhZCBzaGFyZXM6d3JpdGUgc2NoZWR1bGVkX2V2ZW50czpyZWFkIHNjaGVkdWxlZF9ldmVudHM6d3JpdGUgc2NoZWR1bGluZ19saW5rczp3cml0ZSBncm91cHM6cmVhZCBvcmdhbml6YXRpb25zOnJlYWQgb3JnYW5pemF0aW9uczpyZWFkIHVzZXJzOnJlYWQgYWN0aXZpdHlfbG9nOnJlYWQgZGF0YV9jb21wbGlhbmNlOndyaXRlIG91dGdvaW5nX2NvbW11bmljYXRpb25zOnJlYWQgd2ViaG9va3M6cmVhZCB3ZWJob29rczp3cml0ZSJ9.QX5KMcdg8OUwPltbltMec7hM6qXQr010KUzJayC4hkWbM6gE3Sgshy2PPjQFtc-jX7H_Zzn5xPSzPtAHfMheNA";
+        const CALENDLY_URL = "https://calendly.com/montismedia/30min";
 
         let responses = { delegation: null, budget: null, obj: null };
 
-        // FONCTION : Envoyer un message vers Discord
-        function sendToDiscord(status, name = "Non identifié", email = "Non renseigné", color = 15158332) {
+        async function sendToDiscord(status, color = 3447003) {
             const payload = {
-                username: "Montis Bot",
-                avatar_url: "https://calendly.com/assets/favicon.ico",
                 embeds: [{
                     title: status,
                     color: color,
                     fields: [
-                        { name: "👤 Nom", value: name, inline: true },
-                        { name: "📧 Email", value: email, inline: true },
                         { name: "Délégation", value: responses.delegation || "N/A", inline: true },
-                        { name: "Horizon d'action", value: responses.budget || "N/A", inline: true },
+                        { name: "Horizon", value: responses.budget || "N/A", inline: true },
                         { name: "Objectif 20 audits", value: responses.obj || "N/A", inline: true }
                     ],
                     timestamp: new Date()
                 }]
             };
-
-            fetch(DISCORD_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(err => console.error("Erreur Discord:", err));
+            try {
+                await fetch(DISCORD_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            } catch (e) { console.error(e); }
         }
 
-        // LOGIQUE DU FORMULAIRE
         function selectOption(el, category, value, currentStepId, nextStepId) {
-            const siblings = el.parentElement.querySelectorAll('.option-card');
-            siblings.forEach(s => s.classList.remove('selected'));
-            el.classList.add('selected');
-            
             responses[category] = value;
-
-            setTimeout(() => {
-                document.getElementById(currentStepId).classList.add('hidden');
-                if (nextStepId === 'evaluate') {
-                    evaluateFirstStep();
-                } else {
-                    document.getElementById(nextStepId).classList.remove('hidden');
-                }
-            }, 350);
+            document.getElementById(currentStepId).classList.add('hidden');
+            if (nextStepId === 'evaluate') {
+                evaluateForm();
+            } else {
+                document.getElementById(nextStepId).classList.remove('hidden');
+            }
         }
 
-        function evaluateFirstStep() {
+        function evaluateForm() {
             if (responses.delegation === 'non') {
-                sendToDiscord("❌ Prospect Disqualifié (Refus délégation)", "N/A", "N/A", 15158332);
+                sendToDiscord("❌ Prospect Disqualifié", 15158332);
                 document.getElementById('refusal-step').classList.remove('hidden');
             } else {
                 document.getElementById('sms-step').classList.remove('hidden');
             }
         }
 
-        function handleSmsResponse(response) {
+        async function handleSmsResponse(response) {
             document.getElementById('sms-step').classList.add('hidden');
-
             if (response === 'non') {
-                sendToDiscord("⚠️ Blocage à l'étape SMS", "N/A", "N/A", 16753920);
-                document.getElementById('sms-refusal-step').classList.remove('hidden');
+                sendToDiscord("⚠️ Refus SMS", 16753920);
+                document.getElementById('refusal-step').classList.remove('hidden');
             } else {
                 document.getElementById('redirect-step').classList.remove('hidden');
                 
-                // Signal Discord que quelqu'un ouvre l'agenda
-                sendToDiscord("👀 Quelqu'un ouvre l'agenda (En attente de réservation)", "N/A", "N/A", 3447003);
+                // On attend que le message Discord soit envoyé avant de partir
+                await sendToDiscord("🚀 Direction Calendly (Prêt à réserver)", 3066993);
 
-                setTimeout(() => {
-                    // Ouverture de l'agenda
-                    Calendly.initPopupWidget({
-                        url: 'https://calendly.com/montismedia/30min'
-                    });
-                    document.getElementById('redirect-step').classList.add('hidden');
-                    document.getElementById('step-1').classList.remove('hidden'); // Reset bg
-                }, 800);
+                // Redirection finale dans le même onglet
+                // On passe les réponses en UTM pour que tu les voies dans Calendly
+                const finalUrl = `${CALENDLY_URL}?utm_source=${responses.delegation}&utm_medium=${encodeURIComponent(responses.budget)}`;
+                window.location.href = finalUrl;
             }
-        }
-
-        // ECOUTEUR CALENDLY + REQUETE API POUR INFOS CLIENT
-        window.addEventListener('message', async function(e) {
-            if (e.data.event && e.data.event === 'calendly.event_scheduled') {
-                
-                // Récupération de l'URI de l'invité depuis l'event du widget
-                const inviteeUri = e.data.payload.invitee.uri;
-                
-                try {
-                    // Appel à l'API Calendly avec ton Token pour récupérer Nom/Email
-                    const response = await fetch(inviteeUri, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${CALENDLY_API_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    
-                    if(response.ok) {
-                        const data = await response.json();
-                        const clientName = data.resource.name;
-                        const clientEmail = data.resource.email;
-                        
-                        // Envoi de toutes les datas au Discord (Succès vert)
-                        sendToDiscord("✅ BINGO ! Nouveau RDV Confirmé !", clientName, clientEmail, 3066993);
-                    } else {
-                        // Si l'API bloque la requête navigateur (CORS), on envoie quand même l'alerte
-                        sendToDiscord("✅ BINGO ! RDV Confirmé ! (Info manuelle requise)", "Vérifier Calendly", "Vérifier Calendly", 3066993);
-                    }
-
-                } catch (error) {
-                    console.error("Impossible de fetch l'API Calendly", error);
-                    sendToDiscord("✅ BINGO ! RDV Confirmé !", "Vérifier Calendly", "Vérifier Calendly", 3066993);
-                }
-            }
-        });
-
-        // UTILITAIRES DE RESET
-        function resetForm() {
-            responses = { delegation: null, budget: null, obj: null };
-            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
-            document.getElementById('refusal-step').classList.add('hidden');
-            document.getElementById('sms-refusal-step').classList.add('hidden');
-            document.getElementById('step-1').classList.remove('hidden');
-        }
-
-        function retrySms() {
-            document.getElementById('sms-refusal-step').classList.add('hidden');
-            document.getElementById('sms-step').classList.remove('hidden');
         }
     </script>
 </body>
