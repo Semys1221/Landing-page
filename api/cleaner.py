@@ -70,7 +70,6 @@ def clean_csv():
         if not mapping.get('email'):
             return jsonify({"error": "Colonne email non mappée."}), 400
 
-        # --- LECTURE CSV ---
         df = None
         for encoding in ['utf-8', 'latin1', 'cp1252']:
             try:
@@ -88,7 +87,6 @@ def clean_csv():
         print(f"Colonnes CSV: {list(df.columns)}")
         print(f"Mapping reçu: {mapping}")
 
-        # --- EMAIL via mapping ---
         email_col = mapping['email']
         if email_col not in df.columns:
             return jsonify({"error": f"Colonne '{email_col}' introuvable dans le CSV."}), 400
@@ -101,44 +99,37 @@ def clean_csv():
         if df.empty:
             return jsonify({"error": "Aucun email valide dans le fichier."}), 400
 
-        # --- NETTOYAGE MÉTIER (optionnel) ---
         if do_clean:
             valid_cat = ['conseil', 'conseiller', 'consultant', 'planificateur',
                          'financial', 'courtier', 'broker', 'investment',
                          'gestionnaire', 'patrimoine']
 
-            # Cherche colonne catégorie dans le CSV (pas via mapping)
             cat_col = None
             for col in df.columns:
                 col_norm = col.lower().replace(' ', '').replace('_', '')
                 if any(k in col_norm for k in ['category', 'categorie', 'profession', 'metier']):
                     cat_col = col
                     break
-
             if cat_col:
                 df = df[df[cat_col].fillna('').str.contains(
                     '|'.join(valid_cat), case=False, na=False)].copy()
 
-            # Filtre statut email
             status_csv_col = None
             for col in df.columns:
                 col_norm = col.lower().replace(' ', '').replace('_', '')
                 if any(k in col_norm for k in ['emailstatus', 'email1', 'emailvalid']):
                     status_csv_col = col
                     break
-
             if status_csv_col:
                 bad = ['invalid', 'unknown', 'blacklisted', 'catch all', 'complainer']
                 df  = df[~df[status_csv_col].fillna('').str.lower().isin(bad)].copy()
 
-            # Filtre préfixes génériques
             prefixes = ('contact@', 'info@', 'admin@', 'hello@', 'support@', 'sales@', 'office@')
             df = df[~df[email_col].str.startswith(prefixes)].copy()
 
             if df.empty:
                 return jsonify({"error": "Aucun lead valide après nettoyage."}), 400
 
-        # --- MAPPING VERS SUPABASE ---
         def get_mapped(col_name):
             col = mapping.get(col_name)
             if col and col in df.columns:
@@ -155,14 +146,12 @@ def clean_csv():
         df_mapped = df_mapped.drop_duplicates(subset=['Email'], keep='first').copy()
         print(f"Leads après mapping: {len(df_mapped)}")
 
-        # --- MASTER DB ---
         db_data  = sb_select()
         db_leads = {}
         if isinstance(db_data, list):
             db_leads = {item['email'].lower(): item['status']
                         for item in db_data if isinstance(item, dict) and 'email' in item}
 
-        # --- MODE BLACKLIST ---
         if intent == 'blacklist':
             records = [
                 {"email": r['Email'], "company_name": r['Company Name'],
@@ -172,7 +161,6 @@ def clean_csv():
             sb_upsert(records)
             return jsonify({"message": f"✅ {len(records)} leads ajoutés à la Block List."}), 200
 
-        # --- MODE À CONTACTER ---
         def categorize_lead(email):
             status = db_leads.get(email.lower(), 'new')
             if status == 'blacklist':
@@ -201,7 +189,6 @@ def clean_csv():
             ]
             sb_upsert(records_old)
 
-        # --- EXPORT ZIP ---
         memory_file = io.BytesIO()
         with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
             if not df_neufs.empty:
@@ -209,3 +196,18 @@ def clean_csv():
                             df_neufs.to_csv(index=False, sep=';', encoding='utf-8-sig'))
             if not df_relances.empty:
                 zf.writestr('2_campagne_relances_60j.csv',
+                            df_relances.to_csv(index=False, sep=';', encoding='utf-8-sig'))
+            if df_neufs.empty and df_relances.empty:
+                zf.writestr('vide.txt', 'Tous les leads étaient en blacklist ou déjà traités.')
+
+        memory_file.seek(0)
+        return send_file(memory_file, mimetype="application/zip",
+                         as_attachment=True, download_name="smartlead_exports.zip")
+
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run()
