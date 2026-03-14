@@ -182,4 +182,45 @@ def clean_csv():
             return 'new'
 
         df_mapped['category'] = df_mapped['Email'].apply(categorize_lead)
-        df_neufs    = df_mapped[df_mapped['category'] == '
+        df_neufs    = df_mapped[df_mapped['category'] == 'new'].drop(columns=['category']).copy()
+        df_relances = df_mapped[df_mapped['category'] == 'relance'].drop(columns=['category']).copy()
+
+        if not df_neufs.empty:
+            records_new = [
+                {"email": r['Email'], "company_name": r['Company Name'],
+                 "site_web": r['Site Web'], "status": "to_contact"}
+                for _, r in df_neufs.iterrows() if r['Email']
+            ]
+            sb_upsert(records_new)
+
+        if force_old and not df_relances.empty:
+            records_old = [
+                {"email": r['Email'], "company_name": r['Company Name'],
+                 "site_web": r['Site Web'], "status": "contacted"}
+                for _, r in df_relances.iterrows() if r['Email']
+            ]
+            sb_upsert(records_old)
+
+        # --- EXPORT ZIP ---
+        memory_file = io.BytesIO()
+        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
+            if not df_neufs.empty:
+                zf.writestr('1_campagne_leads_neufs.csv',
+                            df_neufs.to_csv(index=False, sep=';', encoding='utf-8-sig'))
+            if not df_relances.empty:
+                zf.writestr('2_campagne_relances_60j.csv',
+                            df_relances.to_csv(index=False, sep=';', encoding='utf-8-sig'))
+            if df_neufs.empty and df_relances.empty:
+                zf.writestr('vide.txt', 'Tous les leads étaient en blacklist ou déjà traités.')
+
+        memory_file.seek(0)
+        return send_file(memory_file, mimetype="application/zip",
+                         as_attachment=True, download_name="smartlead_exports.zip")
+
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run()
