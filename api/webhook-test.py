@@ -1,6 +1,7 @@
 import os
 import requests
 from flask import Flask, request, jsonify
+from vercel_wsgi import handle_request
 
 app = Flask(__name__)
 
@@ -37,4 +38,5 @@ def test_webhook():
 
     return jsonify({"status": "test_ok", "category": category, "discord": "notif envoyée"}), 200
 
-handler = app
+def handler(event, context):
+    return handle_request(app, event, context)
