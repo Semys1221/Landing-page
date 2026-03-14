@@ -14,6 +14,25 @@
         .option-card:hover { border-color: rgba(59, 130, 246, 0.5); background: rgba(59, 130, 246, 0.05); color: #fff; }
         .selected { border-color: #3b82f6 !important; background: rgba(59, 130, 246, 0.1) !important; color: #fff !important; }
         .hidden { display: none !important; }
+        
+        /* Input pour le prénom */
+        .name-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            outline: none;
+            width: 100%;
+            padding: 10px 0;
+            transition: all 0.3s ease;
+        }
+        .name-input:focus { 
+            border-bottom-color: #3b82f6; 
+            box-shadow: 0 10px 10px -10px rgba(59, 130, 246, 0.3);
+        }
+        .name-input::placeholder { color: rgba(255, 255, 255, 0.2); }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -25,7 +44,19 @@
     </header>
 
     <main class="flex-1 flex flex-col items-center justify-center px-6 py-12">
-        <div id="step-1" class="w-full max-w-3xl space-y-12 fade-in text-center">
+        
+        <div id="step-name" class="w-full max-w-xl space-y-12 fade-in text-center">
+            <div class="space-y-4 mb-8">
+                <h1 class="text-sm font-light text-blue-500 uppercase tracking-[0.2em]">Bienvenue</h1>
+                <p class="text-2xl md:text-4xl font-light">Comment devons-nous vous appeler ?</p>
+            </div>
+            <div class="max-w-sm mx-auto space-y-8">
+                <input type="text" id="user-name" class="name-input" placeholder="Votre prénom..." autocomplete="given-name" onkeypress="handleEnter(event)">
+                <button onclick="saveName()" class="inline-block text-xs uppercase tracking-[0.3em] border border-white/20 px-8 py-4 hover:bg-white hover:text-black hover:border-white transition-all cursor-pointer">Continuer</button>
+            </div>
+        </div>
+
+        <div id="step-1" class="hidden w-full max-w-3xl space-y-12 fade-in text-center">
             <div class="space-y-4 mb-8">
                 <h1 class="text-sm font-light text-blue-500 uppercase tracking-[0.2em]">Préparation (1/3)</h1>
                 <p class="text-2xl md:text-4xl font-light">Acceptez-vous de déléguer la prise de contact ?</p>
@@ -39,7 +70,7 @@
         <div id="step-2" class="hidden w-full max-w-4xl space-y-12 fade-in text-center">
             <div class="space-y-4 mb-8">
                 <h1 class="text-sm font-light text-blue-500 uppercase tracking-[0.2em]">Préparation (2/3)</h1>
-                <p class="text-2xl md:text-4xl font-light">Quel est l'horizon d’action envisagé ?</p>
+                <p class="text-2xl md:text-4xl font-light" id="question-horizon">Quel est l'horizon d’action envisagé ?</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="option-card p-8 rounded-sm text-sm uppercase tracking-widest" onclick="selectOption(this, 'budget', 'immédiat', 'step-2', 'step-3')">Immédiat</div>
@@ -61,8 +92,8 @@
 
         <div id="sms-step" class="hidden w-full max-w-3xl space-y-12 fade-in text-center">
             <div class="space-y-4 mb-8">
-                <h2 class="text-3xl font-light uppercase tracking-widest">Confirmation</h2>
-                <p class="text-lg text-gray-400 font-light">Acceptez-vous de recevoir un rappel SMS ?</p>
+                <h2 class="text-3xl font-light uppercase tracking-widest text-white">Confirmation</h2>
+                <p class="text-lg text-gray-400 font-light mt-4">Acceptez-vous de recevoir un rappel SMS ?</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
                 <div class="option-card p-8 rounded-sm text-lg uppercase tracking-widest font-bold" onclick="handleSmsResponse('oui')">Oui</div>
@@ -71,13 +102,13 @@
         </div>
 
         <div id="refusal-step" class="hidden w-full max-w-2xl text-center space-y-8 fade-in">
-            <h2 class="text-3xl font-light text-gray-300">Modèle non compatible.</h2>
-            <button onclick="location.reload()" class="text-xs uppercase tracking-[0.3em] border-b border-white/20 pb-1">Recommencer</button>
+            <h2 class="text-3xl font-light text-gray-300" id="refusal-title">Modèle non compatible.</h2>
+            <button onclick="location.reload()" class="mt-8 text-xs uppercase tracking-[0.3em] border-b border-white/20 pb-1 hover:text-blue-500">Recommencer</button>
         </div>
 
         <div id="redirect-step" class="hidden w-full max-w-md text-center space-y-6 fade-in">
             <div class="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
-            <p class="text-sm uppercase tracking-[0.2em] text-gray-400">Redirection vers Calendly...</p>
+            <p class="text-sm uppercase tracking-[0.2em] text-gray-400" id="redirect-text">Redirection vers l'agenda...</p>
         </div>
     </main>
 
@@ -85,14 +116,41 @@
         const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1482238647502766192/lfd8E3ZsPjqZI8R0VcoknPvP6u-an49eBvIReIe8qtF_9kJa1PA6LDTH02jJlUJejn28";
         const CALENDLY_URL = "https://calendly.com/montismedia/30min";
 
-        let responses = { delegation: null, budget: null, obj: null };
+        let responses = { name: "", delegation: null, budget: null, obj: null };
+
+        // Permet de valider le prénom avec la touche "Entrée"
+        function handleEnter(e) {
+            if (e.key === 'Enter') saveName();
+        }
+
+        function saveName() {
+            const nameInput = document.getElementById('user-name').value.trim();
+            if (!nameInput) {
+                // Petit effet visuel si le champ est vide
+                document.getElementById('user-name').style.borderBottomColor = 'red';
+                setTimeout(() => document.getElementById('user-name').style.borderBottomColor = 'rgba(255,255,255,0.2)', 1000);
+                return;
+            }
+            
+            responses.name = nameInput;
+            
+            // Personnalisation dynamique de la question 2 avec le prénom
+            document.getElementById('question-horizon').innerHTML = `Quel est l'horizon d’action envisagé pour ce projet, <span class="text-blue-500 font-medium">${responses.name}</span> ?`;
+            
+            document.getElementById('step-name').classList.add('hidden');
+            document.getElementById('step-1').classList.remove('hidden');
+        }
 
         async function sendToDiscord(status, color = 3447003) {
+            // On ajoute le prénom au titre du message Discord
+            const titleWithname = responses.name ? `${status} - ${responses.name}` : status;
+
             const payload = {
                 embeds: [{
-                    title: status,
+                    title: titleWithname,
                     color: color,
                     fields: [
+                        { name: "Prénom", value: responses.name || "N/A", inline: true },
                         { name: "Délégation", value: responses.delegation || "N/A", inline: true },
                         { name: "Horizon", value: responses.budget || "N/A", inline: true },
                         { name: "Objectif 20 audits", value: responses.obj || "N/A", inline: true }
@@ -118,6 +176,7 @@
         function evaluateForm() {
             if (responses.delegation === 'non') {
                 sendToDiscord("❌ Prospect Disqualifié", 15158332);
+                if(responses.name) document.getElementById('refusal-title').innerText = `Désolé ${responses.name}, modèle non compatible.`;
                 document.getElementById('refusal-step').classList.remove('hidden');
             } else {
                 document.getElementById('sms-step').classList.remove('hidden');
@@ -132,12 +191,14 @@
             } else {
                 document.getElementById('redirect-step').classList.remove('hidden');
                 
-                // On attend que le message Discord soit envoyé avant de partir
+                // On met à jour le texte du loader avec le prénom
+                if(responses.name) document.getElementById('redirect-text').innerText = `Redirection de ${responses.name} vers l'agenda...`;
+
                 await sendToDiscord("🚀 Direction Calendly (Prêt à réserver)", 3066993);
 
-                // Redirection finale dans le même onglet
-                // On passe les réponses en UTM pour que tu les voies dans Calendly
-                const finalUrl = `${CALENDLY_URL}?utm_source=${responses.delegation}&utm_medium=${encodeURIComponent(responses.budget)}`;
+                // REDIRECTION AVEC PRE-REMPLISSAGE
+                // name=... va pré-remplir le champ "Nom" de Calendly
+                const finalUrl = `${CALENDLY_URL}?name=${encodeURIComponent(responses.name)}&utm_source=${responses.delegation}&utm_medium=${encodeURIComponent(responses.budget)}`;
                 window.location.href = finalUrl;
             }
         }
