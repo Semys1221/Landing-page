@@ -31,8 +31,8 @@
                 <p class="text-[10px] text-blue-500 uppercase tracking-widest mb-2">À Contacter</p>
                 <p class="text-3xl font-light text-white" id="stat-tocontact">...</p>
             </div>
-            <div class="stat-card p-6 text-center rounded-sm border-green-500/30">
-                <p class="text-[10px] text-green-500 uppercase tracking-widest mb-2">Déjà Contactés</p>
+            <div class="stat-card p-6 text-center rounded-sm border-orange-500/30">
+                <p class="text-[10px] text-orange-500 uppercase tracking-widest mb-2">Déjà Contactés</p>
                 <p class="text-3xl font-light text-white" id="stat-contacted">...</p>
             </div>
             <div class="stat-card p-6 text-center rounded-sm border-red-500/30">
@@ -42,16 +42,21 @@
         </div>
 
         <div class="max-w-xl mx-auto p-8 border border-white/10 bg-white/5 rounded-sm space-y-8">
-            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">Importer des Leads</h2>
+            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-[0.4em] text-center border-b border-white/10 pb-4">Configuration de l'Import</h2>
 
-            <div class="space-y-6 text-left">
+            <div class="space-y-4 text-left">
                 <div class="flex items-center justify-between p-4 bg-black border border-white/10 rounded-sm">
-                    <label for="is-clean" class="text-sm font-light text-gray-300 cursor-pointer">Le fichier est-il déjà pré-nettoyé ?</label>
+                    <label for="is-clean" class="text-sm font-light text-gray-300 cursor-pointer">1. Le fichier est-il déjà pré-nettoyé ?</label>
                     <input type="checkbox" id="is-clean" class="w-5 h-5 accent-blue-500 cursor-pointer">
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] text-gray-500 uppercase tracking-widest">Intention pour ces leads :</label>
+                <div class="flex items-center justify-between p-4 bg-black border border-white/10 rounded-sm">
+                    <label for="force-old" class="text-sm font-light text-gray-300 cursor-pointer text-orange-400">2. Archive : Marquer comme "Déjà contactés" ?</label>
+                    <input type="checkbox" id="force-old" class="w-5 h-5 accent-orange-500 cursor-pointer">
+                </div>
+
+                <div class="space-y-2 pt-2">
+                    <label class="text-[10px] text-gray-500 uppercase tracking-widest">3. Destination Finale :</label>
                     <select id="lead-intent" class="w-full bg-black border border-white/20 p-4 text-sm font-light text-white outline-none focus:border-blue-500 rounded-sm">
                         <option value="to_contact">À CONTACTER (Génère ZIP : Neufs & Relances)</option>
                         <option value="blacklist">BLOCK LIST (Ajoute en Ne pas contacter - Aucun export)</option>
@@ -70,7 +75,6 @@
             </button>
             <p id="status-message" class="text-sm text-center text-gray-400 font-light h-4"></p>
         </div>
-
     </div>
 
     <script>
@@ -80,10 +84,10 @@
                 const res = await fetch('/api/crm');
                 if(res.ok) {
                     const data = await res.json();
-                    document.getElementById('stat-total').innerText = data.stats.total;
-                    document.getElementById('stat-tocontact').innerText = data.stats.to_contact;
-                    document.getElementById('stat-contacted').innerText = data.stats.contacted;
-                    // Si api/crm.py renvoie la blacklist, tu peux l'afficher ici
+                    document.getElementById('stat-total').innerText = data.stats.total || 0;
+                    document.getElementById('stat-tocontact').innerText = data.stats.to_contact || 0;
+                    document.getElementById('stat-contacted').innerText = data.stats.contacted || 0;
+                    // Si api/crm.py compte la blacklist (ajoute la ligne dans crm.py si besoin)
                     if(data.stats.blacklist !== undefined) {
                         document.getElementById('stat-blacklist').innerText = data.stats.blacklist;
                     }
@@ -112,14 +116,16 @@
 
             // Récupération des choix UI
             const isClean = document.getElementById('is-clean').checked;
+            const forceOld = document.getElementById('force-old').checked; // Variable Archive
             const intent = document.getElementById('lead-intent').value;
             
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
             formData.append('is_clean', isClean);
+            formData.append('force_old', forceOld);
             formData.append('intent', intent);
 
-            // Mise à jour de l'UI
+            // Mise à jour UI
             processBtn.innerText = "Algorithme en cours...";
             processBtn.classList.add('opacity-50', 'cursor-not-allowed');
             processBtn.disabled = true;
@@ -133,12 +139,10 @@
                     const contentType = response.headers.get("content-type");
                     
                     if (contentType && contentType.includes("application/json")) {
-                        // Cas où l'API renvoie un message (ex: Blocklist)
                         const data = await response.json();
                         statusMsg.innerText = data.message;
                         statusMsg.className = "text-sm text-center text-green-500 font-light h-4";
                     } else {
-                        // Cas où l'API renvoie le ZIP
                         const blob = await response.blob();
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
@@ -148,11 +152,10 @@
                         a.click(); a.remove();
                         window.URL.revokeObjectURL(url);
                         
-                        statusMsg.innerText = "✅ ZIP généré ! (Fichiers Neufs + Relances)";
+                        statusMsg.innerText = "✅ ZIP généré ! (Vérifie les dossiers Neufs/Relances)";
                         statusMsg.className = "text-sm text-center text-green-500 font-light h-4";
                     }
-                    
-                    fetchCRMStats(); // Rafraîchir les stats du CRM
+                    fetchCRMStats(); 
                 } else {
                     const err = await response.json();
                     statusMsg.innerText = "❌ Erreur : " + (err.error || "Erreur serveur.");
