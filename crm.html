@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montis Media — Pipeline CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080808;
+            --surface: #111;
+            --border: rgba(255,255,255,0.07);
+            --text: #e0e0e0;
+            --muted: #555;
+            --green: #2ecc71;
+            --yellow: #f1c40f;
+            --red: #e74c3c;
+            --blue: #3b82f6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.4em;
+            color: var(--blue);
+            text-transform: uppercase;
+        }
+
+        .sync {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat {
+            padding: 28px 40px;
+            border-right: 1px solid var(--border);
+        }
+
+        .stat:last-child { border-right: none; }
+
+        .stat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 300;
+        }
+
+        .stat-value.green { color: var(--green); }
+        .stat-value.yellow { color: var(--yellow); }
+        .stat-value.red { color: var(--red); }
+
+        .pipeline {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            margin: 0;
+        }
+
+        .column {
+            background: var(--bg);
+            padding: 24px;
+        }
+
+        .col-header {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            padding-bottom: 16px;
+            border-bottom: 2px solid;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .col-header.green { color: var(--green); border-color: var(--green); }
+        .col-header.yellow { color: var(--yellow); border-color: var(--yellow); }
+        .col-header.red { color: var(--red); border-color: var(--red); }
+
+        .count-badge {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 10px;
+        }
+
+        .lead-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            overflow: hidden;
+        }
+
+        .lead-card:hover { border-color: rgba(255,255,255,0.2); }
+        .lead-card.active { border-color: var(--blue); }
+
+        .card-header {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .lead-email {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .lead-company {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .card-meta {
+            text-align: right;
+        }
+
+        .campaign-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            color: var(--blue);
+            background: rgba(59,130,246,0.1);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        .reply-count {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .thread-preview {
+            padding: 0 16px 14px;
+            font-size: 11px;
+            color: var(--muted);
+            font-style: italic;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+            display: none;
+        }
+
+        /* CONVERSATION PANEL */
+        .conv-panel {
+            position: fixed;
+            right: 0; top: 0; bottom: 0;
+            width: 480px;
+            background: #0d0d0d;
+            border-left: 1px solid var(--border);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            animation: slideIn 0.2s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(40px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .conv-panel.open { display: flex; }
+
+        .conv-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .conv-email {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+        }
+
+        .close-btn:hover { color: var(--text); }
+
+        .messages-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            padding: 12px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .message.sent {
+            background: rgba(59,130,246,0.08);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-left: 3px solid var(--blue);
+        }
+
+        .message.reply {
+            background: rgba(46,204,113,0.06);
+            border: 1px solid rgba(46,204,113,0.15);
+            border-left: 3px solid var(--green);
+        }
+
+        .message.scheduled {
+            background: rgba(241,196,15,0.06);
+            border: 1px solid rgba(241,196,15,0.15);
+            border-left: 3px solid var(--yellow);
+            opacity: 0.8;
+        }
+
+        .msg-meta {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            color: var(--muted);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .msg-type {
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .msg-type.sent { color: var(--blue); }
+        .msg-type.reply { color: var(--green); }
+        .msg-type.scheduled { color: var(--yellow); }
+
+        .msg-subject {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .msg-body {
+            color: #aaa;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: var(--muted);
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+        }
+
+        .empty {
+            color: var(--muted);
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            text-align: center;
+            padding: 40px 0;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Montis Media — Pipeline CRM</div>
+    <div class="sync">
+        <div class="dot"></div>
+        <span id="sync-time">Chargement...</span>
+    </div>
+</header>
+
+<div class="stats-bar">
+    <div class="stat">
+        <div class="stat-label">Total Réponses</div>
+        <div class="stat-value" id="s-total">—</div>
+    </div>
+    <div class="stat">
+        <div class="stat-label">Intéressés</div>
+        <div class="stat-value green" id="s-hot">—</div>
+    </div>
+    <div class="stat">
+        <div class="stat-label">Incertains</div>
+        <div class="stat-value yellow" id="s-uncertain">—</div>
+    </div>
+    <div class="stat">
+        <div class="stat-label">Négatifs</div>
+        <div class="stat-value red" id="s-neg">—</div>
+    </div>
+</div>
+
+<div class="pipeline">
+    <div class="column">
+        <div class="col-header green">
+            Intéressés <span class="count-badge" id="c-hot">0</span>
+        </div>
+        <div id="col-hot"><div class="loading">...</div></div>
+    </div>
+    <div class="column">
+        <div class="col-header yellow">
+            Incertains <span class="count-badge" id="c-uncertain">0</span>
+        </div>
+        <div id="col-uncertain"><div class="loading">...</div></div>
+    </div>
+    <div class="column">
+        <div class="col-header red">
+            Négatifs <span class="count-badge" id="c-neg">0</span>
+        </div>
+        <div id="col-neg"><div class="loading">...</div></div>
+    </div>
+</div>
+
+<!-- CONVERSATION PANEL -->
+<div class="conv-panel" id="conv-panel">
+    <div class="conv-header">
+        <div>
+            <div class="conv-email" id="conv-email">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px" id="conv-campaign">—</div>
+        </div>
+        <button class="close-btn" onclick="closePanel()">✕</button>
+    </div>
+    <div class="messages-list" id="messages-list"></div>
+</div>
+
+<script>
+    let allLeads = [];
+
+    async function loadCRM() {
+        try {
+            const res = await fetch('/api/crm-data');
+            allLeads = await res.json();
+            renderAll(allLeads);
+            document.getElementById('sync-time').textContent =
+                'Mis à jour ' + new Date().toLocaleTimeString('fr-FR');
+        } catch(e) {
+            document.getElementById('sync-time').textContent = 'Erreur de chargement';
+        }
+    }
+
+    function renderAll(leads) {
+        const hot = leads.filter(l => l.category === 'INTERESSE');
+        const uncertain = leads.filter(l => l.category === 'INCERTAIN');
+        const neg = leads.filter(l => l.category === 'NEGATIF');
+
+        document.getElementById('s-total').textContent = leads.length;
+        document.getElementById('s-hot').textContent = hot.length;
+        document.getElementById('s-uncertain').textContent = uncertain.length;
+        document.getElementById('s-neg').textContent = neg.length;
+
+        document.getElementById('c-hot').textContent = hot.length;
+        document.getElementById('c-uncertain').textContent = uncertain.length;
+        document.getElementById('c-neg').textContent = neg.length;
+
+        document.getElementById('col-hot').innerHTML = renderColumn(hot);
+        document.getElementById('col-uncertain').innerHTML = renderColumn(uncertain);
+        document.getElementById('col-neg').innerHTML = renderColumn(neg);
+    }
+
+    function renderColumn(leads) {
+        if (!leads.length) return '<div class="empty">Aucun lead</div>';
+        return leads.map((l, i) => `
+            <div class="lead-card" onclick="openPanel(${allLeads.indexOf(l)})">
+                <div class="card-header">
+                    <div>
+                        <div class="lead-email">${l.email}</div>
+                        <div class="lead-company">${l.company || l.first_name + ' ' + l.last_name || '—'}</div>
+                    </div>
+                    <div class="card-meta">
+                        <div class="campaign-tag">${l.campaign_name.substring(0, 20)}</div>
+                        <div class="reply-count">${l.reply_count} réponse(s)</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openPanel(index) {
+        const lead = allLeads[index];
+        document.getElementById('conv-email').textContent = lead.email;
+        document.getElementById('conv-campaign').textContent = lead.campaign_name;
+
+        const msgList = document.getElementById('messages-list');
+        if (!lead.messages || !lead.messages.length) {
+            msgList.innerHTML = '<div class="empty">Aucun message</div>';
+        } else {
+            msgList.innerHTML = lead.messages.map(m => {
+                const typeClass = m.scheduled ? 'scheduled' : m.type.toLowerCase();
+                const typeLabel = m.scheduled ? '⏰ Programmé' : (m.type === 'SENT' ? '→ Envoyé' : '← Réponse');
+                const time = m.time ? new Date(m.time).toLocaleDateString('fr-FR', {
+                    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+                }) : '';
+                return `
+                    <div class="message ${typeClass}">
+                        <div class="msg-meta">
+                            <span class="msg-type ${typeClass}">${typeLabel}</span>
+                            <span>${time}</span>
+                        </div>
+                        ${m.subject ? `<div class="msg-subject">${m.subject}</div>` : ''}
+                        <div class="msg-body">${(m.body || '').replace(/<[^>]*>/g, '').substring(0, 400)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('conv-panel').classList.add('open');
+    }
+
+    function closePanel() {
+        document.getElementById('conv-panel').classList.remove('open');
+    }
+
+    window.onload = loadCRM;
+    setInterval(loadCRM, 30000);
+</script>
+</body>
+</html>
