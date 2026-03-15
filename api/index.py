@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 # --- CONFIGURATION DES CLÉS API ---
-SMARTLEAD_API_KEY = os.getenv("SMARTLEAD_API_KEY")
+SMARTLEAD_API_KEY = "d08bf81e-8d1d-44e4-886d-c2f67e3eeaa6_ei684kq"
 BASE_SMARTLEAD = "https://server.smartlead.ai/api/v1"
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1481916119412379702/RcXuyn6RKvbwqAU4EdcWRVuLhY6ZA8jCVe3d4jQl_a0-sUO9IVOM0-s7yCVhAIUqH0ow"
 GEMINI_API_KEY = "AIzaSyDmmAEeF9RHZaw_pQuCddlfRFloaJ8Hizc"
@@ -133,7 +133,7 @@ def crm_data():
     result.sort(key=lambda x: order.get(x["category"], 2))
     return jsonify(result)
 
-@app.route('/api/webhook-test', methods=['POST'])
+@app.route('/api/webhook', methods=['POST'])
 def test_webhook():
     data = request.json or {}
     message = data.get('message') or data.get('text') or 'Je suis intéressé mais à voir'
