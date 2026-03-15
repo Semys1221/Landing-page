@@ -5,7 +5,7 @@
       "destination": "/api/index.py"
     },
     {
-      "source": "/api/webhook-test",
+      "source": "/api/webhook",
       "destination": "/api/index.py"
     }
   ]
