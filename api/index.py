@@ -6,6 +6,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 # --- CONFIGURATION DES CLÉS API ---
+# Ta clé est maintenant en dur, plus besoin de variables d'environnement Vercel
 SMARTLEAD_API_KEY = "d08bf81e-8d1d-44e4-886d-c2f67e3eeaa6_ei684kq"
 BASE_SMARTLEAD = "https://server.smartlead.ai/api/v1"
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1481916119412379702/RcXuyn6RKvbwqAU4EdcWRVuLhY6ZA8jCVe3d4jQl_a0-sUO9IVOM0-s7yCVhAIUqH0ow"
@@ -55,7 +56,7 @@ def send_smartlead_reply(campaign_id, lead_id, reply_message_id, email_body, del
         "lead_id": int(lead_id),
         "email_body": email_body,
         "reply_message_id": str(reply_message_id),
-        # L'utilisation de l'heure exacte force Smartlead à traiter le message en priorité
+        # L'utilisation de l'heure exacte force Smartlead à traiter le message en priorité absolue
         "reply_email_time": send_time.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     })
 
