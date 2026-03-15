@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Montis Media</title>
+  <title>Montis Media | L'Apporteur d'Affaires Industriel pour CGP</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
         :root {
@@ -15,22 +15,14 @@
             --glass: rgba(255, 255, 255, 0.03);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; width: 100%; }
+        
         body {
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            position: relative; /* Pour positionner le bouton Espace Client */
+            position: relative;
         }
 
         /* --- BOUTON ESPACE CLIENT --- */
@@ -57,10 +49,10 @@
             border-color: var(--text-main);
             background: rgba(255,255,255,0.1);
         }
-        /* --------------------------- */
 
+        /* --- HERO SECTION --- */
         .hero-header {
-            min-height: 75vh;
+            min-height: 85vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -71,12 +63,10 @@
             padding: 0 20px;
         }
 
-        .brand-identity {
-            margin-bottom: 60px;
-        }
+        .brand-identity { margin-bottom: 40px; }
 
         .brand-main {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 500;
             letter-spacing: 4px;
             text-transform: uppercase;
@@ -89,39 +79,52 @@
 
         .brand-subtitle {
             font-size: 0.75rem;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             color: var(--accent);
             margin-top: 10px;
             text-transform: uppercase;
+            font-weight: 600;
         }
 
         .hero-content {
             display: flex;
             flex-direction: column;
             align-items: center;
+            max-width: 900px;
         }
 
         .hero-title {
-            font-size: 2.2rem;
-            font-weight: 500;
-            letter-spacing: -1px;
-            margin: 0 0 40px 0;
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: -1.5px;
+            margin: 0 0 24px 0;
+            line-height: 1.1;
             background: linear-gradient(180deg, #ffffff 0%, #aaaaaa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+
+        .hero-description strong { color: var(--text-main); font-weight: 500; }
+
         .btn-hero-cta {
             background: #ffffff;
             color: #000000;
-            padding: 14px 32px;
+            padding: 18px 40px;
             border: none;
             border-radius: 4px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -131,31 +134,35 @@
         .btn-hero-cta:hover {
             background: var(--accent);
             color: #ffffff;
-            box-shadow: 0 0 20px rgba(0, 112, 243, 0.4);
+            box-shadow: 0 0 30px rgba(0, 112, 243, 0.3);
             transform: translateY(-2px);
         }
 
+        /* --- THE PROBLEM / SOLUTION SECTION --- */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
             max-width: 1200px;
-            margin: 80px auto;
+            margin: 60px auto 80px auto;
             padding: 0 20px;
         }
 
-        .services-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .services-section { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         .services-title {
             font-size: 32px;
             font-weight: 600;
             text-align: center;
-            margin: 80px 0 60px 0;
+            margin: 80px 0 20px 0;
             letter-spacing: -1px;
+        }
+        
+        .services-subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 60px;
+            font-size: 1.1rem;
         }
 
         .service-card {
@@ -164,59 +171,57 @@
             border-radius: 8px;
             background: var(--glass);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .service-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-        }
+        .service-card:hover { border-color: var(--accent); transform: translateY(-5px); }
 
         .tagline {
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--accent);
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             font-weight: 600;
         }
 
+        .tagline.alert { color: #ef4444; }
+
         .service-card h2 {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 600;
             margin-bottom: 16px;
             letter-spacing: -1px;
         }
 
-        .description {
-            font-size: 15px;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
+        .description { font-size: 15px; color: var(--text-dim); line-height: 1.6; }
 
+        /* --- PROSPECTS SECTION (BNC/BIC ROTATING) --- */
         .prospects-section {
             padding: 80px 20px;
             background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
         .prospects-title {
             font-size: 32px;
             font-weight: 600;
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 10px;
             letter-spacing: -1px;
         }
 
         .prospects-container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 60px auto 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 60px;
         }
 
-        .prospect-category {
-            text-align: center;
-        }
+        .prospect-category { text-align: center; }
 
         .category-title {
             font-size: 24px;
@@ -234,62 +239,33 @@
             font-weight: 600;
         }
 
-        .prospect-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .prospect-grid { display: flex; flex-direction: column; gap: 12px; align-items: center;}
 
         .prospect-item {
             border: 1px solid var(--border);
             padding: 16px 24px;
             border-radius: 6px;
             background: var(--glass);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            min-width: 250px;
+            text-align: center;
         }
 
-        .prospect-item:hover {
-            border-color: var(--accent);
-            background: rgba(0, 112, 243, 0.05);
-            transform: translateX(4px);
-        }
-
-        .prospect-item span {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-main);
-        }
+        .prospect-item span { font-size: 16px; font-weight: 500; color: var(--text-main); }
 
         .prospect-rotating {
             display: inline-block;
-            min-width: 180px;
             animation: fadeInOut 2s ease-in-out infinite;
         }
 
         @keyframes fadeInOut {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            10% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            90% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
+            0% { opacity: 0; transform: translateY(5px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-5px); }
         }
 
-        .infra-section {
-            padding: 80px 20px;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(7,112,243,0.05) 100%);
-        }
+        /* --- INFRASTRUCTURE / METHODOLOGY SECTION --- */
+        .infra-section { padding: 100px 20px; }
 
         .infra-title {
             font-size: 32px;
@@ -313,299 +289,168 @@
             border-radius: 8px;
             background: var(--glass);
             transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: left;
+        }
+
+        .module-item:hover { border-color: var(--accent); transform: translateY(-5px); }
+
+        .module-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 24px;
+            color: var(--accent);
+            background: rgba(0, 112, 243, 0.1);
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .module-item h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+        .module-item p { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
+
+        /* --- THE OFFER BANNER --- */
+        .offer-banner {
+            max-width: 1000px;
+            margin: 0 auto 80px auto;
+            background: linear-gradient(135deg, rgba(0, 112, 243, 0.1) 0%, rgba(0,0,0,0) 100%);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 50px;
             text-align: center;
         }
 
-        .module-item:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
+        .offer-banner h2 { font-size: 28px; font-weight: 600; margin-bottom: 20px;}
+        .offer-banner p { font-size: 16px; color: var(--text-dim); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;}
+        
+        .guarantee-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-top: 20px;
         }
 
-        .module-icon {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 20px;
-            color: var(--accent);
-        }
-
-        .module-icon svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .module-item h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .module-item p {
-            font-size: 14px;
-            color: var(--text-dim);
-            line-height: 1.5;
-        }
-
+        /* --- FOOTER --- */
         footer {
             padding: 80px 20px;
             text-align: center;
             border-top: 1px solid var(--border);
         }
 
-        .btn-main {
-            background: #ffffff;
-            color: #000000;
-            padding: 20px 48px;
-            border: none;
-            border-radius: 4px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-main:hover {
-            background: #0070f3;
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 0 40px rgba(0, 112, 243, 0.4);
-        }
-
         @media (max-width: 768px) {
-            .client-area-btn {
-                top: 15px;
-                right: 15px;
-                padding: 8px 14px;
-                font-size: 0.7rem;
-            }
-
-            .hero-header {
-                min-height: 50vh;
-                padding: 40px 20px;
-            }
-
-            .brand-main {
-                font-size: 1rem;
-            }
-
-            .hero-title {
-                font-size: 1.8rem;
-            }
-
-            .btn-hero-cta {
-                padding: 12px 28px;
-                font-size: 0.8rem;
-            }
-
-            .services-grid {
-                margin: 60px auto;
-                gap: 16px;
-            }
-
-            .services-title {
-                font-size: 24px;
-                margin: 60px 0 40px 0;
-            }
-
-            .service-card {
-                padding: 30px 20px;
-            }
-
-            .service-card h2 {
-                font-size: 24px;
-            }
-
-            .infra-section {
-                padding: 60px 20px;
-            }
-
-            .infra-title {
-                font-size: 24px;
-                margin-bottom: 40px;
-            }
-
-            .prospects-section {
-                padding: 60px 20px;
-            }
-
-            .prospects-title {
-                font-size: 24px;
-                margin-bottom: 40px;
-            }
-
-            .prospects-container {
-                gap: 40px;
-            }
-
-            .category-title {
-                font-size: 20px;
-            }
-
-            .prospect-item {
-                padding: 14px 20px;
-            }
-
-            .prospect-item span {
-                font-size: 14px;
-            }
-
-            .module-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
-            }
-
-            .module-item {
-                padding: 30px 20px;
-            }
-
-            .module-icon {
-                width: 40px;
-                height: 40px;
-            }
-
-            .module-item h3 {
-                font-size: 16px;
-            }
-
-            .module-item p {
-                font-size: 13px;
-            }
-
-            footer {
-                padding: 60px 20px;
-            }
-
-            .btn-main {
-                padding: 14px 35px;
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .module-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: clamp(1.25rem, 5vw, 2rem);
-            }
-
-            .infra-title {
-                font-size: 20px;
-                margin-bottom: 30px;
-            }
+            .hero-title { font-size: 2.2rem; }
+            .hero-description { font-size: 1rem; padding: 0 10px; }
+            .module-grid { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+            .offer-banner { padding: 30px 20px; }
         }
     </style>
-  <style>body { box-sizing: border-box; }</style>
-  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body>
-  <a href="./01-access-gate/" class="client-area-btn">Espace Client</a>
+  <a href="./01-access-gate/" class="client-area-btn">Portail Partenaires</a>
 
   <div class="app-wrapper">
+   
    <header class="hero-header">
     <div class="brand-identity">
      <h2 class="brand-main">Montis Media</h2>
-     <p class="brand-subtitle">Prospection sur mesure pour le conseil patrimonial</p>
+     <p class="brand-subtitle">L'Infrastructure d'Apport d'Affaires</p>
     </div>
-    <div class="hero-content"><a href="https://montismedia.com/15-scheduling-page/" target="_blank" rel="noopener noreferrer" class="btn-hero-cta">Définissez votre approche</a>
+    <div class="hero-content">
+     <h1 class="hero-title">Nous réalisons vos R1 à votre place.<br>Vous signez les dossiers complexes.</h1>
+     <p class="hero-description">Arrêtez de gaspiller 15h par semaine en découverte avec des curieux ou de céder 50% de vos commissions aux apporteurs classiques. <strong>Recevez 15 dossiers BNC/BIC (TMI > 30%) pré-diagnostiqués par trimestre.</strong></p>
+     <a href="https://montismedia.com/15-scheduling-page/" class="btn-hero-cta">Vérifier l'éligibilité de votre cabinet</a>
     </div>
    </header>
+
    <section class="services-section">
-    <h2 class="services-title">Choisissez votre approche</h2>
+    <h2 class="services-title">Le problème de la recommandation artisanale</h2>
+    <p class="services-subtitle">Si vous dépendez du bouche-à-oreille ou des notaires, votre croissance est plafonnée par le hasard.</p>
+    
     <div class="services-grid">
-     <div class="service-card">
-      <div class="tagline">
-       Ingénierie Discrète
-      </div>
-      <h2>Montis Silent</h2>
-      <p class="description">Une croissance maîtrisée, sans exposition publique ni prise de parole. Le développement avance, votre image reste intacte.</p>
+     <div class="service-card" style="border-color: #331111; background: rgba(50, 0, 0, 0.1);">
+      <div class="tagline alert">L'Ancien Modèle (Coûteux & Lent)</div>
+      <h2>La Prospection et le Partage</h2>
+      <p class="description">Vous perdez votre temps sur des R1 avec des prospects sans capacité d'épargne. Pire, quand un apporteur vous amène un beau dossier, vous lui cédez jusqu'à 50% de vos honoraires de souscription. Vous êtes l'expert, mais vous payez le prix fort.</p>
      </div>
-     <div class="service-card">
-      <div class="tagline">
-       Autorité Statutaire
-      </div>
-      <h2>Montis Display</h2>
-      <p class="description">Une croissance assumée, visible et statutaire. Votre présence s'impose au grand jour, votre cabinet devient une référence identifiable.</p>
+     
+     <div class="service-card" style="border-color: rgba(0, 112, 243, 0.3);">
+      <div class="tagline">Le Modèle Montis (Souverain)</div>
+      <h2>Le Sourcing avec R1 Délégué</h2>
+      <p class="description">Nous agissons comme un filtre industriel. Nous ciblons les dirigeants, nous extrayons leurs données fiscales (Audit R1), et nous vous allouons le dossier qualifié. Vous payez un forfait fixe d'activation et gardez 100% de vos commissions de conseil.</p>
      </div>
     </div>
    </section>
+
    <section class="prospects-section">
-    <h2 class="prospects-title">Définissez votre prospect idéal</h2>
+    <h2 class="prospects-title">Les profils que nous pré-diagnostiquons</h2>
+    <p class="services-subtitle">Uniquement des décideurs avec un besoin stratégique immédiat.</p>
     <div class="prospects-container">
      <div class="prospect-category">
       <h3 class="category-title">BNC</h3>
-      <p class="category-subtitle">Bénéfices Non Commerciaux</p>
+      <p class="category-subtitle">Professions Libérales</p>
       <div class="prospect-grid">
-       <div class="prospect-item"><span class="prospect-rotating" id="bnc-rotating">Architecte</span>
-       </div>
+       <div class="prospect-item"><span class="prospect-rotating" id="bnc-rotating">Architecte</span></div>
       </div>
      </div>
      <div class="prospect-category">
       <h3 class="category-title">BIC</h3>
-      <p class="category-subtitle">Bénéfices Industriels et Commerciaux</p>
+      <p class="category-subtitle">Dirigeants d'Entreprise</p>
       <div class="prospect-grid">
-       <div class="prospect-item"><span class="prospect-rotating" id="bic-rotating">Restaurateur</span>
-       </div>
+       <div class="prospect-item"><span class="prospect-rotating" id="bic-rotating">Restaurateur</span></div>
       </div>
      </div>
     </div>
    </section>
+
    <section class="infra-section">
-    <h3 class="infra-title">L'Infrastructure Opérationnelle</h3>
-    <div class="module-grid" id="module-container">
+    <h3 class="infra-title">L'Infrastructure : 4 étapes vers la clôture</h3>
+    <div class="module-grid">
      <div class="module-item">
-      <div class="module-icon">
-       <svg viewbox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5"><path d="M2 12s3 -10 7-10-7-10-7Z"></path> <circle cx="12" cy="12" r="3"></circle>
-       </svg>
-      </div>
-      <h3>Visibilité</h3>
-      <p>Maîtrisez votre présence et votre exposition sur le marché.</p>
+      <div class="module-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+      <h3>1. Ciblage Sourcing (TMI > 30%)</h3>
+      <p>Identification des niches BNC/BIC sous haute pression fiscale. Nous rejetons les profils non rentables avant tout contact.</p>
      </div>
      <div class="module-item">
-      <div class="module-icon">
-       <svg viewbox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-       </svg>
-      </div>
-      <h3>Protection</h3>
-      <p>Sécurisez vos données et votre réputation au quotidien.</p>
+      <div class="module-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div>
+      <h3>2. Le R1 Délégué (Audit)</h3>
+      <p>Nous faisons passer un audit asynchrone pour extraire la data fiscale brute (revenus, épargne, objectifs). Le dossier est préparé.</p>
      </div>
      <div class="module-item">
-      <div class="module-icon">
-       <svg viewbox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect> <line x1="16" y1="2" x2="16" y2="6"></line> <line x1="8" y1="2" x2="8" y2="6"></line>
-       </svg>
-      </div>
-      <h3>Planification</h3>
-      <p>Orchestrez vos actions marketing avec précision.</p>
+      <div class="module-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></div>
+      <h3>3. Transfert d'Autorité</h3>
+      <p>Le prospect visionne un support exclusif qui pré-vend votre expertise. Il arrive au R2 en vous considérant comme l'unique solution.</p>
      </div>
      <div class="module-item">
-      <div class="module-icon">
-       <svg viewbox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect> <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-       </svg>
-      </div>
-      <h3>Confidentialité</h3>
-      <p>Gardez le contrôle total de vos stratégies.</p>
+      <div class="module-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+      <h3>4. Allocation de Flux</h3>
+      <p>Intégration directe du dossier validé et qualifié dans votre agenda. Vous intervenez uniquement pour l'ingénierie et la clôture.</p>
      </div>
     </div>
    </section>
-   <footer><a href="https://montismedia.com/15-scheduling-page/" target="_blank" rel="noopener noreferrer" class="btn-main" id="cta-button">Définissez votre approche</a>
+
+   <section class="services-section">
+       <div class="offer-banner">
+           <div class="tagline">L'Engagement Montis Media</div>
+           <h2>15 Audits Qualifiés livrés en 90 jours.</h2>
+           <p>Nous paramétrons votre infrastructure (500€ de frais d'activation) et allouons le flux. Vous ne réglez que 89€ HT par dossier strictement qualifié et honoré.</p>
+           <div class="guarantee-badge">
+               <svg style="width:16px; height:16px; color:var(--accent)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+               Garantie contractuelle de livraison ou prolongation du sourcing
+           </div>
+       </div>
+   </section>
+
+   <footer>
+       <a href="https://montismedia.com/15-scheduling-page/" class="btn-hero-cta">Demander une Allocation (Entretien de 15 min)</a>
    </footer>
   </div>
+
   <script>
-    const bncProfiles = ['Architecte', 'Dentiste', 'Expert-comptable', 'Consultant indépendant', 'Coach professionnel', 'Psychologue', 'Ostéopathe', 'Formateur indépendant'];
-    const bicProfiles = ['Restaurateur', 'Artisan plombier', 'Artisan électricien', 'Coiffeur', 'Garagiste', 'Hôtelier', 'Vendeur e-commerce', 'Entreprise de bâtiment', 'Loueur meublé professionnel'];
+    const bncProfiles = ['Architecte', 'Chirurgien', 'Expert-comptable', 'Avocat d\'Affaires', 'Pilote', 'Directeur Médical', 'Notaire', 'Consultant IT Senior'];
+    const bicProfiles = ['Restaurateur', 'Dirigeant BTP', 'Hôtelier', 'CEO E-commerce', 'Marchand de Biens', 'Concessionnaire', 'Pharmacien', 'Loueur LMNP/LMP'];
 
     let bncIndex = 0;
     let bicIndex = 0;
@@ -626,9 +471,8 @@
       }
     }
 
-    // Rotate every 2 seconds
     setInterval(rotateBNC, 2000);
     setInterval(rotateBIC, 2000);
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d38786500abddcc',t:'MTc3MjAzNTgwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
