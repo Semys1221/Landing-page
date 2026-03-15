@@ -251,29 +251,33 @@
         btn.textContent = 'Envoi en cours...';
         result.style.display = 'none';
         try {
-            const res = await fetch('/api/webhook-test', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, email })
-            });
-            const data = await res.json();
-            const labels = { 'INTERESSE': '✅ INTÉRESSÉ', 'NEGATIF': '❌ NÉGATIF', 'INCERTAIN': '⚠️ INCERTAIN' };
-            result.className = 'test-result success';
-            result.innerHTML = `
-                <div class="result-category ${data.category}">${labels[data.category] || data.category}</div>
-                <div style="color:var(--muted);margin-bottom:4px">Message analysé :</div>
-                <div style="color:#ccc;margin-bottom:12px;font-style:italic">"${message}"</div>
-                <div style="color:var(--muted)">Discord : ${data.discord}</div>
-            `;
-            result.style.display = 'block';
-        } catch(e) {
-            result.className = 'test-result error';
-            result.innerHTML = `<div style="color:var(--red)">❌ Erreur : ${e.message}</div>`;
-            result.style.display = 'block';
-        } finally {
-            btn.disabled = false;
-            btn.textContent = 'Lancer le test';
+        const res = await fetch('/api/webhook-test', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message, email })
+        });
+
+        // 🚨 NOUVEAU : On vérifie si le serveur a planté avant de lire le JSON
+        if (!res.ok) {
+            throw new Error(`Erreur Serveur (Statut ${res.status}). Vérifiez les logs sur Vercel.`);
         }
+
+        const data = await res.json();
+        const labels = { 'INTERESSE': '✅ INTÉRESSÉ', 'NEGATIF': '❌ NÉGATIF', 'INCERTAIN': '⚠️ INCERTAIN' };
+        
+        result.className = 'test-result success';
+        result.innerHTML = `
+            <div class="result-category ${data.category}">${labels[data.category] || data.category}</div>
+            <div style="color:var(--muted);margin-bottom:4px">Message analysé :</div>
+            <div style="color:#ccc;margin-bottom:12px;font-style:italic">"${message}"</div>
+            <div style="color:var(--muted)">Discord : ${data.discord}</div>
+        `;
+        result.style.display = 'block';
+    } catch(e) {
+        // L'erreur affichée sera maintenant beaucoup plus claire
+        result.className = 'test-result error';
+        result.innerHTML = `<div style="color:var(--red)">❌ Erreur : ${e.message}</div>`;
+        result.style.display = 'block';
     }
 
     window.onload = loadCRM;
