@@ -22,16 +22,15 @@ def sl_get(path, params={}):
         return None
 
 # ==========================================
-# 2. LE CERVEAU : ANALYSE & RÉDACTION IA
+# 2. LE CERVEAU BINAIR : ANALYSE IA
 # ==========================================
 def classify_with_ai(message):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
     prompt = f"""
-    Tu es un analyste de ventes High Ticket. Analyse la réponse de ce prospect.
-    Réponds UNIQUEMENT par l'un de ces 3 mots :
-    - INTERESSE : Le prospect dit oui, veut un rendez-vous, demande des infos, ou dit "pourquoi pas".
-    - NEGATIF : Le prospect dit non, n'est pas intéressé, désabonner, stop.
-    - INCERTAIN : Le prospect pose une question, soulève une objection, ou sa réponse est floue.
+    Tu es un analyste de ventes High Ticket impitoyable. Analyse la réponse de ce prospect.
+    Réponds UNIQUEMENT par l'un de ces 2 mots :
+    - INTERESSE : Le prospect dit oui, veut un rendez-vous, demande des infos, pose une question, ou montre le moindre signe d'ouverture. Un "à moitié oui" ou une hésitation est un INTERESSE.
+    - NEGATIF : Le prospect dit clairement non, n'est pas intéressé, demande à être désabonné ou dit stop.
     Message : "{message}"
     """
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
@@ -39,32 +38,11 @@ def classify_with_ai(message):
         r = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=10)
         if r.ok:
             response_text = r.json()['candidates'][0]['content']['parts'][0]['text'].strip().upper()
-            for cat in ["INTERESSE", "NEGATIF", "INCERTAIN"]:
-                if cat in response_text: return cat
-        return "INCERTAIN"
+            if "NEGATIF" in response_text:
+                return "NEGATIF"
+            return "INTERESSE" # Par défaut, la moindre ouverture bascule en intérêt
     except:
-        return "INCERTAIN"
-
-def generate_objection_handling_reply(message):
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
-    prompt = f"""
-    Tu es Julie Piana, de l'infrastructure Montis Media. Tu t'adresses à un Conseiller en Gestion de Patrimoine (CGP).
-    Ton offre : vous réalisez les rendez-vous de découverte (R1) à leur place et leur allouez 15 dossiers haut de gamme (TMI > 30%) par trimestre.
-    Le prospect a répondu à ton e-mail de prospection avec une question ou une incertitude : "{message}"
-    
-    Rédige une réponse sur-mesure courte (3 phrases max), très professionnelle, directe et sans jargon marketing pour lever son doute.
-    Termine l'e-mail en lui proposant d'en discuter de vive voix via ce lien : <a href="https://www.montismedia.com/A-scheduling-page/index.html">réserver un appel de 15 min</a>
-    
-    Format : Utilise des balises HTML <p>. Ne mets pas d'objet. Signe uniquement : "Bien cordialement,<br>Julie Piana".
-    """
-    payload = {"contents": [{"parts": [{"text": prompt}]}]}
-    try:
-        r = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=15)
-        if r.ok:
-            return r.json()['candidates'][0]['content']['parts'][0]['text'].strip()
-        return "<p>Bonjour, merci pour votre retour. Le plus simple serait d'en discuter de vive voix pour clarifier ce point : <a href='https://www.montismedia.com/A-scheduling-page/index.html'>réserver un appel</a>.</p><p>Bien cordialement,<br>Julie Piana</p>"
-    except:
-        return "<p>Bonjour, merci pour votre retour. Le plus simple serait d'en discuter de vive voix : <a href='https://www.montismedia.com/A-scheduling-page/index.html'>réserver un appel</a>.</p><p>Bien cordialement,<br>Julie Piana</p>"
+        return "INTERESSE" # Fallback agressif : en cas de doute, on tente le closing.
 
 # ==========================================
 # 3. LE BRAS ARMÉ : ACTION SMARTLEAD
@@ -77,11 +55,12 @@ def send_smartlead_reply(campaign_id, lead_id, reply_message_id, email_body, del
         "lead_id": int(lead_id),
         "email_body": email_body,
         "reply_message_id": str(reply_message_id),
+        # L'utilisation de l'heure exacte force Smartlead à traiter le message en priorité
         "reply_email_time": send_time.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     })
 
 def schedule_interested_sequence(campaign_id, lead_id, reply_message_id):
-    # EMAIL 1 : Immédiat
+    # EMAIL 1 : Immédiat (Push force)
     body_1 = """<p>Ravie de votre intérêt,</p>
     <p>Nous réalisons les R1 et vous allouons jusqu'à 15 rendez-vous qualifiés sur 90 jours, auprès de profils BIC/BNC, sans aucun démarchage de votre part, avec un modèle orienté performance.</p>
     <p>Le plus simple est de planifier un court échange de 15 minutes pour voir si cela fait sens : <a href="https://www.montismedia.com/A-scheduling-page/index.html">Réserver un appel</a>.</p>
@@ -131,9 +110,11 @@ def crm_data():
                     "scheduled": msg.get("stats", {}).get("status") == "SCHEDULED" if msg.get("stats") else False
                 })
 
-            if lead.get("is_interested"): cat = "INTERESSE"
-            elif lead.get("status") == "BLOCKED": cat = "NEGATIF"
-            else: cat = "INCERTAIN"
+            # Forçage binaire pour l'affichage CRM
+            if lead.get("status") == "BLOCKED":
+                cat = "NEGATIF"
+            else:
+                cat = "INTERESSE"
 
             result.append({
                 "email": lead.get("email", ""),
@@ -148,51 +129,38 @@ def crm_data():
                 "messages": messages
             })
 
-    order = {"INTERESSE": 0, "INCERTAIN": 1, "NEGATIF": 2}
-    result.sort(key=lambda x: order.get(x["category"], 3))
+    order = {"INTERESSE": 0, "NEGATIF": 1}
+    result.sort(key=lambda x: order.get(x["category"], 2))
     return jsonify(result)
 
 @app.route('/api/webhook-test', methods=['POST'])
 def test_webhook():
     data = request.json or {}
-    message = data.get('message') or data.get('text') or 'Pouvez-vous m\'en dire plus sur le prix ?'
+    message = data.get('message') or data.get('text') or 'Je suis intéressé mais à voir'
     email = data.get('email') or data.get('from_email') or 'test@montismedia.com'
     
     campaign_id = data.get('campaign_id')
     lead_id = data.get('lead_id')
     message_id = data.get('message_id')
 
-    # 1. Classification
+    # 1. Classification Binaire
     category = classify_with_ai(message)
-    action_taken = "Aucune action (Analyse IA seule)"
-    ai_generated_text = ""
+    action_taken = "Aucune action"
 
-    # 2. Exécution des actions selon la catégorie
+    # 2. Exécution : Action directe si Intéressé
     if category == "INTERESSE" and campaign_id and lead_id and message_id:
         schedule_interested_sequence(campaign_id, lead_id, message_id)
-        action_taken = "Séquence de 3 emails planifiée"
+        action_taken = "Séquence de closing planifiée (Envoi immédiat forcé)"
         
-    elif category == "NEGATIF":
-        action_taken = "Aucune action (Lead ignoré)"
-        
-    elif category == "INCERTAIN" and campaign_id and lead_id and message_id:
-        # L'IA rédige la réponse aux objections
-        ai_generated_text = generate_objection_handling_reply(message)
-        # On l'envoie immédiatement (délai = 0)
-        send_smartlead_reply(campaign_id, lead_id, message_id, ai_generated_text, delay_days=0)
-        action_taken = "Réponse sur-mesure générée par l'IA et envoyée"
+    elif category == "INTERESSE" and not campaign_id:
+        action_taken = "Simulation de séquence de closing (Non envoyée car mode test)"
 
-    # Si c'est un test depuis l'interface web (pas de campaign_id réel)
-    if category == "INCERTAIN" and not campaign_id:
-        ai_generated_text = generate_objection_handling_reply(message)
-        action_taken = "Simulation de réponse générée par l'IA (Non envoyée car mode test)"
+    elif category == "NEGATIF":
+        action_taken = "Aucune action (Lead mort ignoré)"
 
     # 3. Notification Discord
-    colors = {"INTERESSE": 3066993, "NEGATIF": 15158332, "INCERTAIN": 16776960}
+    colors = {"INTERESSE": 3066993, "NEGATIF": 15158332}
     description = f"**De :** {email}\n**Message :** {message}\n\n⚙️ **Action :** {action_taken}"
-    
-    if ai_generated_text:
-        description += f"\n\n🤖 **Réponse générée :**\n```html\n{ai_generated_text}\n```"
 
     discord_payload = {
         "embeds": [{
@@ -210,8 +178,7 @@ def test_webhook():
     return jsonify({
         "status": "ok", 
         "category": category, 
-        "action": action_taken,
-        "ai_reply": ai_generated_text
+        "action": action_taken
     }), 200
 
 if __name__ == "__main__":
