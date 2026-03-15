@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Record - Montis Media</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            background-color: #030303;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { font-family: 'DM Serif Display', serif; }
+        .font-mono { font-family: 'DM Mono', monospace; }
+
+        .text-gradient {
+            background: linear-gradient(180deg, #FFFFFF 0%, #777777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .glow-border {
+            position: relative;
+        }
+        .glow-border::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(45deg, rgba(59,130,246,0.5), transparent, rgba(59,130,246,0.1));
+            z-index: -1;
+            border-radius: inherit;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.8s ease-out forwards;
+        }
+        
+        @keyframes fillBar {
+            from { width: 0%; }
+            to { width: 80%; } 
+        }
+        .animate-fill {
+            animation: fillBar 1.5s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-500/30">
+
+    <section class="border-b border-white/5 bg-white/[0.01] py-6 relative z-20">
+        <div class="max-w-6xl mx-auto px-6">
+            <p class="text-[9px] text-center font-mono text-gray-500 uppercase tracking-widest mb-4">Infrastructure Institutionnelle</p>
+            <div class="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                <div class="text-xs font-bold font-mono tracking-widest">AMF <span class="text-[8px] font-normal align-top">COMPLIANT</span></div>
+                <div class="text-xs font-bold font-mono tracking-widest">ORIAS <span class="text-[8px] font-normal align-top">READY</span></div>
+                <div class="text-xs font-bold font-mono tracking-widest flex items-center gap-1">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> 
+                    100% RGPD
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="relative pt-24 pb-16 flex flex-col items-center justify-center px-6 text-center">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.05)_0%,transparent_50%)] pointer-events-none"></div>
+        
+        <div class="z-10 max-w-4xl mx-auto animate-fade-up">
+            <div class="inline-flex items-center gap-2 px-3 py-1 border border-white/10 rounded-full bg-white/5 text-[10px] font-bold font-mono uppercase tracking-[0.3em] text-blue-400 mb-8">
+                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+                Preuve d'Exécution
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold italic text-gradient leading-tight mb-6">
+                Des résultats.<br>Aucune théorie.
+            </h1>
+            
+            <p class="text-lg text-gray-400 font-light tracking-wide max-w-2xl mx-auto leading-relaxed mb-12">
+                Nous ne vendons pas des leads. Nous sourçons de l'encours. Voici les chiffres bruts de l'infrastructure Montis Media sur le secteur de la gestion de patrimoine.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-12 px-6 border-y border-white/5 bg-[#020202]">
+        <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div class="glass-card p-6 rounded-sm">
+                <p class="text-4xl font-light text-white tracking-tighter mb-2">350k€+</p>
+                <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-500">AdSpend Géré</p>
+            </div>
+            <div class="glass-card p-6 rounded-sm">
+                <p class="text-4xl font-light text-white tracking-tighter mb-2">BNC/BIC</p>
+                <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-blue-400">Ciblage Exclusif</p>
+            </div>
+            <div class="glass-card p-6 rounded-sm">
+                <p class="text-4xl font-light text-white tracking-tighter mb-2">100%</p>
+                <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-500">Qualification Manuelle</p>
+            </div>
+            <div class="glass-card p-6 rounded-sm border-b-2 border-b-blue-500">
+                <p class="text-4xl font-light text-white tracking-tighter mb-2">15 R1</p>
+                <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-500">Garantis sur 90 jours</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 relative">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-start gap-16">
+            
+            <div class="w-full md:w-1/2 space-y-12">
+                <div>
+                    <h2 class="text-4xl italic mb-4">L'Alignement Total.</h2>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">
+                        Notre modèle économique vous protège intégralement. Nous absorbons le risque de l'acquisition. Si le volume contractuel n'est pas délivré, nous travaillons à perte jusqu'à la complétion.
+                    </p>
+                </div>
+                
+                <div class="glow-border bg-[#050505] p-8 rounded-lg">
+                    <div class="flex justify-between items-end mb-4">
+                        <p class="text-[10px] font-mono font-bold uppercase tracking-widest text-gray-300">Capacité Opérationnelle</p>
+                        <p class="text-xs font-mono font-bold text-blue-500">8 / 10 Partenaires</p>
+                    </div>
+                    <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-4">
+                        <div class="h-full bg-blue-500 rounded-full w-0 animate-fill"></div>
+                    </div>
+                    <p class="text-[10px] font-mono text-red-400 mt-2 uppercase tracking-widest flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></span>
+                        Fermeture imminente du secteur
+                    </p>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 space-y-6">
+                <div class="glass-card p-8 rounded border-l-2 border-l-blue-500 relative">
+                    <p class="text-sm text-gray-300 font-light leading-relaxed italic mb-6">"Je ne gère plus l'acquisition. Je reçois simplement des cadres sup et des dirigeants directement dans mon agenda. Le R1 est déjà pré-vendu, je n'ai plus qu'à dérouler mon ingénierie patrimoniale."</p>
+                    <div>
+                        <p class="text-xs font-mono font-bold text-white uppercase tracking-widest">Laurent M.</p>
+                        <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider mt-1">CGP Indépendant (Paris)</p>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-8 rounded border-l-2 border-l-gray-600 relative">
+                    <p class="text-sm text-gray-300 font-light leading-relaxed italic mb-6">"Le filtre est impitoyable. Contrairement aux agences classiques, ils refusent d'envoyer des dossiers avec moins de 1000€/mois de capacité d'épargne. C'est du chirurgical."</p>
+                    <div>
+                        <p class="text-xs font-mono font-bold text-white uppercase tracking-widest">Sarah D.</p>
+                        <p class="text-[9px] font-mono text-gray-500 uppercase tracking-wider mt-1">Gérante de Cabinet (Lyon)</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+</body>
+</html>
