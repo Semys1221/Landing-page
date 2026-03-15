@@ -6,7 +6,6 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 # --- CONFIGURATION DES CLÉS API ---
-# Ta clé est maintenant en dur, plus besoin de variables d'environnement Vercel
 SMARTLEAD_API_KEY = "d08bf81e-8d1d-44e4-886d-c2f67e3eeaa6_ei684kq"
 BASE_SMARTLEAD = "https://server.smartlead.ai/api/v1"
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1481916119412379702/RcXuyn6RKvbwqAU4EdcWRVuLhY6ZA8jCVe3d4jQl_a0-sUO9IVOM0-s7yCVhAIUqH0ow"
@@ -38,12 +37,17 @@ def classify_with_ai(message):
     try:
         r = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=10)
         if r.ok:
-            response_text = r.json()['candidates'][0]['content']['parts'][0]['text'].strip().upper()
+            # Sécurité renforcée au cas où l'API Gemini changerait de format
+            data = r.json()
+            response_text = data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '').strip().upper()
+            
             if "NEGATIF" in response_text:
                 return "NEGATIF"
-            return "INTERESSE" # Par défaut, la moindre ouverture bascule en intérêt
-    except:
-        return "INTERESSE" # Fallback agressif : en cas de doute, on tente le closing.
+            return "INTERESSE"
+        return "INTERESSE" # Fallback si l'API Gemini plante
+    except Exception as e:
+        print(f"Erreur IA: {e}")
+        return "INTERESSE" # Fallback : dans le doute, on active la séquence.
 
 # ==========================================
 # 3. LE BRAS ARMÉ : ACTION SMARTLEAD
@@ -56,12 +60,12 @@ def send_smartlead_reply(campaign_id, lead_id, reply_message_id, email_body, del
         "lead_id": int(lead_id),
         "email_body": email_body,
         "reply_message_id": str(reply_message_id),
-        # L'utilisation de l'heure exacte force Smartlead à traiter le message en priorité absolue
+        # L'heure exacte force l'envoi immédiat ou la programmation stricte
         "reply_email_time": send_time.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     })
 
 def schedule_interested_sequence(campaign_id, lead_id, reply_message_id):
-    # EMAIL 1 : Immédiat (Push force)
+    # EMAIL 1 : Immédiat
     body_1 = """<p>Ravie de votre intérêt,</p>
     <p>Nous réalisons les R1 et vous allouons jusqu'à 15 rendez-vous qualifiés sur 90 jours, auprès de profils BIC/BNC, sans aucun démarchage de votre part, avec un modèle orienté performance.</p>
     <p>Le plus simple est de planifier un court échange de 15 minutes pour voir si cela fait sens : <a href="https://www.montismedia.com/A-scheduling-page/index.html">Réserver un appel</a>.</p>
@@ -111,7 +115,6 @@ def crm_data():
                     "scheduled": msg.get("stats", {}).get("status") == "SCHEDULED" if msg.get("stats") else False
                 })
 
-            # Forçage binaire pour l'affichage CRM
             if lead.get("status") == "BLOCKED":
                 cat = "NEGATIF"
             else:
@@ -135,38 +138,40 @@ def crm_data():
     return jsonify(result)
 
 @app.route('/api/webhook', methods=['POST'])
-def test_webhook():
+def smartlead_webhook():
     data = request.json or {}
-    message = data.get('message') or data.get('text') or 'Je suis intéressé mais à voir'
-    email = data.get('email') or data.get('from_email') or 'test@montismedia.com'
     
-    campaign_id = data.get('campaign_id')
-    lead_id = data.get('lead_id')
-    message_id = data.get('message_id')
+    # 1. Extraction robuste (On ratisse large sur les noms de variables Smartlead)
+    message = data.get('text') or data.get('message') or data.get('text_plain') or 'Message vide'
+    email = data.get('from_email') or data.get('email') or 'Prospect'
+    
+    campaign_id = data.get('campaign_id') or data.get('campaignId')
+    lead_id = data.get('lead_id') or data.get('leadId')
+    message_id = data.get('message_id') or data.get('reply_message_id') or data.get('messageId')
 
-    # 1. Classification Binaire
+    # 2. Classification Lya (Gemini)
     category = classify_with_ai(message)
-    action_taken = "Aucune action"
+    action_taken = "En attente"
 
-    # 2. Exécution : Action directe si Intéressé
-    if category == "INTERESSE" and campaign_id and lead_id and message_id:
-        schedule_interested_sequence(campaign_id, lead_id, message_id)
-        action_taken = "Séquence de closing planifiée (Envoi immédiat forcé)"
-        
-    elif category == "INTERESSE" and not campaign_id:
-        action_taken = "Simulation de séquence de closing (Non envoyée car mode test)"
-
+    # 3. L'ACTION FORCÉE
+    if category == "INTERESSE":
+        if campaign_id and lead_id and message_id:
+            # S'il y a des IDs, c'est un vrai message Smartlead : ON TIRE.
+            schedule_interested_sequence(campaign_id, lead_id, message_id)
+            action_taken = "✅ ACTION : Séquence programmée (Email 1 envoyé immédiatement)"
+        else:
+            # Si c'est un test via ton CRM HTML (sans ID de campagne)
+            action_taken = "⚠️ TEST CRM : Lead qualifié 'Intéressé', mais séquence non envoyée car c'est un test à blanc."
+            
     elif category == "NEGATIF":
-        action_taken = "Aucune action (Lead mort ignoré)"
+        action_taken = "❌ ACTION : Aucune. Le lead est ignoré."
 
-    # 3. Notification Discord
+    # 4. Envoi du rapport à Discord
     colors = {"INTERESSE": 3066993, "NEGATIF": 15158332}
-    description = f"**De :** {email}\n**Message :** {message}\n\n⚙️ **Action :** {action_taken}"
-
     discord_payload = {
         "embeds": [{
-            "title": f"🧠 ANALYSE IA — {category}",
-            "description": description,
+            "title": f"🧠 LYA (IA) — {category}",
+            "description": f"**De :** {email}\n**Message :** {message}\n\n⚙️ **Logique :** {action_taken}",
             "color": colors.get(category, 9807270)
         }]
     }
