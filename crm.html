@@ -238,7 +238,6 @@
         result.style.display = 'none';
         
         try {
-            // L'appel pointe désormais vers la bonne URL synchronisée avec Smartlead
             const res = await fetch('/api/webhook', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -257,8 +256,8 @@
                 <div class="result-category ${data.category}">${labels[data.category] || data.category}</div>
                 <div style="color:var(--muted);margin-bottom:4px">Message analysé :</div>
                 <div style="color:#ccc;margin-bottom:12px;font-style:italic">"${message}"</div>
-                <div style="color:var(--muted)">Discord : Notification envoyée</div>
-                <div style="color:var(--muted)">Action : ${data.action}</div>
+                <div style="color:var(--blue); margin-bottom: 4px;">=> Notification Discord envoyée</div>
+                <div style="color:var(--green); font-weight: bold;">=> ${data.action}</div>
             `;
             result.style.display = 'block';
         } catch(e) {
@@ -270,9 +269,4 @@
             btn.textContent = 'Lancer le test';
         }
     }
-
-    window.onload = loadCRM;
-    setInterval(loadCRM, 30000);
-</script>
-</body>
 </html>
