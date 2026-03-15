@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Montis Media — Infrastructure d'Apport d'Affaires</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #000000;
+      --white: #ffffff;
+      --gray-100: #f5f5f5;
+      --gray-400: #999999;
+      --gray-600: #555555;
+      --gray-800: #1a1a1a;
+      --gray-900: #0d0d0d;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.18);
+    }
+
+    html, body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Mono', monospace;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HERO ─────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Grain overlay */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      border: 1px solid var(--border-strong);
+      padding: 8px 20px;
+      border-radius: 100px;
+      margin-bottom: 48px;
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.7s ease forwards 0.1s;
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(52px, 9vw, 120px);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.8s ease forwards 0.25s;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--gray-400);
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      color: var(--gray-400);
+      letter-spacing: 0.05em;
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 56px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.7s ease forwards 0.4s;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: var(--white);
+      color: var(--black);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 18px 48px;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.2s;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.7s ease forwards 0.55s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .hero-cta:hover {
+      background: var(--gray-100);
+      transform: translateY(-2px);
+    }
+
+    /* ── MÉCANISME ────────────────────────────────────────────────── */
+    .mechanism {
+      padding: 120px 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gray-600);
+      margin-bottom: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* 3 étapes — layout horizontal sur desktop */
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(16.66% + 16px);
+      right: calc(16.66% + 16px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--border-strong), var(--border-strong));
+      z-index: 0;
+    }
+
+    .step {
+      padding: 0 32px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .step.visible { opacity: 1; transform: translateY(0); }
+    .step:nth-child(2) { transition-delay: 0.15s; }
+    .step:nth-child(3) { transition-delay: 0.3s; }
+
+    .step:first-child { padding-left: 0; }
+    .step:last-child { padding-right: 0; }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border: 1px solid var(--border-strong);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--gray-400);
+      margin-bottom: 28px;
+      background: var(--black);
+      position: relative;
+    }
+
+    .step-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      font-style: italic;
+      color: var(--white);
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .step-body {
+      font-size: 12px;
+      color: var(--gray-400);
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── SÉPARATEUR ───────────────────────────────────────────────── */
+    .divider {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--border-strong), transparent);
+      margin: 0 auto;
+    }
+
+    /* ── PROPOSITION ──────────────────────────────────────────────── */
+    .proposition {
+      padding: 80px 24px 120px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .prop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .prop-cell {
+      background: var(--black);
+      padding: 48px 40px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .prop-cell.visible { opacity: 1; transform: translateY(0); }
+    .prop-cell:nth-child(2) { transition-delay: 0.1s; }
+    .prop-cell:nth-child(3) { transition-delay: 0.2s; }
+    .prop-cell:nth-child(4) { transition-delay: 0.3s; }
+
+    .prop-cell-label {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gray-600);
+      margin-bottom: 16px;
+    }
+
+    .prop-cell-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .prop-cell-desc {
+      font-size: 11px;
+      color: var(--gray-600);
+      line-height: 1.7;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── CTA FINAL ────────────────────────────────────────────────── */
+    .cta-section {
+      padding: 80px 24px 120px;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(28px, 4vw, 48px);
+      color: var(--white);
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .cta-title.visible { opacity: 1; transform: translateY(0); }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--white);
+      color: var(--black);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 18px 56px;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-btn.visible { opacity: 1; transform: translateY(0); }
+
+    .cta-btn:hover {
+      background: var(--gray-100);
+      box-shadow: 0 0 40px rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gray-600);
+    }
+
+    /* ── ANIMATIONS ───────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .steps::before { display: none; }
+
+      .step { padding: 0; }
+
+      .prop-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title {
+        font-size: clamp(44px, 12vw, 72px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <span class="hero-eyebrow">Montis Media</span>
+
+    <h1 class="hero-title">
+      Infrastructure<br>
+      <em>d'Apport</em><br>
+      d'Affaires.
+    </h1>
+
+    <p class="hero-sub">
+      Déléguez l'acquisition. Nous validons les enjeux patrimoniaux (R1) et vous transmettons des prospects qualifiés, prêts pour le conseil.
+    </p>
+
+    <button class="hero-cta" onclick="goNext()">
+      Découvrir le modèle
+    </button>
+  </section>
+
+  <section class="mechanism">
+    <div class="section-label">Le mécanisme</div>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-number">01</div>
+        <h3 class="step-title">Acquisition.</h3>
+        <p class="step-body">
+          Ciblage précis sur des profils BNC et dirigeants à forte TMI. Les campagnes sont réalisées en marque blanche pour protéger votre cabinet.
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">02</div>
+        <h3 class="step-title">Qualification.</h3>
+        <p class="step-body">
+          Nous menons le premier échange (R1). Seuls les dossiers présentant un véritable enjeu fiscal ou successoral sont validés.
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">03</div>
+        <h3 class="step-title">Transmission.</h3>
+        <p class="step-body">
+          Vous recevez un prospect éduqué et un dossier documenté. Votre intervention débute directement par l'ingénierie patrimoniale (R2).
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="proposition">
+    <div class="section-label">L'engagement contractuel</div>
+
+    <div class="prop-grid">
+      <div class="prop-cell">
+        <p class="prop-cell-label">Volume</p>
+        <p class="prop-cell-value">15 R1</p>
+        <p class="prop-cell-desc">Rendez-vous qualifiés et exclusifs livrés sur une période de 90 jours.</p>
+      </div>
+
+      <div class="prop-cell">
+        <p class="prop-cell-label">Modèle financier</p>
+        <p class="prop-cell-value">Au<br>succès</p>
+        <p class="prop-cell-desc">Facturation à la performance (89 € HT par R1 honoré). Aucun frais fixe.</p>
+      </div>
+
+      <div class="prop-cell">
+        <p class="prop-cell-label">Sécurité</p>
+        <p class="prop-cell-value">Résultat<br>garanti</p>
+        <p class="prop-cell-desc">Si l'objectif n'est pas atteint, la mission se prolonge sans surcoût jusqu'à livraison finale.</p>
+      </div>
+
+      <div class="prop-cell">
+        <p class="prop-cell-label">Périmètre</p>
+        <p class="prop-cell-value">Expertise<br>exclusive</p>
+        <p class="prop-cell-desc">Concentrez-vous sur votre cœur de métier : la stratégie et la signature des mandats.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <p class="cta-title">Étudions les synergies possibles.</p>
+    <button class="cta-btn" onclick="goNext()">
+      Voir le détail de l'offre
+    </button>
+  </section>
+
+  <footer>
+    Montis Media &nbsp;/&nbsp; 2026 &nbsp;—&nbsp; Droits Réservés
+  </footer>
+
+  <script>
+    // ── Navigation ──────────────────────────────────────────────────────
+    function goNext() {
+      window.location.href = "../04-showcase/";
+    }
+
+    // ── Scroll reveal ───────────────────────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.step, .prop-cell, .cta-title, .cta-btn').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
