@@ -3,349 +3,73 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Montis Media</title>
+  <title>Montis Media | Infrastructure d'Apport d'Affaires</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
-        :root {
-            --bg: #000000;
-            --border: #1a1a1a;
-            --accent: #0070f3;
-            --text-main: #ffffff;
-            --text-dim: #888888;
-            --glass: rgba(255, 255, 255, 0.03);
-        }
-
+        /* [LE CSS RESTE EXACTEMENT LE MÊME] */
+        :root { --bg: #000000; --border: #1a1a1a; --accent: #0070f3; --text-main: #ffffff; --text-dim: #888888; --glass: rgba(255, 255, 255, 0.03); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { height: 100%; width: 100%; }
-        
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            position: relative;
-        }
+        body { background-color: var(--bg); color: var(--text-main); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; position: relative; }
 
-        /* --- BOUTON ESPACE CLIENT --- */
-        .client-area-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            text-decoration: none;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid var(--border);
-            padding: 10px 20px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-        }
+        .client-area-btn { position: absolute; top: 20px; right: 20px; z-index: 100; text-decoration: none; color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--border); padding: 10px 20px; border-radius: 4px; transition: all 0.3s ease; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        .client-area-btn:hover { color: var(--text-main); border-color: var(--text-main); background: rgba(255,255,255,0.1); }
 
-        .client-area-btn:hover {
-            color: var(--text-main);
-            border-color: var(--text-main);
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* --- HERO SECTION --- */
-        .hero-header {
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
-            border-bottom: 1px solid var(--border);
-            padding: 0 20px;
-        }
-
+        .hero-header { min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%); border-bottom: 1px solid var(--border); padding: 0 20px; }
         .brand-identity { margin-bottom: 40px; }
+        .brand-main { font-size: 1.8rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; margin: 0; background: linear-gradient(180deg, #ffffff 0%, #888888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .brand-subtitle { font-size: 0.75rem; letter-spacing: 2px; color: var(--accent); margin-top: 10px; text-transform: uppercase; font-weight: 600; }
 
-        .brand-main {
-            font-size: 1.8rem;
-            font-weight: 500;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin: 0;
-            background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .brand-subtitle {
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            color: var(--accent);
-            margin-top: 10px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .hero-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 900px;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 600;
-            letter-spacing: -1.5px;
-            margin: 0 0 24px 0;
-            line-height: 1.1;
-            background: linear-gradient(180deg, #ffffff 0%, #aaaaaa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-description {
-            font-size: 1.15rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-            margin-bottom: 40px;
-            max-width: 700px;
-        }
-
+        .hero-content { display: flex; flex-direction: column; align-items: center; max-width: 900px; }
+        .hero-title { font-size: 3.5rem; font-weight: 600; letter-spacing: -1.5px; margin: 0 0 24px 0; line-height: 1.1; background: linear-gradient(180deg, #ffffff 0%, #aaaaaa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-description { font-size: 1.15rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; max-width: 700px; }
         .hero-description strong { color: var(--text-main); font-weight: 500; }
 
-        .btn-hero-cta {
-            background: #ffffff;
-            color: #000000;
-            padding: 18px 40px;
-            border: none;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
+        .btn-hero-cta { background: #ffffff; color: #000000; padding: 18px 40px; border: none; border-radius: 4px; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+        .btn-hero-cta:hover { background: var(--accent); color: #ffffff; box-shadow: 0 0 30px rgba(0, 112, 243, 0.3); transform: translateY(-2px); }
 
-        .btn-hero-cta:hover {
-            background: var(--accent);
-            color: #ffffff;
-            box-shadow: 0 0 30px rgba(0, 112, 243, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* --- THE PROBLEM / SOLUTION SECTION --- */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            max-width: 1200px;
-            margin: 60px auto 80px auto;
-            padding: 0 20px;
-        }
-
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1200px; margin: 60px auto 80px auto; padding: 0 20px; }
         .services-section { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .services-title { font-size: 32px; font-weight: 600; text-align: center; margin: 80px 0 20px 0; letter-spacing: -1px; }
+        .services-subtitle { text-align: center; color: var(--text-dim); margin-bottom: 60px; font-size: 1.1rem; }
 
-        .services-title {
-            font-size: 32px;
-            font-weight: 600;
-            text-align: center;
-            margin: 80px 0 20px 0;
-            letter-spacing: -1px;
-        }
-        
-        .services-subtitle {
-            text-align: center;
-            color: var(--text-dim);
-            margin-bottom: 60px;
-            font-size: 1.1rem;
-        }
-
-        .service-card {
-            border: 1px solid var(--border);
-            padding: 40px 30px;
-            border-radius: 8px;
-            background: var(--glass);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
+        .service-card { border: 1px solid var(--border); padding: 40px 30px; border-radius: 8px; background: var(--glass); transition: all 0.3s ease; position: relative; overflow: hidden; }
         .service-card:hover { border-color: var(--accent); transform: translateY(-5px); }
-
-        .tagline {
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 16px;
-            font-weight: 600;
-        }
-
+        .tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; font-weight: 600; }
         .tagline.alert { color: #ef4444; }
-
-        .service-card h2 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            letter-spacing: -1px;
-        }
-
+        .service-card h2 { font-size: 24px; font-weight: 600; margin-bottom: 16px; letter-spacing: -1px; }
         .description { font-size: 15px; color: var(--text-dim); line-height: 1.6; }
 
-        /* --- PROSPECTS SECTION (BNC/BIC ROTATING) --- */
-        .prospects-section {
-            padding: 80px 20px;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .prospects-title {
-            font-size: 32px;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
-        }
-
-        .prospects-container {
-            max-width: 1200px;
-            margin: 60px auto 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 60px;
-        }
-
+        .prospects-section { padding: 80px 20px; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .prospects-title { font-size: 32px; font-weight: 600; text-align: center; margin-bottom: 10px; letter-spacing: -1px; }
+        .prospects-container { max-width: 1200px; margin: 60px auto 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px; }
         .prospect-category { text-align: center; }
-
-        .category-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-main);
-        }
-
-        .category-subtitle {
-            font-size: 12px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-
+        .category-title { font-size: 24px; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+        .category-subtitle { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 30px; font-weight: 600; }
         .prospect-grid { display: flex; flex-direction: column; gap: 12px; align-items: center;}
-
-        .prospect-item {
-            border: 1px solid var(--border);
-            padding: 16px 24px;
-            border-radius: 6px;
-            background: var(--glass);
-            min-width: 250px;
-            text-align: center;
-        }
-
+        .prospect-item { border: 1px solid var(--border); padding: 16px 24px; border-radius: 6px; background: var(--glass); min-width: 250px; text-align: center; }
         .prospect-item span { font-size: 16px; font-weight: 500; color: var(--text-main); }
 
-        .prospect-rotating {
-            display: inline-block;
-            animation: fadeInOut 2s ease-in-out infinite;
-        }
+        .prospect-rotating { display: inline-block; animation: fadeInOut 2s ease-in-out infinite; }
+        @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(5px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-5px); } }
 
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(5px); }
-            15% { opacity: 1; transform: translateY(0); }
-            85% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-5px); }
-        }
-
-        /* --- INFRASTRUCTURE / METHODOLOGY SECTION --- */
         .infra-section { padding: 100px 20px; }
-
-        .infra-title {
-            font-size: 32px;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 60px;
-            letter-spacing: -1px;
-        }
-
-        .module-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .module-item {
-            border: 1px solid var(--border);
-            padding: 40px 30px;
-            border-radius: 8px;
-            background: var(--glass);
-            transition: all 0.3s ease;
-            text-align: left;
-        }
-
+        .infra-title { font-size: 32px; font-weight: 600; text-align: center; margin-bottom: 60px; letter-spacing: -1px; }
+        .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+        .module-item { border: 1px solid var(--border); padding: 40px 30px; border-radius: 8px; background: var(--glass); transition: all 0.3s ease; text-align: left; }
         .module-item:hover { border-color: var(--accent); transform: translateY(-5px); }
-
-        .module-icon {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 24px;
-            color: var(--accent);
-            background: rgba(0, 112, 243, 0.1);
-            padding: 8px;
-            border-radius: 6px;
-        }
-
+        .module-icon { width: 40px; height: 40px; margin-bottom: 24px; color: var(--accent); background: rgba(0, 112, 243, 0.1); padding: 8px; border-radius: 6px; }
         .module-item h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
         .module-item p { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
 
-        /* --- THE OFFER BANNER --- */
-        .offer-banner {
-            max-width: 1000px;
-            margin: 0 auto 80px auto;
-            background: linear-gradient(135deg, rgba(0, 112, 243, 0.1) 0%, rgba(0,0,0,0) 100%);
-            border: 1px solid var(--accent);
-            border-radius: 12px;
-            padding: 50px;
-            text-align: center;
-        }
-
+        .offer-banner { max-width: 1000px; margin: 0 auto 80px auto; background: linear-gradient(135deg, rgba(0, 112, 243, 0.1) 0%, rgba(0,0,0,0) 100%); border: 1px solid var(--accent); border-radius: 12px; padding: 50px; text-align: center; }
         .offer-banner h2 { font-size: 28px; font-weight: 600; margin-bottom: 20px;}
         .offer-banner p { font-size: 16px; color: var(--text-dim); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;}
-        
-        .guarantee-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #ffffff;
-            margin-top: 20px;
-        }
+        .guarantee-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #ffffff; margin-top: 20px; }
 
-        /* --- FOOTER --- */
-        footer {
-            padding: 80px 20px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
+        footer { padding: 80px 20px; text-align: center; border-top: 1px solid var(--border); }
 
-        @media (max-width: 768px) {
-            .hero-title { font-size: 2.2rem; }
-            .hero-description { font-size: 1rem; padding: 0 10px; }
-            .module-grid { grid-template-columns: 1fr; }
-            .services-grid { grid-template-columns: 1fr; }
-            .offer-banner { padding: 30px 20px; }
-        }
+        @media (max-width: 768px) { .hero-title { font-size: 2.2rem; } .hero-description { font-size: 1rem; padding: 0 10px; } .module-grid { grid-template-columns: 1fr; } .services-grid { grid-template-columns: 1fr; } .offer-banner { padding: 30px 20px; } }
     </style>
  </head>
  <body>
@@ -356,37 +80,37 @@
    <header class="hero-header">
     <div class="brand-identity">
      <h2 class="brand-main">Montis Media</h2>
-     <p class="brand-subtitle">L'Infrastructure d'Apport d'Affaires</p>
+     <p class="brand-subtitle">Apport d'Affaires pour CGP</p>
     </div>
     <div class="hero-content">
-     <h1 class="hero-title">Nous réalisons vos R1 à votre place.<br>Vous signez les dossiers complexes.</h1>
-     <p class="hero-description">Arrêtez de gaspiller 15h par semaine en découverte avec des curieux ou de céder 50% de vos commissions aux apporteurs classiques. <strong>Recevez 15 dossiers BNC/BIC (TMI > 30%) pré-diagnostiqués par trimestre.</strong></p>
-     <a href="https://montismedia.com/15-scheduling-page/" class="btn-hero-cta">Vérifier l'éligibilité de votre cabinet</a>
+     <h1 class="hero-title">Déléguez vos R1.<br>Signez les dossiers complexes.</h1>
+     <p class="hero-description">Recevez <strong>15 dossiers dirigeants (TMI > 30%)</strong> pré-qualifiés par trimestre. Payez un forfait par rendez-vous, gardez 100% de vos honoraires.</p>
+     <a href="https://montismedia.com/15-scheduling-page/" class="btn-hero-cta">Vérifier votre éligibilité (15 min)</a>
     </div>
    </header>
 
    <section class="services-section">
-    <h2 class="services-title">Le problème de la recommandation artisanale</h2>
-    <p class="services-subtitle">Si vous dépendez du bouche-à-oreille ou des notaires, votre croissance est plafonnée par le hasard.</p>
+    <h2 class="services-title">Deux modèles de croissance</h2>
+    <p class="services-subtitle">L'indépendance de votre cabinet dépend de vos canaux d'acquisition.</p>
     
     <div class="services-grid">
      <div class="service-card" style="border-color: #331111; background: rgba(50, 0, 0, 0.1);">
-      <div class="tagline alert">L'Ancien Modèle (Coûteux & Lent)</div>
-      <h2>La Prospection et le Partage</h2>
-      <p class="description">Vous perdez votre temps sur des R1 avec des prospects sans capacité d'épargne. Pire, quand un apporteur vous amène un beau dossier, vous lui cédez jusqu'à 50% de vos honoraires de souscription. Vous êtes l'expert, mais vous payez le prix fort.</p>
+      <div class="tagline alert">L'Ancien Modèle</div>
+      <h2>Partage & Perte de temps</h2>
+      <p class="description">Les apporteurs classiques (notaires) exigent 50% de vos commissions. De plus, vous perdez des heures en découverte (R1) avec des profils non qualifiés.</p>
      </div>
      
      <div class="service-card" style="border-color: rgba(0, 112, 243, 0.3);">
-      <div class="tagline">Le Modèle Montis (Souverain)</div>
-      <h2>Le Sourcing avec R1 Délégué</h2>
-      <p class="description">Nous agissons comme un filtre industriel. Nous ciblons les dirigeants, nous extrayons leurs données fiscales (Audit R1), et nous vous allouons le dossier qualifié. Vous payez un forfait fixe d'activation et gardez 100% de vos commissions de conseil.</p>
+      <div class="tagline">Le Modèle Montis</div>
+      <h2>Sourcing Délégué</h2>
+      <p class="description">Nous réalisons l'audit (R1). Vous recevez le dossier prêt pour la stratégie (R2). Vous payez un coût fixe, vous gardez 100% de votre marge.</p>
      </div>
     </div>
    </section>
 
    <section class="prospects-section">
-    <h2 class="prospects-title">Les profils que nous pré-diagnostiquons</h2>
-    <p class="services-subtitle">Uniquement des décideurs avec un besoin stratégique immédiat.</p>
+    <h2 class="prospects-title">Les profils ciblés</h2>
+    <p class="services-subtitle">Décideurs. Forte TMI. Capacité d'investissement immédiate.</p>
     <div class="prospects-container">
      <div class="prospect-category">
       <h3 class="category-title">BNC</h3>
@@ -397,7 +121,7 @@
      </div>
      <div class="prospect-category">
       <h3 class="category-title">BIC</h3>
-      <p class="category-subtitle">Dirigeants d'Entreprise</p>
+      <p class="category-subtitle">Chefs d'Entreprise</p>
       <div class="prospect-grid">
        <div class="prospect-item"><span class="prospect-rotating" id="bic-rotating">Restaurateur</span></div>
       </div>
@@ -406,51 +130,51 @@
    </section>
 
    <section class="infra-section">
-    <h3 class="infra-title">L'Infrastructure : 4 étapes vers la clôture</h3>
+    <h3 class="infra-title">Le Protocole en 4 Étapes</h3>
     <div class="module-grid">
      <div class="module-item">
       <div class="module-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
-      <h3>1. Ciblage Sourcing (TMI > 30%)</h3>
-      <p>Identification des niches BNC/BIC sous haute pression fiscale. Nous rejetons les profils non rentables avant tout contact.</p>
+      <h3>1. Ciblage Strict</h3>
+      <p>Identification des profils BNC/BIC avec une TMI supérieure à 30%.</p>
      </div>
      <div class="module-item">
       <div class="module-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div>
-      <h3>2. Le R1 Délégué (Audit)</h3>
-      <p>Nous faisons passer un audit asynchrone pour extraire la data fiscale brute (revenus, épargne, objectifs). Le dossier est préparé.</p>
+      <h3>2. Audit R1</h3>
+      <p>Extraction des données fiscales et des objectifs via notre protocole asynchrone.</p>
      </div>
      <div class="module-item">
       <div class="module-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></div>
-      <h3>3. Transfert d'Autorité</h3>
-      <p>Le prospect visionne un support exclusif qui pré-vend votre expertise. Il arrive au R2 en vous considérant comme l'unique solution.</p>
+      <h3>3. Recommandation</h3>
+      <p>Le prospect est pré-vendu sur votre expertise avant même le premier appel.</p>
      </div>
      <div class="module-item">
       <div class="module-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
-      <h3>4. Allocation de Flux</h3>
-      <p>Intégration directe du dossier validé et qualifié dans votre agenda. Vous intervenez uniquement pour l'ingénierie et la clôture.</p>
+      <h3>4. Allocation</h3>
+      <p>Le dossier validé arrive directement dans votre agenda de consultation.</p>
      </div>
     </div>
    </section>
 
    <section class="services-section">
        <div class="offer-banner">
-           <div class="tagline">L'Engagement Montis Media</div>
-           <h2>15 Audits Qualifiés livrés en 90 jours.</h2>
-           <p>Nous paramétrons votre infrastructure (500€ de frais d'activation) et allouons le flux. Vous ne réglez que 89€ HT par dossier strictement qualifié et honoré.</p>
+           <div class="tagline">Mandat d'Allocation</div>
+           <h2>15 Audits Qualifiés par trimestre.</h2>
+           <p>500€ de frais d'activation. Puis 89€ HT uniquement par dossier qualifié et honoré.</p>
            <div class="guarantee-badge">
                <svg style="width:16px; height:16px; color:var(--accent)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-               Garantie contractuelle de livraison ou prolongation du sourcing
+               Garantie contractuelle de volume
            </div>
        </div>
    </section>
 
    <footer>
-       <a href="https://montismedia.com/15-scheduling-page/" class="btn-hero-cta">Demander une Allocation (Entretien de 15 min)</a>
+       <a href="https://montismedia.com/15-scheduling-page/" class="btn-hero-cta">Solliciter un Entretien (15 min)</a>
    </footer>
   </div>
 
   <script>
-    const bncProfiles = ['Architecte', 'Chirurgien', 'Expert-comptable', 'Avocat d\'Affaires', 'Pilote', 'Directeur Médical', 'Notaire', 'Consultant IT Senior'];
-    const bicProfiles = ['Restaurateur', 'Dirigeant BTP', 'Hôtelier', 'CEO E-commerce', 'Marchand de Biens', 'Concessionnaire', 'Pharmacien', 'Loueur LMNP/LMP'];
+    const bncProfiles = ['Architecte', 'Chirurgien', 'Expert-Comptable', 'Avocat d\'Affaires', 'Pilote de Ligne', 'Directeur de Clinique', 'Notaire', 'Consultant IT'];
+    const bicProfiles = ['Restaurateur', 'Dirigeant BTP', 'Hôtelier', 'CEO E-commerce', 'Marchand de Biens', 'Concessionnaire', 'Pharmacien', 'Loueur LMNP'];
 
     let bncIndex = 0;
     let bicIndex = 0;
